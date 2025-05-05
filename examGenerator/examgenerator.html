@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Exam Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .question-form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .question-list {
+            margin-top: 20px;
+        }
+        .question-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .options {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+        button, input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover, input[type="button"]:hover {
+            background-color: #45a049;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .option-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .option-input input[type="text"] {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .preview-exam {
+            margin-top: 20px;
+        }
+        .print-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .print-btn {
+            background-color: #2196F3;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .checkbox-label {
+            display: block;
+            margin: 10px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .question-item {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container no-print">
+        <h1>Interactive Exam Generator</h1>
+        
+        <!-- Exam Settings -->
+        <div class="question-form">
+            <h2>Exam Settings</h2>
+            <div>
+                <label for="exam-title">Exam Title:</label>
+                <input type="text" id="exam-title" placeholder="Enter exam title">
+            </div>
+            <div>
+                <label for="exam-instructions">Instructions:</label>
+                <textarea id="exam-instructions" rows="3" placeholder="Enter exam instructions"></textarea>
+            </div>
+        </div>
+
+        <!-- Question Form -->
+        <div class="question-form">
+            <h2>Add Question</h2>
+            <div>
+                <label for="question-type">Question Type:</label>
+                <select id="question-type" onchange="toggleQuestionOptions()">
+                    <option value="multiple-choice">Multiple Choice</option>
+                    <option value="true-false">True/False</option>
+                    <option value="short-answer">Short Answer</option>
+                    <option value="essay">Essay</option>
+                </select>
+            </div>
+            <div>
+                <label for="question-text">Question:</label>
+                <textarea id="question-text" rows="3" placeholder="Enter your question"></textarea>
+            </div>
+            <div id="options-container">
+                <label>Options:</label>
+                <div id="options-list">
+                    <div class="option-input">
+                        <input type="text" placeholder="Option 1" class="option-text">
+                        <input type="checkbox" class="correct-option">
+                    </div>
+                    <div class="option-input">
+                        <input type="text" placeholder="Option 2" class="option-text">
+                        <input type="checkbox" class="correct-option">
+                    </div>
+                </div>
+                <button type="button" onclick="addOption()">Add Option</button>
+            </div>
+            <div id="true-false-container" class="hidden">
+                <label>Correct Answer:</label>
+                <select id="true-false-answer">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
+            <div>
+                <label for="points">Points:</label>
+                <input type="number" id="points" min="1" value="10">
+            </div>
+            <div class="controls">
+                <button type="button" onclick="addQuestion()">Add Question</button>
+            </div>
+        </div>
+
+        <!-- Question List -->
+        <div class="question-list">
+            <h2>Added Questions</h2>
+            <div id="questions-container"></div>
+        </div>
+
+        <div class="print-section">
+            <button type="button" class="print-btn" onclick="generateExam()">Generate Exam</button>
+        </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div id="preview-container" class="container preview-exam">
+        <h2 class="no-print">Exam Preview</h2>
+        <div id="exam-preview">
+            <p>Your exam will be displayed here after generation.</p>
+        </div>
+        <div class="print-section no-print">
+            <button type="button" onclick="window.print()" class="print-btn">Print/Save PDF</button>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let currentQuestionId = 0;
+
+        function toggleQuestionOptions() {
+            const questionType = document.getElementById('question-type').value;
+            const optionsContainer = document.getElementById('options-container');
+            const trueFalseContainer = document.getElementById('true-false-container');
+            
+            optionsContainer.classList.add('hidden');
+            trueFalseContainer.classList.add('hidden');
+            
+            if (questionType === 'multiple-choice') {
+                optionsContainer.classList.remove('hidden');
+            } else if (questionType === 'true-false') {
+                trueFalseContainer.classList.remove('hidden');
+            }
+        }
+
+        function addOption() {
+            const optionsList = document.getElementById('options-list');
+            const optionCount = optionsList.children.length + 1;
+            
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-input';
+            
+            const optionInput = document.createElement('input');
+            optionInput.type = 'text';
+            optionInput.placeholder = `Option ${optionCount}`;
+            optionInput.className = 'option-text';
+            
+            const correctCheckbox = document.createElement('input');
+            correctCheckbox.type = 'checkbox';
+            correctCheckbox.className = 'correct-option';
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'Remove';
+            removeBtn.onclick = function() {
+                optionsList.removeChild(optionDiv);
+            };
+            
+            optionDiv.appendChild(optionInput);
+            optionDiv.appendChild(correctCheckbox);
+            optionDiv.appendChild(removeBtn);
+            
+            optionsList.appendChild(optionDiv);
+        }
+
+        function addQuestion() {
+            const questionType = document.getElementById('question-type').value;
+            const questionText = document.getElementById('question-text').value.trim();
+            const points = document.getElementById('points').value;
+            
+            if (!questionText) {
+                alert('Please enter a question.');
+                return;
+            }
+            
+            const question = {
+                id: currentQuestionId++,
+                type: questionType,
+                text: questionText,
+                points: points
+            };
+            
+            if (questionType === 'multiple-choice') {
+                const options = [];
+                const optionElements = document.querySelectorAll('.option-text');
+                const correctElements = document.querySelectorAll('.correct-option');
+                
+                for (let i = 0; i < optionElements.length; i++) {
+                    const optionText = optionElements[i].value.trim();
+                    if (optionText) {
+                        options.push({
+                            text: optionText,
+                            isCorrect: correctElements[i].checked
+                        });
+                    }
+                }
+                
+                if (options.length < 2) {
+                    alert('Please add at least two options.');
+                    return;
+                }
+                
+                question.options = options;
+            } else if (questionType === 'true-false') {
+                question.correctAnswer = document.getElementById('true-false-answer').value === 'true';
+            }
+            
+            questions.push(question);
+            renderQuestions();
+            clearQuestionForm();
+        }
+
+        function clearQuestionForm() {
+            document.getElementById('question-text').value = '';
+            const optionElements = document.querySelectorAll('.option-text');
+            const correctElements = document.querySelectorAll('.correct-option');
+            
+            for (let i = 0; i < optionElements.length; i++) {
+                optionElements[i].value = '';
+                correctElements[i].checked = false;
+            }
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            if (questions.length === 0) {
+                container.innerHTML = '<p>No questions added yet.</p>';
+                return;
+            }
+            
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item';
+                
+                const questionHeader = document.createElement('h3');
+                questionHeader.textContent = `Question ${index + 1} (${question.points} pts) - ${getQuestionTypeName(question.type)}`;
+                
+                const questionText = document.createElement('p');
+                questionText.textContent = question.text;
+                
+                questionDiv.appendChild(questionHeader);
+                questionDiv.appendChild(questionText);
+                
+                if (question.type === 'multiple-choice') {
+                    const optionsList = document.createElement('div');
+                    optionsList.className = 'options';
+                    
+                    question.options.forEach((option, optIndex) => {
+                        const optionItem = document.createElement('div');
+                        optionItem.innerHTML = `${String.fromCharCode(65 + optIndex)}. ${option.text} ${option.isCorrect ? '<strong>(Correct)</strong>' : ''}`;
+                        optionsList.appendChild(optionItem);
+                    });
+                    
+                    questionDiv.appendChild(optionsList);
+                } else if (question.type === 'true-false') {
+                    const answer = document.createElement('p');
+                    answer.innerHTML = `Answer: <strong>${question.correctAnswer ? 'True' : 'False'}</strong>`;
+                    questionDiv.appendChild(answer);
+                }
+                
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'controls';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remove';
+                removeBtn.onclick = function() {
+                    removeQuestion(question.id);
+                };
+                
+                const moveUpBtn = document.createElement('button');
+                moveUpBtn.textContent = 'Move Up';
+                moveUpBtn.disabled = index === 0;
+                moveUpBtn.onclick = function() {
+                    moveQuestion(index, index - 1);
+                };
+                
+                const moveDownBtn = document.createElement('button');
+                moveDownBtn.textContent = 'Move Down';
+                moveDownBtn.disabled = index === questions.length - 1;
+                moveDownBtn.onclick = function() {
+                    moveQuestion(index, index + 1);
+                };
+                
+                controlsDiv.appendChild(moveUpBtn);
+                controlsDiv.appendChild(moveDownBtn);
+                controlsDiv.appendChild(removeBtn);
+                
+                questionDiv.appendChild(controlsDiv);
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function getQuestionTypeName(type) {
+            const types = {
+                'multiple-choice': 'Multiple Choice',
+                'true-false': 'True/False',
+                'short-answer': 'Short Answer',
+                'essay': 'Essay'
+            };
+            return types[type] || type;
+        }
+
+        function removeQuestion(id) {
+            questions = questions.filter(q => q.id !== id);
+            renderQuestions();
+        }
+
+        function moveQuestion(fromIndex, toIndex) {
+            if (toIndex < 0 || toIndex >= questions.length) return;
+            
+            const question = questions[fromIndex];
+            questions.splice(fromIndex, 1);
+            questions.splice(toIndex, 0, question);
+            renderQuestions();
+        }
+
+        function generateExam() {
+            const examTitle = document.getElementById('exam-title').value.trim() || 'Exam';
+            const examInstructions = document.getElementById('exam-instructions').value.trim() || 'Answer all questions to the best of your ability.';
+            
+            if (questions.length === 0) {
+                alert('Please add at least one question to generate an exam.');
+                return;
+            }
+            
+            const previewContainer = document.getElementById('exam-preview');
+            
+            let examHTML = `
+                <div class="exam-header">
+                    <h1>${examTitle}</h1>
+                    <p>${examInstructions}</p>
+                </div>
+            `;
+            
+            let totalPoints = 0;
+            questions.forEach(q => totalPoints += parseInt(q.points));
+            
+            examHTML += `<p><strong>Total Points: ${totalPoints}</strong></p>`;
+            
+            questions.forEach((question, index) => {
+                examHTML += `
+                    <div class="question-item">
+                        <h3>Question ${index + 1} (${question.points} points)</h3>
+                        <p>${question.text}</p>
+                `;
+                
+                if (question.type === 'multiple-choice') {
+                    examHTML += '<div class="options">';
+                    question.options.forEach((option, optIndex) => {
+                        const letter = String.fromCharCode(65 + optIndex);
+                        examHTML += `
+                            <div>
+                                <label class="checkbox-label">
+                                    <input type="checkbox"> ${letter}. ${option.text}
+                                </label>
+                            </div>
+                        `;
+                    });
+                    examHTML += '</div>';
+                } else if (question.type === 'true-false') {
+                    examHTML += `
+                        <div>
+                            <label class="checkbox-label">
+                                <input type="checkbox"> True
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox"> False
+                            </label>
+                        </div>
+                    `;
+                } else if (qsuestion.type === 'short-answer') {
+                    examHTML += `
+                        <div>
+                            <textarea rows="3" placeholder="Your answer..." style="width: 100%;"></textarea>
+                        </div>
+                    `;
+                } else if (question.type === 'essay') {
+                    examHTML += `
+                        <div>
+                            <textarea rows="8" placeholder="Your answer..." style="width: 100%;"></textarea>
+                        </div>
+                    `;
+                }
+                
+                examHTML += '</div>';
+            });
+            
+            previewContainer.innerHTML = examHTML;
+        }
+
+        // Initialize
+        toggleQuestionOptions();
+    </script>
+</body>
+</html>
