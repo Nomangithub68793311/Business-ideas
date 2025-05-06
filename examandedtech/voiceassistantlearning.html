@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice-based Learning Assistant</title>
+  <style>
+    :root {
+      --primary-color: #6200ee;
+      --primary-dark: #3700b3;
+      --primary-light: #bb86fc;
+      --secondary-color: #03dac6;
+      --error-color: #b00020;
+      --background: #f5f5f5;
+      --surface: #ffffff;
+      --on-primary: #ffffff;
+      --on-secondary: #000000;
+      --on-background: #121212;
+      --on-surface: #121212;
+      --font-main: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--background);
+      color: var(--on-background);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: var(--on-primary);
+      padding: 1rem;
+      text-align: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    main {
+      padding: 80px 16px 100px 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+    }
+
+    .card {
+      background-color: var(--surface);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      margin-bottom: 16px;
+      padding: 16px;
+      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+    .card:hover {
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 1rem 0;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.875rem;
+      letter-spacing: 0.0892857143em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--on-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: var(--on-secondary);
+    }
+
+    .btn-secondary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-neutral {
+      background-color: #e0e0e0;
+      color: var(--on-surface);
+    }
+
+    .btn-neutral:hover {
+      background-color: #d0d0d0;
+    }
+
+    .icon-button {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+    }
+
+    .mic-button {
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 24px;
+    }
+
+    .mic-button.active {
+      background-color: var(--error-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(176, 0, 32, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(176, 0, 32, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(176, 0, 32, 0);
+      }
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 14px;
+      margin: 5px 0;
+      border-radius: 18px;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background-color: var(--primary-light);
+      color: var(--on-surface);
+      border-bottom-right-radius: 4px;
+    }
+
+    .assistant-message {
+      align-self: flex-start;
+      background-color: #e0e0e0;
+      color: var(--on-surface);
+      border-bottom-left-radius: 4px;
+    }
+
+    .voice-waveform {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60px;
+      margin: 20px 0;
+    }
+
+    .bar {
+      background-color: var(--primary-color);
+      width: 4px;
+      height: 30px;
+      margin: 0 2px;
+      border-radius: 2px;
+    }
+
+    .voice-recognition-status {
+      text-align: center;
+      margin: 16px 0;
+      font-style: italic;
+      color: #666;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .course-card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .course-image {
+      height: 140px;
+      background-color: #ddd;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-weight: 500;
+    }
+
+    .course-info {
+      padding: 12px;
+    }
+
+    .course-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .course-description {
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background-color: #e0e0e0;
+      border-radius: 2px;
+      margin-top: 8px;
+    }
+
+    .progress {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 2px;
+    }
+
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: var(--on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-size: 24px;
+      z-index: 1000;
+      border: none;
+    }
+
+    .fab:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .tab {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #666;
+      position: relative;
+    }
+
+    .tab.active {
+      color: var(--primary-color);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    footer {
+      background-color: var(--primary-color);
+      color: var(--on-primary);
+      padding: 12px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.75rem;
+    }
+
+    .accessibility-controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .accessibility-button {
+      padding: 8px 16px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      background-color: #e0e0e0;
+    }
+
+    .quiz-container {
+      margin-top: 20px;
+    }
+
+    .quiz-question {
+      margin-bottom: 16px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .quiz-option {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .quiz-option:hover {
+      background-color: #f0f0f0;
+    }
+
+    .quiz-option.selected {
+      background-color: var(--primary-light);
+      border-color: var(--primary-color);
+    }
+
+    .helper-text {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column;
+      }
+      
+      .course-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .card {
+        padding: 12px;
+      }
+      
+      h1 {
+        font-size: 1.25rem;
+      }
+      
+      h2 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Voice Learning Assistant</h1>
+  </header>
+
+  <main>
+    <div class="accessibility-controls">
+      <button class="accessibility-button">
+        <span>A-</span>
+      </button>
+      <button class="accessibility-button">
+        <span>A+</span>
+      </button>
+      <button class="accessibility-button">
+        <span>High Contrast</span>
+      </button>
+      <button class="accessibility-button">
+        <span>Screen Reader</span>
+      </button>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="home">Home</div>
+      <div class="tab" data-tab="assistant">Voice Assistant</div>
+      <div class="tab" data-tab="courses">My Courses</div>
+      <div class="tab" data-tab="practice">Practice</div>
+    </div>
+
+    <div class="content-section active" id="home">
+      <div class="card">
+        <h2>Welcome to Voice Learning!</h2>
+        <p>Your personal voice-activated learning assistant is ready to help you learn on the go.</p>
+        <div class="helper-text">Try saying: "Hey Learning Assistant, what can you help me with today?"</div>
+      </div>
+
+      <div class="card">
+        <h2>Continue Learning</h2>
+        <div class="course-card">
+          <div class="course-info">
+            <div class="course-title">Introduction to Machine Learning</div>
+            <div class="course-description">Module 3: Neural Networks</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 35%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Today's Goal</h2>
+        <p>Complete 20 minutes of learning</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 50%;"></div>
+        </div>
+        <p class="helper-text">10 minutes completed</p>
+      </div>
+    </div>
+
+    <div class="content-section" id="assistant">
+      <div class="card">
+        <h2>Voice Assistant</h2>
+        <div class="chat-container" id="chatContainer">
+          <div class="message assistant-message">
+            Hi there! I'm your voice learning assistant. What would you like to learn today?
+          </div>
+          <div class="message user-message">
+            I want to learn about neural networks.
+          </div>
+          <div class="message assistant-message">
+            Great choice! Neural networks are computational models inspired by the human brain. Would you like me to start with the basics or go into more advanced concepts?
+          </div>
+        </div>
+
+        <div class="voice-recognition-status" id="recognitionStatus">
+          Tap the microphone button and start speaking...
+        </div>
+
+        <div class="voice-waveform" id="voiceWaveform">
+          <div class="bar" style="height: 10px;"></div>
+          <div class="bar" style="height: 20px;"></div>
+          <div class="bar" style="height: 15px;"></div>
+          <div class="bar" style="height: 30px;"></div>
+          <div class="bar" style="height: 25px;"></div>
+          <div class="bar" style="height: 15px;"></div>
+          <div class="bar" style="height: 20px;"></div>
+          <div class="bar" style="height: 10px;"></div>
+        </div>
+
+        <div class="controls">
+          <button class="btn-neutral">
+            Text Mode
+          </button>
+          <button class="icon-button mic-button" id="micButton">
+            🎤
+          </button>
+          <button class="btn-secondary">
+            Help
+          </button>
+        </div>
+
+        <div class="helper-text">
+          Try asking: "Explain neural networks", "What are activation functions?", or "Give me a quiz on machine learning"
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section" id="courses">
+      <div class="card">
+        <h2>My Courses</h2>
+        
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-image">Introduction to Machine Learning</div>
+            <div class="course-info">
+              <div class="course-title">Introduction to Machine Learning</div>
+              <div class="course-description">Learn the fundamentals of ML algorithms</div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 35%;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="course-card">
+            <div class="course-image">Web Development Basics</div>
+            <div class="course-info">
+              <div class="course-title">Web Development Basics</div>
+              <div class="course-description">HTML, CSS and JavaScript fundamentals</div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 80%;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="course-card">
+            <div class="course-image">Data Science Essentials</div>
+            <div class="course-info">
+              <div class="course-title">Data Science Essentials</div>
+              <div class="course-description">Master data analysis and visualization</div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 10%;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="course-card">
+            <div class="course-image">Mobile App Development</div>
+            <div class="course-info">
+              <div class="course-title">Mobile App Development</div>
+              <div class="course-description">Build cross-platform mobile apps</div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section" id="practice">
+      <div class="card">
+        <h2>Practice Quizzes</h2>
+        <p>Test your knowledge with voice-enabled quizzes.</p>
+        
+        <div class="quiz-container">
+          <div class="quiz-question">
+            <h3>What is a neural network?</h3>
+            <div class="quiz-options">
+              <div class="quiz-option">A computational model inspired by the human brain</div>
+              <div class="quiz-option">A network of computers working together</div>
+              <div class="quiz-option">A system for networking neurons in a laboratory</div>
+              <div class="quiz-option">A method for connecting internet devices</div>
+            </div>
+          </div>
+          
+          <div class="helper-text">You can answer by speaking the letter or the full answer</div>
+          
+          <div class="controls">
+            <button class="btn-primary">Next Question</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Flashcards</h2>
+        <p>Practice with voice-activated flashcards.</p>
+        <button class="btn-primary">Start Flashcards</button>
+      </div>
+    </div>
+  </main>
+
+  <button class="fab" id="mainMicButton">🎤</button>
+
+  <footer>
+    Voice Learning Assistant - Making education accessible for everyone
+  </footer>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.content-section').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // Microphone animation
+    const micButton = document.getElementById('micButton');
+    const mainMicButton = document.getElementById('mainMicButton');
+    const recognitionStatus = document.getElementById('recognitionStatus');
+    const voiceWaveform = document.getElementById('voiceWaveform');
+    const chatContainer = document.getElementById('chatContainer');
+    const bars = voiceWaveform.querySelectorAll('.bar');
+    
+    let listening = false;
+    
+    function toggleMic() {
+      listening = !listening;
+      
+      if (listening) {
+        micButton.classList.add('active');
+        mainMicButton.classList.add('active');
+        recognitionStatus.textContent = "Listening...";
+        
+        // Animate bars
+        animateBars();
+        
+        // Simulate voice recognition after 3 seconds
+        setTimeout(() => {
+          if (listening) {
+            addMessage("Tell me about activation functions.", "user-message");
+            
+            setTimeout(() => {
+              addMessage("Activation functions are mathematical equations that determine the output of a neural network. The function is attached to each neuron in the network, and determines whether it should be activated or not based on whether each neuron's input is relevant for the model's prediction. Common activation functions include ReLU, Sigmoid, and Tanh. Would you like me to explain these in more detail?", "assistant-message");
+              
+              stopListening();
+            }, 1500);
+          }
+        }, 3000);
+      } else {
+        stopListening();
+      }
+    }
+    
+    function stopListening() {
+      listening = false;
+      micButton.classList.remove('active');
+      mainMicButton.classList.remove('active');
+      recognitionStatus.textContent = "Tap the microphone button and start speaking...";
+      
+      // Stop animation
+      bars.forEach(bar => {
+        bar.style.height = (Math.floor(Math.random() * 20) + 10) + 'px';
+        bar.style.animation = 'none';
+      });
+    }
+    
+    function animateBars() {
+      if (!listening) return;
+      
+      bars.forEach(bar => {
+        const height = Math.floor(Math.random() * 30) + 5;
+        bar.style.height = height + 'px';
+        
+        // Random animation duration
+        const duration = (Math.random() * 0.5) + 0.2;
+        bar.style.transition = `height ${duration}s ease`;
+      });
+      
+      if (listening) {
+        setTimeout(animateBars, 200);
+      }
+    }
+    
+    function addMessage(text, className) {
+      const message = document.createElement('div');
+      message.className = `message ${className}`;
+      message.textContent = text;
+      chatContainer.appendChild(message);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    micButton.addEventListener('click', toggleMic);
+    mainMicButton.addEventListener('click', toggleMic);
+
+    // Quiz options
+    document.querySelectorAll('.quiz-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+      });
+    });
+
+    // Accessibility buttons
+    let fontSize = 16;
+    document.querySelectorAll('.accessibility-button').forEach((button, index) => {
+      button.addEventListener('click', () => {
+        switch(index) {
+          case 0: // A-
+            fontSize = Math.max(12, fontSize - 1);
+            document.body.style.fontSize = `${fontSize}px`;
+            break;
+          case 1: // A+
+            fontSize = Math.min(24, fontSize + 1);
+            document.body.style.fontSize = `${fontSize}px`;
+            break;
+          case 2: // High Contrast
+            document.body.classList.toggle('high-contrast');
+            break;
+          case 3: // Screen Reader
+            alert('Screen reader functionality would be enabled here.');
+            break;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

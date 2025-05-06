@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CourseGenius - AI-Powered Course Marketplace</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --gray-light: #e9ecef;
+      --gray-dark: #343a40;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .logo span {
+      color: var(--secondary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-dark);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #05b386;
+    }
+
+    .hero {
+      padding: 50px 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .hero-content {
+      max-width: 600px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    .section {
+      padding: 40px 0;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      color: var(--gray-dark);
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--gray);
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 25px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .card-text {
+      color: var(--gray);
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+
+    .card-footer {
+      padding: 15px 20px;
+      background-color: var(--gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--gray-dark);
+    }
+
+    .ratings {
+      color: #ff9800;
+      font-weight: 600;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray-light);
+      margin-bottom: 30px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--gray);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--gray-dark);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--gray-light);
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .ai-tools-panel {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .tool-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .tool-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .tool-description {
+      color: var(--gray);
+      margin-bottom: 25px;
+    }
+
+    .output-section {
+      background-color: var(--gray-light);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .output-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--gray-dark);
+    }
+
+    .output-content {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .badge-primary {
+      background-color: #e6ecff;
+      color: var(--primary);
+    }
+
+    .badge-secondary {
+      background-color: #f0e6ff;
+      color: var(--secondary);
+    }
+
+    .badge-success {
+      background-color: #e6fff7;
+      color: var(--success);
+    }
+
+    .suggestions {
+      margin-top: 20px;
+    }
+
+    .suggestion-item {
+      background-color: white;
+      border: 1px solid var(--gray-light);
+      border-radius: 6px;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-item:hover {
+      border-color: var(--primary);
+      background-color: #f8f9ff;
+    }
+
+    .stats {
+      display: flex;
+      margin-top: 30px;
+      gap: 20px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--primary);
+    }
+
+    .stat-title {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: var(--gray-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background-color: var(--primary);
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    footer {
+      background-color: var(--gray-dark);
+      color: white;
+      padding: 40px 0 20px;
+      margin-top: 60px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .footer-column h3 {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+
+    .footer-column ul {
+      list-style: none;
+    }
+
+    .footer-column ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-column a {
+      color: #b0b5bb;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: white;
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #4a4f54;
+      color: #b0b5bb;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .two-columns {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .course-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    /* AI Tool Generation Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(67, 97, 238, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .tone-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tone-option {
+      padding: 8px 15px;
+      border-radius: 50px;
+      border: 1px solid var(--gray-light);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tone-option:hover, .tone-option.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .ai-feedback {
+      background-color: #f0f7ff;
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .metric {
+      background-color: white;
+      border-radius: 8px;
+      padding: 12px 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .metric-title {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .rating-good {
+      color: var(--success);
+    }
+
+    .rating-medium {
+      color: var(--warning);
+    }
+
+    .rating-poor {
+      color: var(--danger);
+    }
+
+    .keyword-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
+    .keyword-tag {
+      background-color: #e6ecff;
+      color: var(--primary);
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+    }
+
+    .version-history {
+      margin-top: 20px;
+    }
+
+    .version {
+      padding: 12px 15px;
+      border-radius: 8px;
+      background-color: var(--gray-light);
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .version-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .version-date {
+      color: var(--gray);
+    }
+
+    .summary-box {
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .summary-box h4 {
+      margin-bottom: 10px;
+      color: var(--gray-dark);
+    }
+
+    /* Tooltip styles */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">Course<span>Genius</span></div>
+        <div class="nav-links">
+          <a href="#">Home</a>
+          <a href="#">Explore Courses</a>
+          <a href="#">Teach</a>
+          <a href="#">AI Tools</a>
+          <a href="#">Resources</a>
+        </div>
+        <div class="nav-actions">
+          <a href="#" class="btn btn-outline">Login</a>
+          <a href="#" class="btn btn-primary">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Boost Your Course Sales with AI-Powered Marketing</h1>
+        <p>Create compelling course descriptions, optimize your marketing copy, and reach more students with our smart AI tools.</p>
+        <a href="#" class="btn btn-success">Start Using AI Tools</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <h2 class="section-title">AI Marketing Tools for Course Creators</h2>
+      <p class="subtitle">Craft perfect course descriptions and marketing materials in minutes, not hours.</p>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="description-generator">Course Description Generator</div>
+        <div class="tab" data-tab="ad-copy">Ad Copy Creator</div>
+        <div class="tab" data-tab="seo-optimizer">SEO Optimizer</div>
+        <div class="tab" data-tab="email-campaigns">Email Campaigns</div>
+      </div>
+
+      <div class="tab-content active" id="description-generator">
+        <div class="ai-tools-panel">
+          <div class="tool-header">
+            <div class="tool-title">AI Course Description Generator</div>
+            <div>
+              <span class="badge badge-primary">Professional Writer</span>
+              <span class="badge badge-success">SEO Optimized</span>
+            </div>
+          </div>
+          <p class="tool-description">Create compelling, SEO-friendly course descriptions that convert visitors into students. Our AI analyzes top-performing courses to generate descriptions that highlight your unique value proposition.</p>
+
+          <form>
+            <div class="form-group">
+              <label for="course-title">Course Title</label>
+              <input type="text" id="course-title" placeholder="e.g. Advanced Python for Data Science" value="Advanced Python for Data Science">
+            </div>
+
+            <div class="form-group">
+              <label for="course-topics">Main Topics Covered (comma separated)</label>
+              <input type="text" id="course-topics" placeholder="e.g. Data visualization, Machine learning, Pandas, NumPy" value="Data visualization, Machine learning algorithms, Pandas, NumPy, Data cleaning">
+            </div>
+
+            <div class="form-group">
+              <label>Target Audience</label>
+              <select>
+                <option>Beginners</option>
+                <option>Intermediate learners</option>
+                <option selected>Advanced practitioners</option>
+                <option>Professional developers</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Tone of Voice</label>
+              <div class="tone-selector">
+                <div class="tone-option">Professional</div>
+                <div class="tone-option active">Friendly</div>
+                <div class="tone-option">Academic</div>
+                <div class="tone-option">Enthusiastic</div>
+                <div class="tone-option">Authoritative</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="course-outcomes">Learning Outcomes (What will students be able to do?)</label>
+              <textarea id="course-outcomes" placeholder="List the main things students will learn...">- Build advanced machine learning models using Python
+- Clean and prepare data for analysis efficiently
+- Create professional data visualizations
+- Implement neural networks for predictive modeling
+- Automate data processing workflows</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="additional-info">Additional Information (Optional)</label>
+              <textarea id="additional-info" placeholder="Any other details you want to include...">Course includes 5 real-world projects and personalized feedback. Students should have basic Python knowledge before enrolling.</textarea>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="generate-btn">Generate Description</button>
+          </form>
+
+          <div class="output-section">
+            <div class="tool-header">
+              <div class="output-title">Generated Course Description</div>
+              <div>
+                <button class="btn btn-outline">Copy</button>
+                <button class="btn btn-outline">Regenerate</button>
+              </div>
+            </div>
+            <div class="output-content">
+              <h3>Advanced Python for Data Science: Master Machine Learning & Data Visualization</h3>
+              
+              <p><strong>Take your Python skills to the professional level with the most comprehensive advanced data science course available online.</strong></p>
+              
+              <p>Ready to transform from a Python programmer into a data science expert? This Advanced Python for Data Science course is designed specifically for intermediate Python users looking to master the powerful tools and techniques used by industry professionals.</p>
+              
+              <p>🔍 <strong>What you'll learn:</strong></p>
+              <ul>
+                <li>Build sophisticated machine learning models that solve real business problems</li>
+                <li>Master data cleaning techniques that will save you countless hours of frustration</li>
+                <li>Create stunning, publication-quality data visualizations that communicate insights effectively</li>
+                <li>Implement neural networks from scratch and understand the math behind them</li>
+                <li>Design automated data processing pipelines that scale with your projects</li>
+              </ul>
+              
+              <p>With 5 comprehensive real-world projects and personalized feedback on your code, you'll build a professional portfolio while learning. By the end of this course, you'll have the confidence and skills to tackle complex data challenges that will set you apart in the job market.</p>
+              
+              <p><em>Note: This course assumes basic Python knowledge. If you're comfortable with Python fundamentals but ready to dive deeper into data science applications, you've found the perfect next step in your learning journey.</em></p>
+              
+              <p><strong>Join over 15,000 successful students who have transformed their careers with our advanced Python curriculum!</strong></p>
+            </div>
+
+            <div class="ai-feedback">
+              <h4>AI Feedback</h4>
+              <p>This description is optimized for conversion with a clear value proposition, specific learning outcomes, and social proof. It uses formatting to improve readability and includes emotion-triggering language.</p>
+              
+              <div class="metrics">
+                <div class="metric">
+                  <div class="metric-title">Readability</div>
+                  <div class="metric-value rating-good">92/100</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-title">SEO Score</div>
+                  <div class="metric-value rating-good">88/100</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-title">Persuasiveness</div>
+                  <div class="metric-value rating-good">90/100</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-title">Clarity</div>
+                  <div class="metric-value rating-medium">85/100</div>
+                </div>
+              </div>
+              
+              <h4 style="margin-top: 15px;">Top-Performing Keywords</h4>
+              <div class="keyword-tags">
+                <div class="keyword-tag">advanced python</div>
+                <div class="keyword-tag">data science</div>
+                <div class="keyword-tag">machine learning</div>
+                <div class="keyword-tag">python for data science</div>
+                <div class="keyword-tag">data visualization</div>
+              </div>
+              
+              <h4>Improvement Suggestions</h4>
+              <p>Consider adding more specific information about the time commitment required and mentioning the instructor's credentials to build additional trust.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="ad-copy">
+        <div class="ai-tools-panel">
+          <div class="tool-header">
+            <div class="tool-title">AI Ad Copy Creator</div>
+            <div>
+              <span class="badge badge-primary">Platform Optimized</span>
+              <span class="badge badge-secondary">Multi-format</span>
+            </div>
+          </div>
+          <p class="tool-description">Create compelling ad copy for different platforms including Facebook, Instagram, Google Ads, and more. Our AI helps you craft messages that drive clicks and conversions.</p>
+
+          <form>
+            <div class="two-columns">
+              <div>
+                <div class="form-group">
+                  <label for="ad-course-title">Course Title</label>
+                  <input type="text" id="ad-course-title" placeholder="Your course title">
+                </div>
+                
+                <div class="form-group">
+                  <label>Ad Platform</label>
+                  <select>
+                    <option>Facebook</option>
+                    <option>Instagram</option>
+                    <option>Google Ads</option>
+                    <option>LinkedIn</option>
+                    <option>Twitter</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label>Ad Format</label>
+                  <select>
+                    <option>News Feed Ad</option>
+                    <option>Story Ad</option>
+                    <option>Carousel Ad</option>
+                    <option>Text Ad</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <div class="form-group">
+                  <label>Target Audience</label>
+                  <select>
+                    <option>Professionals</option>
+                    <option>Students</option>
+                    <option>Career Changers</option>
+                    <option>Hobbyists</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="unique-selling-point">Unique Selling Point</label>
+                  <input type="text" id="unique-selling-point" placeholder="What makes your course special?">
+                </div>
+                
+                <div class="form-group">
+                  <label for="ad-call-to-action">Call to Action</label>
+                  <input type="text" id="ad-call-to-action" placeholder="e.g. Enroll Now, Learn More, Start Today">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ad-key-benefits">Key Benefits (One per line)</label>
+              <textarea id="ad-key-benefits" placeholder="List the main benefits of your course..."></textarea>
+            </div>
+
+            <button type="button" class="btn btn-primary">Generate Ad Copy</button>
+          </form>
+
+          <div class="output-section" style="display: none;">
+            <!-- Ad copy output will appear here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="seo-optimizer">
+        <div class="ai-tools-panel">
+          <div class="tool-header">
+            <div class="tool-title">SEO Optimizer</div>
+            <div>
+              <span class="badge badge-primary">Keyword Analysis</span>
+              <span class="badge badge-success">Ranking Boost</span>
+            </div>
+          </div>
+          <p class="tool-description">Analyze and optimize your course content for search engines. Identify high-performing keywords and improve your course visibility in search results.</p>
+
+          <form>
+            <div class="form-group">
+              <label for="seo-course-description">Current Course Description</label>
+              <textarea id="seo-course-description" placeholder="Paste your current course description here..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="target-keywords">Target Keywords (comma separated)</label>
+              <input type="text" id="target-keywords" placeholder="e.g. python course, data science tutorial, machine learning">
+            </div>
+
+            <button type="button" class="btn btn-primary">Analyze & Optimize</button>
+          </form>
+
+          <div class="output-section" style="display: none;">
+            <!-- SEO analysis will appear here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="email-campaigns">
+        <div class="ai-tools-panel">
+          <div class="tool-header">
+            <div class="tool-title">Email Campaign Generator</div>
+            <div>
+              <span class="badge badge-primary">Sequence Builder</span>
+              <span class="badge badge-secondary">High Open Rates</span>
+            </div>
+          </div>
+          <p class="tool-description">Create engaging email sequences to nurture leads and convert them into students. Our AI helps you craft compelling subject lines and email content optimized for conversions.</p>
+
+          <form>
+            <div class="form-group">
+              <label for="email-course-title">Course Title</label>
+              <input type="text" id="email-course-title" placeholder="Your course title">
+            </div>
+
+            <div class="form-group">
+              <label>Campaign Type</label>
+              <select>
+                <option>Course Launch</option>
+                <option>Lead Nurturing</option>
+                <option>Special Promotion</option>
+                <option>Re-engagement</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="email-course-benefits">

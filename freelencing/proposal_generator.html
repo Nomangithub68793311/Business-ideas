@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Proposal Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .input-section {
+            flex: 1;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .output-section {
+            flex: 1;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .proposal-output {
+            white-space: pre-wrap;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            min-height: 300px;
+        }
+        
+        .copy-button {
+            background-color: #2ecc71;
+            margin-top: 15px;
+        }
+        
+        .copy-button:hover {
+            background-color: #27ae60;
+        }
+        
+        .template-selector {
+            margin-bottom: 25px;
+        }
+        
+        .bubble {
+            padding: 12px 20px;
+            background-color: #e6f7ff;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .tip {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Professional Freelance Proposal Generator</h1>
+    
+    <div class="bubble">
+        Fill in the form below to generate a tailored proposal for your freelance job applications.
+        The better the information you provide, the more personalized your proposal will be.
+    </div>
+    
+    <div class="container">
+        <div class="input-section">
+            <div class="template-selector">
+                <label for="template">Choose a Proposal Style:</label>
+                <select id="template">
+                    <option value="professional">Professional (Formal)</option>
+                    <option value="conversational">Conversational (Friendly)</option>
+                    <option value="technical">Technical Expert</option>
+                    <option value="value-based">Value-Based (ROI Focus)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="client-name">Client Name (Optional):</label>
+                <input type="text" id="client-name" placeholder="Leave blank if unknown">
+                <p class="tip">Personalizing with a name makes your proposal stand out</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="job-description">Job Description (Copy & Paste):</label>
+                <textarea id="job-description" placeholder="Paste the job description here"></textarea>
+                <p class="tip">Helps tailor your proposal to the specific job</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="skills">Your Relevant Skills/Experience:</label>
+                <textarea id="skills" placeholder="List your skills and experience relevant to this job"></textarea>
+                <p class="tip">Be specific about skills directly related to this project</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="portfolio">Relevant Portfolio Items/Past Work (Optional):</label>
+                <textarea id="portfolio" placeholder="Describe 1-3 relevant projects you've completed"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="approach">Your Approach to This Project:</label>
+                <textarea id="approach" placeholder="How will you tackle this project? What's your method?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="timeline">Proposed Timeline (Optional):</label>
+                <input type="text" id="timeline" placeholder="E.g., '2 weeks', '3-4 business days'">
+            </div>
+            
+            <div class="form-group">
+                <label for="pricing">Pricing Information (Optional):</label>
+                <input type="text" id="pricing" placeholder="E.g., '$30/hour', 'Fixed price: $500'">
+            </div>
+            
+            <div class="form-group">
+                <label for="questions">Questions for the Client (Optional):</label>
+                <textarea id="questions" placeholder="Any clarifying questions you have about the project"></textarea>
+            </div>
+            
+            <button id="generate-button">Generate Proposal</button>
+        </div>
+        
+        <div class="output-section">
+            <h3>Your Generated Proposal:</h3>
+            <div class="proposal-output" id="proposal-result">Your proposal will appear here...</div>
+            <button class="copy-button" id="copy-button">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generate-button').addEventListener('click', function() {
+            const templateStyle = document.getElementById('template').value;
+            const clientName = document.getElementById('client-name').value.trim();
+            const jobDescription = document.getElementById('job-description').value.trim();
+            const skills = document.getElementById('skills').value.trim();
+            const portfolio = document.getElementById('portfolio').value.trim();
+            const approach = document.getElementById('approach').value.trim();
+            const timeline = document.getElementById('timeline').value.trim();
+            const pricing = document.getElementById('pricing').value.trim();
+            const questions = document.getElementById('questions').value.trim();
+            
+            if (!jobDescription) {
+                alert("Please paste the job description for better results.");
+                return;
+            }
+            
+            if (!skills) {
+                alert("Please enter your relevant skills/experience.");
+                return;
+            }
+            
+            let proposal = '';
+            const greeting = clientName ? `Hi ${clientName},` : "Hello there,";
+            
+            // Different templates based on selection
+            switch(templateStyle) {
+                case 'professional':
+                    proposal = generateProfessionalProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions);
+                    break;
+                case 'conversational':
+                    proposal = generateConversationalProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions);
+                    break;
+                case 'technical':
+                    proposal = generateTechnicalProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions);
+                    break;
+                case 'value-based':
+                    proposal = generateValueProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions);
+                    break;
+            }
+            
+            document.getElementById('proposal-result').textContent = proposal;
+        });
+        
+        document.getElementById('copy-button').addEventListener('click', function() {
+            const proposalText = document.getElementById('proposal-result').textContent;
+            navigator.clipboard.writeText(proposalText)
+                .then(() => {
+                    this.textContent = "Copied!";
+                    setTimeout(() => {
+                        this.textContent = "Copy to Clipboard";
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy to clipboard. Please select and copy manually.');
+                });
+        });
+        
+        function generateProfessionalProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions) {
+            let proposal = `${greeting}\n\n`;
+            
+            // Introduction
+            proposal += `I'm writing to express my interest in your project regarding ${summarizeJobDescription(jobDescription)}. After reviewing your requirements, I believe my background and expertise align well with what you're looking for.\n\n`;
+            
+            // Skills and experience
+            proposal += `**Relevant Experience & Skills:**\n${skills}\n\n`;
+            
+            // Portfolio
+            if (portfolio) {
+                proposal += `**Relevant Past Work:**\n${portfolio}\n\n`;
+            }
+            
+            // Approach
+            proposal += `**My Approach:**\n${approach}\n\n`;
+            
+            // Timeline
+            if (timeline) {
+                proposal += `**Proposed Timeline:**\n${timeline}\n\n`;
+            }
+            
+            // Pricing
+            if (pricing) {
+                proposal += `**Investment:**\n${pricing}\n\n`;
+            }
+            
+            // Questions
+            if (questions) {
+                proposal += `**Questions to Clarify the Project:**\n${questions}\n\n`;
+            }
+            
+            // Closing
+            proposal += `I look forward to the possibility of working together on this project. Please feel free to reach out if you have any questions or would like to discuss further details.\n\n`;
+            proposal += `Thank you for your consideration.\n\nBest regards,\n[Your Name]`;
+            
+            return proposal;
+        }
+        
+        function generateConversationalProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions) {
+            let proposal = `${greeting}\n\n`;
+            
+            // Introduction
+            proposal += `I just came across your project for ${summarizeJobDescription(jobDescription)} and I'm really excited about it! It lines up perfectly with what I love doing and where my strengths lie.\n\n`;
+            
+            // Skills and experience
+            proposal += `A bit about me and why I think we'd be a great fit:\n${skills}\n\n`;
+            
+            // Portfolio
+            if (portfolio) {
+                proposal += `I've worked on similar projects before:\n${portfolio}\n\n`;
+            }
+            
+            // Approach
+            proposal += `Here's how I'd tackle your project:\n${approach}\n\n`;
+            
+            // Timeline
+            if (timeline) {
+                proposal += `I could deliver this to you within ${timeline}, so you won't be kept waiting.\n\n`;
+            }
+            
+            // Pricing
+            if (pricing) {
+                proposal += `In terms of cost, I'm thinking ${pricing} would be fair for the scope we're looking at.\n\n`;
+            }
+            
+            // Questions
+            if (questions) {
+                proposal += `I do have a few quick questions to make sure I understand exactly what you need:\n${questions}\n\n`;
+            }
+            
+            // Closing
+            proposal += `I'd love to chat more about how we can make this project a success! When would be a good time to connect?\n\n`;
+            proposal += `Looking forward to hearing from you!\n\n[Your Name]`;
+            
+            return proposal;
+        }
+        
+        function generateTechnicalProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions) {
+            let proposal = `${greeting}\n\n`;
+            
+            // Introduction
+            proposal += `I'm responding to your project requirements for ${summarizeJobDescription(jobDescription)}. Based on my technical assessment, I can deliver a robust solution that meets your specifications.\n\n`;
+            
+            // Skills and experience
+            proposal += `**Technical Qualifications:**\n${skills}\n\n`;
+            
+            // Portfolio
+            if (portfolio) {
+                proposal += `**Relevant Technical Projects:**\n${portfolio}\n\n`;
+            }
+            
+            // Approach
+            proposal += `**Technical Approach & Methodology:**\n${approach}\n\n`;
+            
+            // Timeline
+            if (timeline) {
+                proposal += `**Project Timeline & Milestones:**\n${timeline}\n\n`;
+            }
+            
+            // Pricing
+            if (pricing) {
+                proposal += `**Project Cost Estimate:**\n${pricing}\n\n`;
+            }
+            
+            // Questions
+            if (questions) {
+                proposal += `**Technical Clarifications Needed:**\n${questions}\n\n`;
+            }
+            
+            // Closing
+            proposal += `I'm prepared to discuss technical specifications in further detail and can provide additional documentation or code samples as needed. I prioritize clean, maintainable, and well-documented deliverables.\n\n`;
+            proposal += `Ready to proceed at your convenience.\n\nRegards,\n[Your Name]`;
+            
+            return proposal;
+        }
+        
+        function generateValueProposal(greeting, jobDescription, skills, portfolio, approach, timeline, pricing, questions) {
+            let proposal = `${greeting}\n\n`;
+            
+            // Introduction
+            proposal += `I understand that your ${summarizeJobDescription(jobDescription)} project is not just about getting work done, but about achieving concrete business outcomes. My focus is on delivering tangible ROI for your investment.\n\n`;
+            
+            // Skills and experience
+            proposal += `**Value I Bring:**\n${skills}\n\n`;
+            
+            // Portfolio
+            if (portfolio) {
+                proposal += `**Results Achieved for Similar Clients:**\n${portfolio}\n\n`;
+            }
+            
+            // Approach
+            proposal += `**Strategic Approach to Maximize ROI:**\n${approach}\n\n`;
+            
+            // Timeline
+            if (timeline) {
+                proposal += `**Delivery Timeline & Value Milestones:**\nI can deliver within ${timeline}, with regular check-ins to ensure we're on track for your business objectives.\n\n`;
+            }
+            
+            // Pricing
+            if (pricing) {
+                proposal += `**Investment & Expected Returns:**\n${pricing} - This investment typically generates [specific benefit] for my clients, paying for itself within [timeframe].\n\n`;
+            }
+            
+            // Questions
+            if (questions) {
+                proposal += `**Strategic Questions to Align Outcomes:**\n${questions}\n\n`;
+            }
+            
+            // Closing
+            proposal += `I measure my success by the tangible results I deliver for my clients. I'd welcome the opportunity to discuss specifically how I can help you achieve your business goals through this project.\n\n`;
+            proposal += `Looking forward to creating measurable value together.\n\nBest regards,\n[Your Name]`;
+            
+            return proposal;
+        }
+        
+        function summarizeJobDescription(jobDescription) {
+            // This is a simple version - in a real implementation, you might use NLP
+            // to extract the main topic of the job
+            const words = jobDescription.split(' ');
+            if (words.length <= 10) {
+                return jobDescription;
+            }
+            
+            // Get first 8-10 words for a simple summary
+            return words.slice(0, 10).join(' ') + '...';
+        }
+    </script>
+</body>
+</html>

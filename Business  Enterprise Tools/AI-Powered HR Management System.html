@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered HR Management System</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #0ea5e9;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gray-light: #f3f4f6;
+            --gray: #9ca3af;
+            --gray-dark: #4b5563;
+            --white: #ffffff;
+            --black: #111827;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: #f9fafb;
+            color: var(--black);
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            border-right: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+        
+        .logo svg {
+            margin-right: 0.75rem;
+        }
+        
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .nav-item.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .nav-item svg {
+            margin-right: 0.75rem;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .search-bar {
+            background-color: var(--white);
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            margin-left: 0.5rem;
+            flex: 1;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.75rem;
+        }
+        
+        .user-info {
+            font-size: 0.875rem;
+        }
+        
+        .user-info p:first-child {
+            font-weight: 600;
+        }
+        
+        .user-info p:last-child {
+            color: var(--gray);
+        }
+        
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card h3 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+        
+        .metric-trend.positive {
+            color: var(--success);
+        }
+        
+        .metric-trend.negative {
+            color: var(--danger);
+        }
+        
+        .content-section {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .section-header button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-header button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .section-header button svg {
+            margin-right: 0.5rem;
+        }
+        
+        .candidates-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
+        .candidate-card {
+            background-color: var(--white);
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .candidate-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .candidate-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .candidate-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        
+        .candidate-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .candidate-position {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        .match-score {
+            margin-left: auto;
+            background-color: #ecfdf5;
+            color: var(--success);
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .candidate-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .skill-tag {
+            background-color: var(--gray-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .candidate-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .candidate-actions button {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .candidate-actions button:first-child {
+            background-color: var(--primary);
+            color: var(--white);
+            margin-right: 0.5rem;
+        }
+        
+        .candidate-actions button:first-child:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .candidate-actions button:last-child {
+            background-color: var(--white);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .candidate-actions button:last-child:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .employee-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .employee-list th, .employee-list td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .employee-list th {
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+        
+        .employee-list tbody tr:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .employee-name {
+            display: flex;
+            align-items: center;
+        }
+        
+        .employee-name img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.75rem;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active {
+            background-color: #ecfdf5;
+            color: var(--success);
+        }
+        
+        .status-badge.onboarding {
+            background-color: #eff6ff;
+            color: var(--secondary);
+        }
+        
+        .status-badge.risk {
+            background-color: #fef2f2;
+            color: var(--danger);
+        }
+        
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+        }
+        
+        .risk-level {
+            width: 60px;
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .risk-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: 3px;
+        }
+        
+        .risk-level.low::after {
+            width: 25%;
+            background-color: var(--success);
+        }
+        
+        .risk-level.medium::after {
+            width: 50%;
+            background-color: var(--warning);
+        }
+        
+        .risk-level.high::after {
+            width: 75%;
+            background-color: var(--danger);
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .onboarding-steps {
+            display: flex;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .onboarding-steps::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e5e7eb;
+            z-index: 0;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-indicator {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--white);
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 auto 0.5rem;
+        }
+        
+        .step.completed .step-indicator {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .step.active .step-indicator {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .resume-analysis {
+            margin-top: 2rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar .fill {
+            height: 100%;
+            background-color: var(--primary);
+        }
+        
+        .resume-highlights {
+            margin-top: 1.5rem;
+        }
+        
+        .highlight-item {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-item svg {
+            margin-right: 0.75rem;
+            color: var(--success);
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1.5rem 0.75rem;
+            }
+            
+            .logo span {
+                display: none;
+            }
+            
+            .nav-item span {
+                display: none;
+            }
+            
+            .nav-item {
+                justify-content: center;
+            }
+            
+            .nav-item svg {
+                margin-right: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+            }
+            
+            .nav-links {
+                display: flex;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-left: 0.5rem;
+            }
+            
+            .dashboard-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <circle cx="12" cy="12" r="4"></circle>
+                </svg>
+                <span>AI-HR System</span>
+            </div>
+            
+            <div class="nav-links">
+                <div class="nav-item active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </div>
+                
+                <div class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Employees</span>
+                </div>
+                
+                <div class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Recruitment</span>
+                </div>
+                
+                <div class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Onboarding</span>
+                </div>
+                
+                <div class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span>Analytics</span>
+                </div>
+                
+                <div class="nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>HR Dashboard</h1>
+                
+                <div class="search-bar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <div class="user-profile">
+                    <img src="/api/placeholder/40/40" alt="User profile">
+                    <div class="user-info">
+                        <p>Sarah Johnson</p>
+                        <p>HR Director</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard Metrics -->
+            <div class="dashboard-metrics">
+                <div class="metric-card">
+                    <h3>Open Positions</h3>
+                    <div class="metric-value">24</div>
+                    <div class="metric-trend positive">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
+                        <span>12% from last month</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h3>New Applications</h3>
+                    <div class="metric-value">187</div>
+                    <div class="metric-trend positive">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
+                        <span>8% from last month</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h3>Time to Hire (Avg)</h3>
+                    <div class="metric-value">18 days</div>
+                    <div class="metric-trend positive">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
+                        <span>3 days less than last quarter</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h3>Turnover Rate</h3>
+                    <div class="metric-value">5.2%</div>
+                    <div class="metric-trend negative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>0.8% from industry average</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI-Powered Resume Screening -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>AI-Powered Resume Screening</h2>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Upload Resumes
+                    </button>
+                </div>
+                
+                <div class="candidates-list">
+                    <div class="candidate-card">
+                        <div class="candidate-header">
+                            <img src="/api/placeholder/50/50" alt="Candidate">
+                            <div>
+                                <div class="candidate-name">Michael Chen</div>
+                                <div class="candidate-position">Senior Developer</div>
+                            </div>
+                            <div class="match-score">94%</div>
+                        </div>
+                        
+                        <div class="candidate-skills">
+                            <div class="skill-tag">JavaScript</div>
+                            <div class="skill-tag">React</div>
+                            <div class="skill-tag">Node.js</div>
+                            <div class="skill-tag">AWS</div>
+                        </div>
+                        
+                        <div class="resume-analysis">
+                            <div>Experience Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 90%"></div>
+                            </div>
+                            
+                            <div>Education Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 100%"></div>
+                            </div>
+                            
+                            <div>Skills Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="resume-highlights">
+                            <div class="highlight-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <div>5+ years experience with React ecosystem</div>
+                            </div>
+                            <div class="highlight-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <div>Led team of 8 developers at previous company</div>
+                            </div>
+                        </div>
+                        
+                        <div class="candidate-actions">
+                            <button>Schedule Interview</button>
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                    
+                    <div class="candidate-card">
+                        <div class="candidate-header">
+                            <img src="/api/placeholder/50/50" alt="Candidate">
+                            <div>
+                                <div class="candidate-name">Sophia Williams</div>
+                                <div class="candidate-position">UX Designer</div>
+                            </div>
+                            <div class="match-score">89%</div>
+                        </div>
+                        
+                        <div class="candidate-skills">
+                            <div class="skill-tag">Figma</div>
+                            <div class="skill-tag">UI/UX</div>
+                            <div class="skill-tag">Prototyping</div>
+                            <div class="skill-tag">User Research</div>
+                        </div>
+                        
+                        <div class="resume-analysis">
+                            <div>Experience Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 85%"></div>
+                            </div>
+                            
+                            <div>Education Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 90%"></div>
+                            </div>
+                            
+                            <div>Skills Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="resume-highlights">
+                            <div class="highlight-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <div>Portfolio includes work for Fortune 500 clients</div>
+                            </div>
+                            <div class="highlight-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <div>UX certification from Nielsen Norman Group</div>
+                            </div>
+                        </div>
+                        
+                        <div class="candidate-actions">
+                            <button>Schedule Interview</button>
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                    
+                    <div class="candidate-card">
+                        <div class="candidate-header">
+                            <img src="/api/placeholder/50/50" alt="Candidate">
+                            <div>
+                                <div class="candidate-name">David Johnson</div>
+                                <div class="candidate-position">Data Scientist</div>
+                            </div>
+                            <div class="match-score">86%</div>
+                        </div>
+                        
+                        <div class="candidate-skills">
+                            <div class="skill-tag">Python</div>
+                            <div class="skill-tag">ML</div>
+                            <div class="skill-tag">TensorFlow</div>
+                            <div class="skill-tag">SQL</div>
+                        </div>
+                        
+                        <div class="resume-analysis">
+                            <div>Experience Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 80%"></div>
+                            </div>
+                            
+                            <div>Education Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 100%"></div>
+                            </div>
+                            
+                            <div>Skills Match</div>
+                            <div class="progress-bar">
+                                <div class="fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="resume-highlights">
+                            <div class="highlight-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <div>Ph.D. in Computer Science from Stanford</div>
+                            </div>
+                            <div class="highlight-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <div>Published 3 papers on predictive analytics</div>
+                            </div>
+                        </div>
+                        
+                        <div class="candidate-actions">
+                            <button>Schedule Interview</button>
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attrition Prediction -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>Attrition Risk Prediction</h2>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        Export Report
+                    </button>
+                </div>
+                
+                <table class="employee-list">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Tenure</th>
+                            <th>Last Review</th>
+                            <th>Attrition Risk</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>James Wilson</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">Senior Developer</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Engineering</td>
+                            <td>3 years, 2 months</td>
+                            <td>4.2/5.0</td>
+                            <td>
+                                <div class="risk-indicator">
+                                    <div class="risk-level high"></div>
+                                    <span style="color: var(--danger); font-weight: 500;">High</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button style="background-color: var(--primary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Emma Garcia</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">Marketing Manager</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Marketing</td>
+                            <td>2 years, 5 months</td>
+                            <td>3.8/5.0</td>
+                            <td>
+                                <div class="risk-indicator">
+                                    <div class="risk-level medium"></div>
+                                    <span style="color: var(--warning); font-weight: 500;">Medium</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button style="background-color: var(--primary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Ryan Thompson</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">Product Manager</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Product</td>
+                            <td>4 years, 1 month</td>
+                            <td>4.7/5.0</td>
+                            <td>
+                                <div class="risk-indicator">
+                                    <div class="risk-level low"></div>
+                                    <span style="color: var(--success); font-weight: 500;">Low</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button style="background-color: var(--primary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Olivia Martinez</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">UX Designer</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Design</td>
+                            <td>1 year, 8 months</td>
+                            <td>3.5/5.0</td>
+                            <td>
+                                <div class="risk-indicator">
+                                    <div class="risk-level high"></div>
+                                    <span style="color: var(--danger); font-weight: 500;">High</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button style="background-color: var(--primary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Daniel Kim</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">Financial Analyst</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Finance</td>
+                            <td>5 years, 3 months</td>
+                            <td>4.5/5.0</td>
+                            <td>
+                                <div class="risk-indicator">
+                                    <div class="risk-level low"></div>
+                                    <span style="color: var(--success); font-weight: 500;">Low</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button style="background-color: var(--primary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Automated Onboarding Workflow -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>Automated Onboarding Workflow</h2>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add New Employee
+                    </button>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active">Active Onboarding (3)</div>
+                    <div class="tab">Completed (8)</div>
+                    <div class="tab">Pending (2)</div>
+                </div>
+                
+                <table class="employee-list">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Position</th>
+                            <th>Start Date</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Alex Morgan</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">alex.morgan@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Frontend Developer</td>
+                            <td>May 15, 2025</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 75%; background-color: var(--secondary);"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--gray-dark);">6/8 tasks completed</div>
+                            </td>
+                            <td><div class="status-badge onboarding">In Progress</div></td>
+                            <td>
+                                <button style="background-color: var(--secondary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    Manage
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Jamie Lee</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">jamie.lee@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Product Designer</td>
+                            <td>May 10, 2025</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 40%; background-color: var(--secondary);"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--gray-dark);">3/8 tasks completed</div>
+                            </td>
+                            <td><div class="status-badge onboarding">In Progress</div></td>
+                            <td>
+                                <button style="background-color: var(--secondary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    Manage
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    <img src="/api/placeholder/36/36" alt="Employee">
+                                    <div>
+                                        <div>Taylor Singh</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray);">taylor.singh@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Marketing Specialist</td>
+                            <td>May 2, 2025</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 90%; background-color: var(--secondary);"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--gray-dark);">7/8 tasks completed</div>
+                            </td>
+                            <td><div class="status-badge onboarding">In Progress</div></td>
+                            <td>
+                                <button style="background-color: var(--secondary); color: var(--white); border: none; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    Manage
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Detailed Onboarding View (Hidden by default, would be shown when clicking "Manage") -->
+                <div style="margin-top: 2rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem;">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 600;">Alex Morgan - Onboarding Progress</h3>
+                    
+                    <div class="onboarding-steps">
+                        <div class="step completed">
+                            <div class="step-indicator">1</div>
+                            <div class="step-label">Document Collection</div>
+                        </div>
+                        <div class="step completed">
+                            <div class="step-indicator">2</div>
+                            <div class="step-label">Equipment Setup</div>
+                        </div>
+                        <div class="step active">
+                            <div class="step-indicator">3</div>
+                            <div class="step-label">Orientation</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-indicator">4</div>
+                            <div class="step-label">Team Introduction</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-indicator">5</div>
+                            <div class="step-label">Training</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem; font-weight: 600;">Current Task: Orientation</h4>
+                        <p style="margin-bottom: 1rem; color: var(--gray-dark);">Employee needs to complete company orientation program.</p>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <button style="background-color: var(--success); color: var(--white); border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; display: flex; align-items: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                Mark as Complete
+                            </button>
+                            <button style="background-color: var(--white); border: 1px solid #e5e7eb; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                                Send Reminder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // This would contain JavaScript functionality for the HR system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example of how AI features would be implemented
+            const aiFeatures = {
+                // Resume screening algorithm
+                screenResume: function(resume, jobRequirements) {
+                    // This would use NLP to analyze the resume against job requirements
+                    // For demo purposes, returns a simple match score
+                    return {
+                        overallMatch: Math.floor(Math.random() * 30) + 70,
+                        experienceMatch: Math.floor(Math.random() * 30) + 70,
+                        educationMatch: Math.floor(Math.random() * 30) + 70,
+                        skillsMatch: Math.floor(Math.random() * 30) + 70,
+                        highlights: [
+                            "Strong technical background in required areas",
+                            "Leadership experience matches position needs"
+                        ]
+                    };
+                },
+                
+                // Attrition prediction model
+                predictAttritionRisk: function(employeeData) {
+                    // This would use ML to analyze risk factors like:
+                    // - Recent performance reviews
+                    // - Compensation relative to market
+                    // - Work hours/overtime patterns
+                    // - Team changes or manager changes
+                    // - Engagement survey results
+                    
+                    // For demo purposes, returns a simple risk assessment
+                    const factors = {
+                        performanceDownward: Math.random() > 0.6,
+                        compensationBelowMarket: Math.random() > 0.5,
+                        highWorkload: Math.random() > 0.7,
+                        recentManagerChange: Math.random() > 0.8,
+                        lowEngagementScore: Math.random() > 0.6
+                    };
+                    
+                    let riskScore = 0;
+                    for (const factor in factors) {
+                        if (factors[factor]) riskScore += 20;
+                    }
+                    
+                    return {
+                        riskScore: riskScore,
+                        riskLevel: riskScore > 60 ? "High" : riskScore > 30 ? "Medium" : "Low",
+                        factors: factors
+                    };
+                },
+                
+                // Automated onboarding workflow engine
+                automateOnboarding: function(newEmployee) {
+                    // This would generate a customized onboarding plan based on:
+                    // - Role and department
+                    // - Experience level
+                    // - Required training and certifications
+                    // - Team structure and reporting relationships
+                    
+                    const standardTasks = [
+                        "Document Collection",
+                        "Equipment Setup",
+                        "System Access",
+                        "Orientation",
+                        "Team Introduction",
+                        "Training",
+                        "Goal Setting",
+                        "First Review"
+                    ];
+                    
+                    // For demo purposes, returns a simple onboarding plan
+                    return {
+                        tasks: standardTasks,
+                        timeline: standardTasks.map((task, i) => ({
+                            task: task,
+                            dueDate: new Date(Date.now() + (i * 3 * 24 * 60 * 60 * 1000)), // Every 3 days
+                            assignedTo: i % 2 === 0 ? "HR Team" : "Hiring Manager",
+                            status: "Pending"
+                        })),
+                        automatedEmails: [
+                            {trigger: "Start Date -7 days", template: "Welcome Email"},
+                            {trigger: "Start Date", template: "First Day Instructions"},
+                            {trigger: "Start Date +30 days", template: "30-day Check-in"}
+                        ]
+                    };
+                }
+            };
+            
+            // Example AI processing for demonstration (would happen server-side in real app)
+            console.log("AI HR System Initialized");
+            console.log("Resume Screening Sample:", aiFeatures.screenResume({}, {}));
+            console.log("Attrition Prediction Sample:", aiFeatures.predictAttritionRisk({}));
+            console.log("Onboarding Automation Sample:", aiFeatures.automateOnboarding({}));
+        });
+    </script>
+</body>
+</html>

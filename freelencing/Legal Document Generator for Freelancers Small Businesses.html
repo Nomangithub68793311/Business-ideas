@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Document Generator</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #64748b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --danger: #ef4444;
+            --success: #10b981;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .hero {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .generator-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .doc-types {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .doc-types h2 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .doc-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .doc-type:hover, .doc-type.active {
+            background-color: #eef2ff;
+        }
+        
+        .doc-type.active {
+            border-left: 3px solid var(--primary);
+        }
+        
+        .doc-type-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .form-section {
+            flex: 2;
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .form-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .preview-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .preview-section h2 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .preview-content {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 1.5rem;
+            font-family: 'Georgia', serif;
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .feature-icon {
+            background-color: #eef2ff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        footer {
+            background-color: white;
+            padding: 2rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--secondary);
+        }
+        
+        /* Document templates */
+        .hidden {
+            display: none;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+        
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .generator-section {
+                flex-direction: column;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                LegalDocs AI
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Templates</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Create Professional Legal Documents in Minutes</h1>
+            <p>Customize contracts, NDAs, and Terms of Service with our AI-powered document generator. Perfect for freelancers and small businesses.</p>
+            <a href="#generator" class="btn">Get Started</a>
+        </section>
+
+        <section id="generator" class="generator-section">
+            <div class="doc-types">
+                <h2>Document Types</h2>
+                <div class="doc-type active" data-type="contract">
+                    <div class="doc-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 11.08V8l-6-6H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h6"></path>
+                            <path d="M14 3v5h5M18 21v-6M15 18h6"></path>
+                        </svg>
+                    </div>
+                    <span>Freelance Contract</span>
+                </div>
+                <div class="doc-type" data-type="nda">
+                    <div class="doc-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <span>Non-Disclosure Agreement</span>
+                </div>
+                <div class="doc-type" data-type="tos">
+                    <div class="doc-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <span>Terms of Service</span>
+                </div>
+                <div class="doc-type" data-type="invoice">
+                    <div class="doc-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                            <line x1="12" y1="22" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <span>Invoice Template</span>
+                </div>
+                <div class="doc-type" data-type="privacy">
+                    <div class="doc-type-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <span>Privacy Policy</span>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Customize Your Freelance Contract</h2>
+                <form id="document-form">
+                    <div class="form-group">
+                        <label for="your-name">Your Name/Company</label>
+                        <input type="text" id="your-name" placeholder="Enter your name or company name">
+                    </div>
+                    <div class="form-group">
+                        <label for="client-name">Client Name/Company</label>
+                        <input type="text" id="client-name" placeholder="Enter client name or company name">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-type">Service Type</label>
+                        <select id="service-type">
+                            <option value="web-development">Web Development</option>
+                            <option value="graphic-design">Graphic Design</option>
+                            <option value="content-writing">Content Writing</option>
+                            <option value="consulting">Consulting</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-scope">Project Scope</label>
+                        <textarea id="project-scope" rows="4" placeholder="Describe the services you'll provide"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-terms">Payment Terms</label>
+                        <select id="payment-terms">
+                            <option value="hourly">Hourly Rate</option>
+                            <option value="fixed">Fixed Price</option>
+                            <option value="milestone">Milestone-based</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-amount">Payment Amount</label>
+                        <input type="text" id="payment-amount" placeholder="Enter amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="delivery-date">Delivery Date</label>
+                        <input type="date" id="delivery-date">
+                    </div>
+                    <div class="controls">
+                        <button type="button" class="btn btn-outline" id="advanced-options">Advanced Options</button>
+                        <button type="button" class="btn" id="generate-document">Generate Document</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="preview-section hidden" id="preview-section">
+            <h2>Document Preview</h2>
+            <div class="preview-content" id="preview-content">
+                <!-- Document preview will be inserted here -->
+            </div>
+            <div class="preview-controls">
+                <button class="btn btn-outline" id="edit-document">Edit Document</button>
+                <div>
+                    <button class="btn" id="download-pdf">Download PDF</button>
+                    <button class="btn" id="download-docx">Download DOCX</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 11 12 14 22 4"></polyline>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                    </div>
+                    Legally Sound Templates
+                </h3>
+                <p>Our templates are created by legal professionals and regularly updated to comply with current laws and regulations.</p>
+            </div>
+            <div class="feature-card">
+                <h3>
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </div>
+                    AI-Powered Customization
+                </h3>
+                <p>Our smart AI adapts documents to your specific needs, ensuring they cover all relevant aspects of your business relationship.</p>
+            </div>
+            <div class="feature-card">
+                <h3>
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    Time-Saving Solution
+                </h3>
+                <p>Create professional legal documents in minutes instead of hours, allowing you to focus on what matters most—your business.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="copyright">
+                © 2025 LegalDocs AI. All rights reserved.
+            </div>
+            <div class="footer-links">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Contact</a>
+                <a href="#">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Advanced Options -->
+    <div class="modal" id="advanced-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Advanced Document Options</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="jurisdiction">Jurisdiction</label>
+                    <select id="jurisdiction">
+                        <option value="default">Default (General)</option>
+                        <option value="us">United States</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="eu">European Union</option>
+                        <option value="ca">Canada</option>
+                        <option value="au">Australia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="confidentiality">Confidentiality Level</label>
+                    <select id="confidentiality">
+                        <option value="standard">Standard</option>
+                        <option value="high">High</option>
+                        <option value="very-high">Very High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="intellectual-property">Intellectual Property Clauses</label>
+                    <select id="intellectual-property">
+                        <option value="client-owns">Client Owns All IP</option>
+                        <option value="provider-owns">Provider Retains IP</option>
+                        <option value="license">License to Client</option>
+                        <option value="shared">Shared Ownership</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="liability">Liability Limitation</label>
+                    <select id="liability">
+                        <option value="standard">Standard Limitation</option>
+                        <option value="capped">Capped at Project Value</option>
+                        <option value="strict">Strict Limitation</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="termination">Termination Clauses</label>
+                    <select id="termination">
+                        <option value="standard">Standard (30 days notice)</option>
+                        <option value="immediate">Immediate for Cause</option>
+                        <option value="custom">Custom Terms</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="custom-clauses">Custom Clauses</label>
+                    <textarea id="custom-clauses" rows="4" placeholder="Enter any additional clauses you want to include"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-advanced">Cancel</button>
+                <button class="btn" id="apply-advanced">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template placeholders for document generation -->
+    <script>
+        // Document templates
+        const templates = {
+            contract: `
+                <h2>FREELANCE SERVICES AGREEMENT</h2>
+                
+                <p>This Freelance Services Agreement (the "Agreement") is made effective as of {currentDate} by and between {clientName} ("Client") and {yourName} ("Freelancer").</p>
+                
+                <h3>1. SERVICES</h3>
+                <p>Freelancer agrees to provide the following services to Client (the "Services"): {projectScope}</p>
+                
+                <h3>2. PAYMENT</h3>
+                <p>Client agrees to pay Freelancer for the Services as follows:</p>
+                <p>Payment Type: {paymentTerms}</p>
+                <p>Payment Amount: {paymentAmount}</p>
+                <p>Payment Schedule: Payment is due within 14 days of invoice date.</p>
+                
+                <h3>3. TERM</h3>
+                <p>This Agreement will begin on {currentDate} and continue until {deliveryDate}, or until the Services are complete, unless earlier terminated as provided in this Agreement.</p>
+                
+                <h3>4. INTELLECTUAL PROPERTY</h3>
+                <p>Upon full payment, all intellectual property rights to the deliverables shall be transferred to the Client, unless otherwise specified.</p>
+                
+                <h3>5. CONFIDENTIALITY</h3>
+                <p>Freelancer agrees to keep confidential all information provided by Client and not to share any such information with any third party.</p>
+                
+                <h3>6. INDEPENDENT CONTRACTOR</h3>
+                <p>Freelancer's relationship with Client is that of an independent contractor, and nothing in this Agreement shall be construed as creating an employer-employee relationship.</p>
+                
+                <h3>7. TERMINATION</h3>
+                <p>Either party may terminate this Agreement with 30 days written notice to the other party.</p>
+                
+                <h3>8. LIMITATION OF LIABILITY</h3>
+                <p>Freelancer's liability under this Agreement shall be limited to the total amount paid by Client to Freelancer under this Agreement.</p>
+                
+                <h3>9. GOVERNING LAW</h3>
+                <p>This Agreement shall be governed by and construed in accordance with the laws of {jurisdiction}.</p>
+                
+                <h3>10. ENTIRE AGREEMENT</h3>
+                <p>This Agreement constitutes the entire agreement between the parties and supersedes all prior discussions, agreements, and understandings of every kind.</p>
+                
+                <h3>SIGNATURES</h3>
+                <p>Client: _________________________ Date: _________</p>
+                <p>Freelancer: _____________________ Date: _________</p>
+            `,
+            
+            nda: `
+                <h2>NON-DISCLOSURE AGREEMENT</h2>
+                
+                <p>This Non-Disclosure Agreement (the "Agreement") is made effective as of {currentDate} by and between {clientName} ("Disclosing Party") and {yourName} ("Receiving Party").</p>
+                
+                <h3>1. PURPOSE</h3>
+                <p>The parties wish to explore a business opportunity of mutual interest, and in connection with this opportunity, Disclosing Party may disclose to Receiving Party certain confidential information.</p>
+                
+                <h3>2. DEFINITION OF CONFIDENTIAL INFORMATION</h3>
+                <p>"Confidential Information" means any information disclosed by Disclosing Party to Receiving Party, either directly or indirectly, in writing, orally or by inspection of tangible objects, which is designated as "Confidential," "Proprietary," or some similar designation, or that should reasonably be understood to be confidential given the nature of the information and the circumstances of disclosure.</p>
+                
+                <h3>3. NON-USE AND NON-DISCLOSURE</h3>
+                <p>Receiving Party agrees not to use any Confidential Information for any purpose except to evaluate and engage in discussions concerning a potential business relationship between the parties. Receiving Party agrees not to disclose any Confidential Information to third parties.</p>
+                
+                <h3>4. MAINTENANCE OF CONFIDENTIALITY</h3>
+                <p>Receiving Party shall take reasonable measures to protect the secrecy of and avoid disclosure and unauthorized use of the Confidential Information. Receiving Party shall notify Disclosing Party immediately upon discovery of any unauthorized use or disclosure of Confidential Information.</p>
+                
+                <h3>5. TERM</h3>
+                <p>This Agreement shall remain in effect for a period of 2 years from the date of this Agreement.</p>
+                
+                <h3>6. RETURN OF MATERIALS</h3>
+                <p>Upon termination of this Agreement, Receiving Party will promptly return to Disclosing Party all documents and other tangible materials representing Confidential Information and all copies thereof.</p>
+                
+                <h3>7. GOVERNING LAW</h3>
+                <p>This Agreement shall be governed by and construed in accordance with the laws of {jurisdiction}.</p>
+                
+                <h3>SIGNATURES</h3>
+                <p>Disclosing Party: _________________________ Date: _________</p>
+                <p>Receiving Party: _________________________ Date: _________</p>
+            `,
+
+            tos: `
+                <h2>TERMS OF SERVICE</h2>
+                
+                <p>Last Updated: {currentDate}</p>
+                
+                <p>These Terms of Service ("Terms") govern your access to and use of {yourName}'s services, including our website, products, and applications (the "Services"), so please read them carefully.</p>
+                
+                <h3>1. ACCEPTANCE OF TERMS</h3>
+                <p>By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use the Services.</p>
+                
+                <h3>2. DESCRIPTION OF SERVICES</h3>
+                <p>The Services provided by {yourName} include: {projectScope}</p>
+                
+                <h3>3. USER ACCOUNTS</h3>
+                <p>To access certain features of the Services, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.</p>
+                
+                <h3>4. USER CONTENT</h3>
+                <p>You retain ownership of any content you submit to the Services. By submitting content, you grant {yourName} a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, and display such content in connection with providing the Services.</p>
+                
+                <h3>5. PROHIBITED CONDUCT</h3>
+                <p>You may not use the Services for any illegal purpose or in violation of any local, state, national, or international law. You may not violate or attempt to violate the security of the Services.</p>
+                
+                <h3>6. TERMINATION</h3>
+                <p>{yourName} reserves the right to terminate or suspend your access to the Services at any time, without notice, for conduct that {yourName} believes violates these Terms or is harmful to other users of the Services, {yourName}, or third parties, or for any other reason.</p>
+                
+                <h3>7. WARRANTY DISCLAIMER</h3>
+                <p>THE SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.</p>
+                
+                <h3>8. LIMITATION OF LIABILITY</h3>
+                <p>IN NO EVENT WILL {yourName} BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES.</p>
+                
+                <h3>9. CHANGES TO TERMS</h3>
+                <p>{yourName} reserves the right to modify these Terms at any time. We will provide notice of material changes by posting the updated Terms on our website.</p>
+                
+                <h3>10. GOVERNING LAW</h3>
+                <p>These Terms shall be governed by and construed in accordance with the laws of {jurisdiction}.</p>
+            `,
+
+            invoice: `
+                <h2>INVOICE</h2>
+                
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <div>
+                        <p><strong>From:</strong> {yourName}</p>
+                        <p>[Your Address]</p>
+                        <p>[Your Email]</p>
+                        <p>[Your Phone]</p>
+                    </div>
+                    <div>
+                        <p><strong>To:</strong> {clientName}</p>
+                        <p>[Client Address]</p>
+                        <p>[Client Email]</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Invoice Number:</strong> INV-001</p>
+                    <p><strong>Issue Date:</strong> {currentDate}</p>
+                    <p><strong>Due Date:</strong> [Due Date]</p>
+                </div>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Description</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Quantity</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Rate</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">{serviceType} Services: {projectScope}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">1</td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">{paymentAmount}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">{paymentAmount}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>Subtotal</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">{paymentAmount}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>Tax</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>Total</strong></td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">{paymentAmount}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3>Payment Instructions</h3>
+                    <p>Please make payment to the following account:</p>
+                    <p><strong>Bank:</strong> [Bank Name]</p>
+                    <p><strong>Account Name:</strong> {yourName}</p>
+                    <p><strong>Account Number:</strong> [Account Number]</p>
+                    <p><strong>Routing Number:</strong> [Routing Number]</p>
+                </div>
+                
+                <div>
+                    <p><strong>Notes:</strong></p>
+                    <p>Payment is due within 14 days of receipt of this invoice. Thank you for your business!</p>
+                </div>
+            `,
+
+            privacy: `
+                <h2>PRIVACY POLICY</h2>
+                
+                <p>Last Updated: {currentDate}</p>
+                
+                <p>This Privacy Policy describes how {yourName} ("we", "our", or "us") collects, uses, and discloses your personal information when you use our services (the "Services").</p>
+                
+                <h3>1. INFORMATION WE COLLECT</h3>
+                <p>We may collect the following types of information:</p>
+                <ul>
+                    <li><strong>Personal Information:</strong> Name, email address, phone number, and other similar contact information.</li>
+                    <li><strong>Usage Information:</strong> Information about how you use our Services, including browser type, referring/exit pages, and date/time stamps.</li>
+                    <li><strong>Device Information:</strong> Information about the device you use to access our Services, such as hardware model, operating system, and unique device identifiers.</li>
+                </ul>
+                
+                <h3>2. HOW WE USE YOUR INFORMATION</h3>
+                <p>We may use the information we collect for the following purposes:</p>
+                <ul>
+                    <li>Provide, maintain, and improve our Services</li>
+                    <li>Process and complete transactions</li>
+                    <li>Send you technical notices, updates, security alerts, and support messages</li>
+                    <li>Respond to your comments, questions, and requests</li>
+                    <li>Communicate with you about products, services, offers, and events</li>
+                </ul>
+                
+                <h3>3. SHARING OF INFORMATION</h3>
+                <p>We may share your information with:</p>
+                <ul>
+                    <li>Service providers who perform services on our behalf</li>
+                    <li>Professional advisors, such as lawyers, auditors, and insurers</li>
+                    <li>Government bodies or law enforcement when required by law</li>
+                </ul>
+                
+                <h3>4. DATA SECURITY</h3>
+                <p>We implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.</p>
+                
+                <h3>5. YOUR RIGHTS</h3>
+                <p>Depending on your location, you may have certain rights regarding your personal information, such as the right to access, correct, or delete your data.</p>
+                
+                <h3>6. CHANGES TO THIS POLICY</h3>
+                <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+                
+                <h3>7. CONTACT US</h3>
+                <p>If you have any questions about this Privacy Policy, please contact us at [contact information].</p>
+            `
+        };
+
+        // DOM Elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const docTypes = document.querySelectorAll('.doc-type');
+            const generateButton = document.getElementById('generate-document');
+            const editButton = document.getElementById('edit-document');
+            const previewSection = document.getElementById('preview-section');
+            const previewContent = document.getElementById('preview-content');
+            const advancedButton = document.getElementById('advanced-options');
+            const modal = document.getElementById('advanced-modal');
+            const modalClose = document.querySelector('.modal-close');
+            const cancelAdvanced = document.getElementById('cancel-advanced');
+            const applyAdvanced = document.getElementById('apply-advanced');
+            const downloadPdf = document.getElementById('download-pdf');
+            const downloadDocx = document.getElementById('download-docx');
+            
+            let currentDocType = 'contract';
+            
+            // Document type selection
+            docTypes.forEach(type => {
+                type.addEventListener('click', function() {
+                    // Remove active class from all
+                    docTypes.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked element
+                    this.classList.add('active');
+                    
+                    // Update form title and fields based on document type
+                    currentDocType = this.dataset.type;
+                    updateFormFields(currentDocType);
+                });
+            });
+            
+            // Generate document button
+            generateButton.addEventListener('click', function() {
+                generateDocument(currentDocType);
+                previewSection.classList.remove('hidden');
+                window.location.href = '#preview-section';
+            });
+            
+            // Edit document button
+            editButton.addEventListener('click', function() {
+                previewSection.classList.add('hidden');
+                window.location.href = '#generator';
+            });
+            
+            // Advanced options button
+            advancedButton.addEventListener('click', function() {
+                modal.style.display = 'flex';
+            });
+            
+            // Modal close button
+            modalClose.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // Cancel advanced button
+            cancelAdvanced.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // Apply advanced button
+            applyAdvanced.addEventListener('click', function() {
+                modal.style.display = 'none';
+                // Here you would apply the advanced options to the document
+            });
+            
+            // Download buttons
+            downloadPdf.addEventListener('click', function() {
+                alert('PDF download simulation - In a real app, this would generate and download a PDF file.');
+            });
+            
+            downloadDocx.addEventListener('click', function() {
+                alert('DOCX download simulation - In a real app, this would generate and download a DOCX file.');
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Update form fields based on document type
+            function updateFormFields(docType) {
+                const formSection = document.querySelector('.form-section');
+                const formTitle = formSection.querySelector('h2');
+                
+                // Update form title
+                switch(docType) {
+                    case 'contract':
+                        formTitle.textContent = 'Customize Your Freelance Contract';
+                        break;
+                    case 'nda':
+                        formTitle.textContent = 'Customize Your Non-Disclosure Agreement';
+                        break;
+                    case 'tos':
+                        formTitle.textContent = 'Customize Your Terms of Service';
+                        break;
+                    case 'invoice':
+                        formTitle.textContent = 'Customize Your Invoice Template';
+                        break;
+                    case 'privacy':
+                        formTitle.textContent = 'Customize Your Privacy Policy';
+                        break;
+                }
+                
+                // Here you could also show/hide form fields specific to certain document types
+            }
+            
+            // Generate document preview
+            function generateDocument(docType) {
+                // Get form values
+                const yourName = document.getElementById('your-name').value || '[Your Name]';
+                const clientName = document.getElementById('client-name').value || '[Client Name]';
+                const serviceType = document.getElementById('service-type').value || 'Professional';
+                const projectScope = document.getElementById('project-scope').value || 'Providing professional services as agreed upon by both parties.';
+                const paymentTerms = document.getElementById('payment-terms').value || 'Fixed Price';
+                const paymentAmount = document.getElementById('payment-amount').value || '$0.00';
+                const deliveryDate = document.getElementById('delivery-date').value || '[Delivery Date]';
+                
+                // Get advanced options
+                const jurisdiction = document.getElementById('jurisdiction').value || 'the jurisdiction agreed upon by both parties';
+                
+                // Get current date
+                const today = new Date();
+                const currentDate = today.toLocaleDateString();
+                
+                // Get template
+                let templateContent = templates[docType];
+                
+                // Replace placeholders
+                templateContent = templateContent
+                    .replace(/\{yourName\}/g, yourName)
+                    .replace(/\{clientName\}/g, clientName)
+                    .replace(/\{serviceType\}/g, serviceType)
+                    .replace(/\{projectScope\}/g, projectScope)
+                    .replace(/\{paymentTerms\}/g, paymentTerms)
+                    .replace(/\{paymentAmount\}/g, paymentAmount)
+                    .replace(/\{deliveryDate\}/g, deliveryDate)
+                    .replace(/\{currentDate\}/g, currentDate)
+                    .replace(/\{jurisdiction\}/g, jurisdiction);
+                
+                // Update preview content
+                previewContent.innerHTML = templateContent;
+            }
+        });
+    </script>
+</body>
+</html>

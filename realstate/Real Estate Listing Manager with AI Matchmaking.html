@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Listing Manager with AI Matchmaking</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--gray-800);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            height: min-content;
+        }
+
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-section h3 {
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.375rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input {
+            accent-color: var(--primary);
+        }
+
+        .range-control {
+            width: 100%;
+            accent-color: var(--primary);
+        }
+
+        .range-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .listings-section {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 1.5rem;
+        }
+
+        .listings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--gray-800);
+        }
+
+        .search-sort {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-input {
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.375rem;
+            width: 250px;
+        }
+
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.375rem;
+            background-color: white;
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .property-image {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+            background-color: var(--gray-200);
+        }
+
+        .property-details {
+            padding: 1rem;
+        }
+
+        .property-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .property-address {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.75rem;
+        }
+
+        .property-features {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .match-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .match-percentage {
+            background-color: var(--success);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .match-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .property-actions {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 0.75rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+        }
+
+        .ai-recommendations {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .recommendations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .ai-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #f0f9ff;
+            color: #0ea5e9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .recommended-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        .preference-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .loading {
+            display: none;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .loader {
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--gray-800);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: sticky;
+                top: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .listings-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-sort {
+                width: 100%;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-home"></i>
+                    <span>RealMatch</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">Buy</a>
+                    <a href="#">Sell</a>
+                    <a href="#">Rent</a>
+                    <a href="#">Agents</a>
+                </div>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="preferences-btn">My Preferences</button>
+                    <button class="btn btn-primary"><i class="fas fa-user"></i> Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="dashboard">
+                <aside class="sidebar">
+                    <div class="filter-section">
+                        <h3>Filter Properties</h3>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" class="form-control" placeholder="City, neighborhood, or ZIP">
+                        </div>
+                        <div class="form-group">
+                            <label for="property-type">Property Type</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="type-house" checked>
+                                    <label for="type-house">House</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="type-apartment" checked>
+                                    <label for="type-apartment">Apartment</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="type-condo" checked>
+                                    <label for="type-condo">Condo</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="type-townhouse" checked>
+                                    <label for="type-townhouse">Townhouse</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price-range">Price Range</label>
+                            <input type="range" id="price-range" min="100000" max="1500000" step="50000" class="range-control" value="750000">
+                            <div class="range-values">
+                                <span>$100k</span>
+                                <span id="price-value">$750k</span>
+                                <span>$1.5M</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Bedrooms</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bed-1" checked>
+                                    <label for="bed-1">1+ Beds</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bed-2" checked>
+                                    <label for="bed-2">2+ Beds</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bed-3" checked>
+                                    <label for="bed-3">3+ Beds</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bed-4" checked>
+                                    <label for="bed-4">4+ Beds</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Bathrooms</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bath-1" checked>
+                                    <label for="bath-1">1+ Baths</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bath-2" checked>
+                                    <label for="bath-2">2+ Baths</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bath-3" checked>
+                                    <label for="bath-3">3+ Baths</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Features</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="feature-garage">
+                                    <label for="feature-garage">Garage</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="feature-pool">
+                                    <label for="feature-pool">Pool</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="feature-garden">
+                                    <label for="feature-garden">Garden</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="feature-renovated">
+                                    <label for="feature-renovated">Recently Renovated</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" id="apply-filters">Apply Filters</button>
+                    </div>
+                </aside>
+
+                <section class="listings-section">
+                    <div class="listings-header">
+                        <h2 class="section-title">Available Properties</h2>
+                        <div class="search-sort">
+                            <div class="search-box">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" class="search-input" placeholder="Search properties...">
+                            </div>
+                            <select class="sort-select">
+                                <option value="recommended">AI Recommended</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">Newest</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="loading" id="loading">
+                        <div class="loader"></div>
+                    </div>
+
+                    <div class="listings-grid" id="listings-container">
+                        <!-- Property cards will be inserted here dynamically -->
+                    </div>
+
+                    <div class="ai-recommendations">
+                        <div class="recommendations-header">
+                            <h3 class="section-title">AI Recommended For You</h3>
+                            <div class="ai-badge">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Powered</span>
+                            </div>
+                        </div>
+                        <div class="recommended-listings" id="ai-recommendations-container">
+                            <!-- AI recommended property cards will be inserted here dynamically -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Preferences Modal -->
+    <div class="modal" id="preferences-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Your Home Preferences</h2>
+                <button class="close-modal" id="close-preferences">&times;</button>
+            </div>
+            <form class="preference-form" id="preferences-form">
+                <div class="form-group">
+                    <label for="pref-location">Preferred Locations</label>
+                    <input type="text" id="pref-location" class="form-control" placeholder="Enter neighborhoods or areas">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pref-min-price">Min Price</label>
+                        <input type="number" id="pref-min-price" class="form-control" placeholder="Minimum price">
+                    </div>
+                    <div class="form-group">
+                        <label for="pref-max-price">Max Price</label>
+                        <input type="number" id="pref-max-price" class="form-control" placeholder="Maximum price">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pref-bedrooms">Bedrooms</label>
+                        <select id="pref-bedrooms" class="form-control">
+                            <option value="1">1+</option>
+                            <option value="2" selected>2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                            <option value="5">5+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pref-bathrooms">Bathrooms</label>
+                        <select id="pref-bathrooms" class="form-control">
+                            <option value="1">1+</option>
+                            <option value="2" selected>2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Must Have Features</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-garage">
+                            <label for="pref-garage">Garage</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-pool">
+                            <label for="pref-pool">Pool</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-garden">
+                            <label for="pref-garden">Garden/Yard</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-modern">
+                            <label for="pref-modern">Modern/Updated</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pref-lifestyle">Lifestyle Preferences</label>
+                    <select id="pref-lifestyle" class="form-control">
+                        <option value="family">Family-friendly</option>
+                        <option value="urban">Urban/City Life</option>
+                        <option value="quiet">Quiet/Suburban</option>
+                        <option value="outdoors">Access to Outdoors</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pref-commute">Max Commute Time (mins)</label>
+                    <input type="range" id="pref-commute" min="10" max="60" step="5" class="range-control" value="30">
+                    <div class="range-values">
+                        <span>10 min</span>
+                        <span id="commute-value">30 min</span>
+                        <span>60 min</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-message">Preferences saved successfully!</div>
+    </div>
+
+    <script>
+        // Sample property data - in a real application, this would come from a backend API
+        const propertyData = [
+            {
+                id: 1,
+                image: "/api/placeholder/400/250",
+                price: 450000,
+                address: "123 Main St, Seattle, WA 98101",
+                bedrooms: 3,
+                bathrooms: 2,
+                squareFeet: 1850,
+                type: "House",
+                features: ["Garage", "Garden"],
+                yearBuilt: 2015,
+                description: "Beautiful modern home in the heart of Seattle. Recently renovated with high-end finishes.",
+                matchScore: 92,
+                dateAdded: "2025-05-01"
+            },
+            {
+                id: 2,
+                image: "/api/placeholder/400/250",
+                price: 375000,
+                address: "456 Pine Ave, Seattle, WA 98102",
+                bedrooms: 2,
+                bathrooms: 2,
+                squareFeet: 1200,
+                type: "Condo",
+                features: ["Pool", "Modern"],
+                yearBuilt: 2020,
+                description: "Luxurious condo with amazing city views and resort-style amenities.",
+                matchScore: 87,
+                dateAdded: "2025-05-02"
+            },
+            {
+                id: 3,
+                image: "/api/placeholder/400/250",
+                price: 625000,
+                address: "789 Oak Ln, Bellevue, WA 98004",
+                bedrooms: 4,
+                bathrooms: 3,
+                squareFeet: 2400,
+                type: "House",
+                features: ["Garage", "Garden", "Pool"],
+                yearBuilt: 2010,
+                description: "Spacious family home in a quiet neighborhood with excellent schools nearby.",
+                matchScore: 78,
+                dateAdded: "2025-05-03"
+            },
+            {
+                id: 4,
+                image: "/api/placeholder/400/250",
+                price: 299000,
+                address: "321 Cedar Rd, Kirkland, WA 98033",
+                bedrooms: 2,
+                bathrooms: 1,
+                squareFeet: 950,
+                type: "Townhouse",
+                features: ["Modern"],
+                yearBuilt: 2018,
+                description: "Cozy townhouse perfect for first-time homebuyers or investors.",
+                matchScore: 75,
+                dateAdded: "2025-04-28"
+            },
+            {
+                id: 5,
+                image: "/api/placeholder/400/250",
+                price: 789000,
+                address: "555 Lake Dr, Mercer Island, WA 98040",
+                bedrooms: 5,
+                bathrooms: 4,
+                squareFeet: 3200,
+                type: "House",
+                features: ["Garage", "Pool", "Garden"],
+                yearBuilt: 2008,
+                description: "Luxurious lakefront property with stunning views and high-end finishes.",
+                matchScore: 95,
+                dateAdded: "2025-05-04"
+            },
+            {
+                id: 6,
+                image: "/api/placeholder/400/250",
+                price: 425000,
+                address: "222 Elm St, Renton, WA 98055",
+                bedrooms: 3,
+                bathrooms: 2.5,
+                squareFeet: 1700,
+                type: "House",
+                features: ["Garage", "Garden"],
+                yearBuilt: 2014,
+                description: "Well-maintained home in a family-friendly neighborhood with a large backyard.",
+                matchScore: 82,
+                dateAdded: "2025-04-30"
+            },
+            {
+                id: 7,
+                image: "/api/placeholder/400/250",
+                price: 350000,
+                address: "777 Birch Ave, Redmond, WA 98052",
+                bedrooms: 2,
+                bathrooms: 2,
+                squareFeet: 1150,
+                type: "Apartment",
+                features: ["Modern", "Pool"],
+                yearBuilt: 2019,
+                description: "Modern apartment with great community amenities and close to tech campuses.",
+                matchScore: 89,
+                dateAdded: "2025-05-01"
+            },
+            {
+                id: 8,
+                image: "/api/placeholder/400/250",
+                price: 559000,
+                address: "888 Maple Ct, Issaquah, WA 98027",
+                bedrooms: 3,
+                bathrooms: 2.5,
+                squareFeet: 2100,
+                type: "House",
+                features: ["Garage", "Garden", "Modern"],
+                yearBuilt: 2017,
+                description: "Beautiful modern home with mountain views and newly renovated kitchen.",
+                matchScore: 84,
+                dateAdded: "2025-04-29"
+            },
+            {
+                id: 9,
+                image: "/api/placeholder/400/250",
+                price: 499000,
+                address: "444 Spruce Ln, Bothell, WA 98021",
+                bedrooms: 3,
+                bathrooms: 2,
+                squareFeet: 1900,
+                type: "House",
+                features: ["Garage", "Garden"],
+                yearBuilt: 2011,
+                description: "Charming home in a quiet neighborhood with excellent schools nearby.",
+                matchScore: 79,
+                dateAdded: "2025-05-02"
+            },
+            {
+                id: 10,
+                image: "/api/placeholder/400/250",
+                price: 675000,
+                address: "123 Lakeview Dr, Sammamish, WA 98074",
+                bedrooms: 4,
+                bathrooms: 3,
+                squareFeet: 2800,
+                type: "House",
+                features: ["Garage", "Pool", "Garden", "Modern"],
+                yearBuilt: 2016,
+                description: "Stunning home with lake views and high-end finishes throughout.",
+                matchScore: 91,
+                dateAdded: "2025-05-03"
+            }
+        ];
+
+        // User preference data - would normally be stored in a database
+        let userPreferences = {
+            location: "Seattle, WA",
+            minPrice: 300000,
+            maxPrice: 700000,
+            bedrooms: 2,
+            bathrooms: 2,
+            features: ["Garage", "Modern"],
+            lifestyle: "urban",
+            commuteTime: 30
+        };
+
+        // User interaction history - would be tracked and analyzed for recommendations
+        const userBehavior = {
+            viewedProperties: [1, 5, 10],
+            favoriteProperties: [5],
+            searchTerms: ["seattle modern", "lake view"],
+            clickedFeatures: ["Pool", "Modern"],
+            timeSpentOnProperties: {
+                "5": 120, // seconds
+                "10": 90,
+                "1": 45
+            }
+        };
+
+        // DOM Elements
+        const listingsContainer = document.getElementById('listings-container');
+        const aiRecommendationsContainer = document.getElementById('ai-recommendations-container');
+        const preferencesBtn = document.getElementById('preferences-btn');
+        const preferencesModal = document.getElementById('preferences-modal');
+        const closePreferencesBtn = document.getElementById('close-preferences');
+        const preferencesForm = document.getElementById('preferences-form');
+        const toast = document.getElementById('toast');
+        const priceRange = document.getElementById('price-range');
+        const priceValue = document.getElementById('price-value');
+        const commuteRange = document.getElementById('pref-commute');
+        const commuteValue = document.getElementById('commute-value');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const loadingElement = document.getElementById('loading');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllListings();
+            renderAIRecommendations();
+            initializeEventListeners();
+        });
+
+        // Function to initialize event listeners
+        function initializeEventListeners() {
+            // Modal event listeners
+            preferencesBtn.addEventListener('click', () => {
+                populatePreferencesForm();
+                preferencesModal.style.display = 'flex';
+            });
+
+            closePreferencesBtn.addEventListener('click', () => {
+                preferencesModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === preferencesModal) {
+                    preferencesModal.style.display = 'none';
+                }
+            });
+
+            // Form event listeners
+            preferencesForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                savePreferences();
+                preferencesModal.style.display = 'none';
+                showToast('Preferences saved successfully!');
+                
+                // Simulate loading state
+                simulateLoading(() => {
+                    renderAllListings();
+                    renderAIRecommendations();
+                });
+            });
+
+            // Range slider event listeners
+            priceRange.addEventListener('input', () => {
+                const value = parseInt(priceRange.value).toLocaleString();
+                priceValue.textContent = `${Math.floor(value / 1000)}k`;
+            });
+
+            commuteRange.addEventListener('input', () => {
+                commuteValue.textContent = `${commuteRange.value} min`;
+            });
+
+            // Filter button event listener
+            applyFiltersBtn.addEventListener('click', () => {
+                simulateLoading(() => {
+                    renderAllListings();
+                });
+            });
+        }
+
+        // Function to render all property listings
+        function renderAllListings() {
+            // Clear existing listings
+            listingsContainer.innerHTML = '';
+            
+            // Sort properties based on match score
+            const sortedProperties = [...propertyData].sort((a, b) => b.matchScore - a.matchScore);
+            
+            // Render each property card
+            sortedProperties.forEach(property => {
+                const propertyCard = createPropertyCard(property);
+                listingsContainer.appendChild(propertyCard);
+            });
+        }
+
+        // Function to render AI recommended properties
+        function renderAIRecommendations() {
+            // Clear existing recommendations
+            aiRecommendationsContainer.innerHTML = '';
+            
+            // Get top 3 recommendations based on AI matching algorithm
+            const recommendations = getAIRecommendations();
+            
+            // Render each recommended property card
+            recommendations.forEach(property => {
+                const propertyCard = createPropertyCard(property);
+                aiRecommendationsContainer.appendChild(propertyCard);
+            });
+        }
+
+        // Function to create a property card element
+        function createPropertyCard(property) {
+            const card = document.createElement('div');
+            card.className = 'property-card';
+            card.dataset.id = property.id;
+            
+            // Format price with commas
+            const formattedPrice = property.price.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            });
+            
+            card.innerHTML = `
+                <img src="${property.image}" alt="${property.address}" class="property-image">
+                <div class="property-details">
+                    <div class="match-score">
+                        <span class="match-percentage">${property.matchScore}%</span>
+                        <span class="match-label">Match</span>
+                    </div>
+                    <div class="property-price">${formattedPrice}</div>
+                    <div class="property-address">${property.address}</div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>${property.bedrooms} bd</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>${property.bathrooms} ba</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>${property.squareFeet.toLocaleString()} sqft</span>
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <button class="action-btn favorite-btn" data-id="${property.id}">
+                            <i class="far fa-heart"></i>
+                            <span>Save</span>
+                        </button>
+                        <button class="action-btn share-btn">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Share</span>
+                        </button>
+                        <button class="action-btn details-btn">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Details</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listener to track property views
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.action-btn')) {
+                    trackPropertyView(property.id);
+                }
+            });
+            
+            // Add event listener for the favorite button
+            const favoriteBtn = card.querySelector('.favorite-btn');
+            favoriteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(property.id, favoriteBtn);
+            });
+            
+            // Check if the property is already favorited
+            if (userBehavior.favoriteProperties.includes(property.id)) {
+                const icon = favoriteBtn.querySelector('i');
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                icon.style.color = '#ef4444';
+            }
+            
+            return card;
+        }
+
+        // Function to get AI recommended properties based on user preferences and behavior
+        function getAIRecommendations() {
+            // In a real application, this would use a more sophisticated algorithm
+            // Here we'll simulate an AI recommendation by combining preferences and behavior
+            
+            // Calculate a recommendation score for each property
+            const scoredProperties = propertyData.map(property => {
+                let score = property.matchScore;
+                
+                // Boost score for properties with features the user has clicked on
+                const featureMatch = property.features.filter(feature => 
+                    userBehavior.clickedFeatures.includes(feature)
+                ).length;
+                score += featureMatch * 5;
+                
+                // Boost score for properties similar to ones the user has viewed
+                if (userBehavior.viewedProperties.includes(property.id)) {
+                    score += 10;
+                }
+                
+                // Boost score for properties similar to favorites
+                if (userBehavior.favoriteProperties.includes(property.id)) {
+                    score += 20;
+                }
+                
+                // Adjust score based on time spent viewing the property
+                const timeSpent = userBehavior.timeSpentOnProperties[property.id] || 0;
+                score += timeSpent / 10;
+                
+                return { ...property, recommendationScore: score };
+            });
+            
+            // Sort by recommendation score and take the top 3
+            return scoredProperties
+                .sort((a, b) => b.recommendationScore - a.recommendationScore)
+                .slice(0, 3);
+        }
+
+        // Function to track when a user views a property
+        function trackPropertyView(propertyId) {
+            // Add to viewed properties if not already there
+            if (!userBehavior.viewedProperties.includes(propertyId)) {
+                userBehavior.viewedProperties.push(propertyId);
+            }
+            
+            // Increment time spent (in a real app, this would track actual time)
+            userBehavior.timeSpentOnProperties[propertyId] = 
+                (userBehavior.timeSpentOnProperties[propertyId] || 0) + 30;
+                
+            // In a real application, this data would be sent to the server
+            console.log(`Property ${propertyId} viewed. Updated behavior:`, userBehavior);
+        }
+
+        // Function to toggle a property as favorite
+        function toggleFavorite(propertyId, buttonElement) {
+            const icon = buttonElement.querySelector('i');
+            const isFavorite = userBehavior.favoriteProperties.includes(propertyId);
+            
+            if (isFavorite) {
+                // Remove from favorites
+                userBehavior.favoriteProperties = userBehavior.favoriteProperties.filter(id => id !== propertyId);
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                icon.style.color = '';
+                showToast('Removed from saved properties');
+            } else {
+                // Add to favorites
+                userBehavior.favoriteProperties.push(propertyId);
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                icon.style.color = '#ef4444';
+                showToast('Added to saved properties');
+            }
+            
+            // In a real application, this data would be sent to the server
+            console.log(`Property ${propertyId} favorite toggled. Updated behavior:`, userBehavior);
+        }
+
+        // Function to populate the preferences form with current preferences
+        function populatePreferencesForm() {
+            document.getElementById('pref-location').value = userPreferences.location;
+            document.getElementById('pref-min-price').value = userPreferences.minPrice;
+            document.getElementById('pref-max-price').value = userPreferences.maxPrice;
+            document.getElementById('pref-bedrooms').value = userPreferences.bedrooms;
+            document.getElementById('pref-bathrooms').value = userPreferences.bathrooms;
+            
+            // Set checkboxes
+            document.getElementById('pref-garage').checked = userPreferences.features.includes('Garage');
+            document.getElementById('pref-pool').checked = userPreferences.features.includes('Pool');
+            document.getElementById('pref-garden').checked = userPreferences.features.includes('Garden');
+            document.getElementById('pref-modern').checked = userPreferences.features.includes('Modern');
+            
+            // Set lifestyle and commute
+            document.getElementById('pref-lifestyle').value = userPreferences.lifestyle;
+            document.getElementById('pref-commute').value = userPreferences.commuteTime;
+            commuteValue.textContent = `${userPreferences.commuteTime} min`;
+        }
+
+        // Function to save preferences from the form
+        function savePreferences() {
+            const features = [];
+            if (document.getElementById('pref-garage').checked) features.push('Garage');
+            if (document.getElementById('pref-pool').checked) features.push('Pool');
+            if (document.getElementById('pref-garden').checked) features.push('Garden');
+            if (document.getElementById('pref-modern').checked) features.push('Modern');
+            
+            // Update user preferences
+            userPreferences = {
+                location: document.getElementById('pref-location').value,
+                minPrice: parseInt(document.getElementById('pref-min-price').value) || 0,
+                maxPrice: parseInt(document.getElementById('pref-max-price').value) || 1000000,
+                bedrooms: parseInt(document.getElementById('pref-bedrooms').value),
+                bathrooms: parseInt(document.getElementById('pref-bathrooms').value),
+                features: features,
+                lifestyle: document.getElementById('pref-lifestyle').value,
+                commuteTime: parseInt(document.getElementById('pref-commute').value)
+            };
+            
+            // In a real application, this data would be sent to the server
+            console.log('User preferences updated:', userPreferences);
+        }
+
+        // Function to show a toast notification
+        function showToast(message) {
+            const toastMessage = document.querySelector('.toast-message');
+            toastMessage.textContent = message;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to simulate loading state
+        function simulateLoading(callback) {
+            loadingElement.style.display = 'flex';
+            listingsContainer.style.display = 'none';
+            
+            setTimeout(() => {
+                loadingElement.style.display = 'none';
+                listingsContainer.style.display = 'grid';
+                callback();
+            }, 1000);
+        }
+
+        // AI Matching Algorithm (simplified version)
+        function calculatePropertyMatchScore(property, preferences) {
+            let score = 100;
+            
+            // Adjust score based on price match
+            if (property.price < preferences.minPrice || property.price > preferences.maxPrice) {
+                score -= 15;
+            }
+            
+            // Adjust score based on bedroom match
+            if (property.bedrooms < preferences.bedrooms) {
+                score -= 10;
+            }
+            
+            // Adjust score based on bathroom match
+            if (property.bathrooms < preferences.bathrooms) {
+                score -= 10;
+            }
+            
+            // Adjust score based on feature match
+            const desiredFeatures = preferences.features.length;
+            const matchedFeatures = property.features.filter(feature => 
+                preferences.features.includes(feature)
+            ).length;
+            
+            if (desiredFeatures > 0) {
+                score -= (1 - matchedFeatures / desiredFeatures) * 20;
+            }
+            
+            // Adjust score based on lifestyle preference
+            if (preferences.lifestyle === 'family' && property.bedrooms < 3) {
+                score -= 10;
+            } else if (preferences.lifestyle === 'urban' && !property.address.includes('Seattle')) {
+                score -= 10;
+            }
+            
+            // Return the score, ensuring it's not negative
+            return Math.max(Math.round(score), 0);
+        }
+    </script>
+</body>
+</html>

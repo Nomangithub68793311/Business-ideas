@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Maintenance Tracker</title>
+    <style>
+        :root {
+            --primary: #3c6e71;
+            --secondary: #284b63;
+            --warning: #d9534f;
+            --success: #5cb85c;
+            --light: #f8f9fa;
+            --dark: #353535;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .alert-list {
+            margin-top: 1rem;
+        }
+        
+        .alert-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-left: 4px solid;
+            background-color: rgba(0,0,0,0.02);
+            margin-bottom: 0.5rem;
+        }
+        
+        .alert-critical {
+            border-left-color: var(--warning);
+        }
+        
+        .alert-warning {
+            border-left-color: #ffc107;
+        }
+        
+        .alert-normal {
+            border-left-color: var(--success);
+        }
+        
+        .alert-icon {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+        
+        .alert-critical .alert-icon {
+            color: var(--warning);
+        }
+        
+        .alert-warning .alert-icon {
+            color: #ffc107;
+        }
+        
+        .alert-normal .alert-icon {
+            color: var(--success);
+        }
+        
+        .alert-content {
+            flex-grow: 1;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .alert-location {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .alert-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-urgent {
+            background-color: rgba(217, 83, 79, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-scheduled {
+            background-color: rgba(240, 173, 78, 0.1);
+            color: #f0ad4e;
+        }
+        
+        .status-completed {
+            background-color: rgba(92, 184, 92, 0.1);
+            color: var(--success);
+        }
+        
+        .chart-container {
+            height: 250px;
+            margin-top: 1rem;
+        }
+        
+        .facility-status {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .facility-metric {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(0,0,0,0.02);
+            border-radius: 8px;
+        }
+        
+        .facility-metric h4 {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .facility-metric .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">FacilityTrack Pro</div>
+                <div class="nav-links">
+                    <a href="#">Dashboard</a>
+                    <a href="#">Maintenance</a>
+                    <a href="#">Assets</a>
+                    <a href="#">Analytics</a>
+                    <a href="#">Settings</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">Facility Maintenance Dashboard</h2>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Predictive Alerts</h3>
+                        <span style="color: var(--warning); font-weight: 500;">3 Critical</span>
+                    </div>
+                    <p>System detected maintenance issues that require attention</p>
+                    
+                    <div class="alert-list">
+                        <div class="alert-item alert-critical">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">HVAC Failure Predicted</div>
+                                <div class="alert-location">Building A - 3rd Floor</div>
+                            </div>
+                            <div class="alert-time">2h ago</div>
+                        </div>
+                        
+                        <div class="alert-item alert-warning">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Elevator Maintenance Due</div>
+                                <div class="alert-location">Main Tower</div>
+                            </div>
+                            <div class="alert-time">8h ago</div>
+                        </div>
+                        
+                        <div class="alert-item alert-critical">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Water Leak Detection</div>
+                                <div class="alert-location">Building B - Basement</div>
+                            </div>
+                            <div class="alert-time">1d ago</div>
+                        </div>
+                        
+                        <div class="alert-item alert-normal">
+                            <div class="alert-icon">✓</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Lighting System Check</div>
+                                <div class="alert-location">Parking Garage</div>
+                            </div>
+                            <div class="alert-time">2d ago</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>System Health</h3>
+                    <p>Overall facility condition and maintenance status</p>
+                    
+                    <div class="facility-status">
+                        <div class="facility-metric">
+                            <h4>Assets</h4>
+                            <div class="value">142</div>
+                        </div>
+                        <div class="facility-metric">
+                            <h4>Health Score</h4>
+                            <div class="value" style="color: #f0ad4e;">76%</div>
+                        </div>
+                        <div class="facility-metric">
+                            <h4>Open Tasks</h4>
+                            <div class="value">17</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <img src="/api/placeholder/500/250" alt="System health chart" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Maintenance Task</th>
+                            <th>Location</th>
+                            <th>Priority</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Assigned To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HVAC System Repair</td>
+                            <td>Building A - 3rd Floor</td>
+                            <td>High</td>
+                            <td>May 07, 2025</td>
+                            <td><span class="status-badge status-urgent">Urgent</span></td>
+                            <td>John Miller</td>
+                        </tr>
+                        <tr>
+                            <td>Elevator Maintenance</td>
+                            <td>Main Tower</td>
+                            <td>Medium</td>
+                            <td>May 08, 2025</td>
+                            <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                            <td>Elena Rodriguez</td>
+                        </tr>
+                        <tr>
+                            <td>Water Leak Investigation</td>
+                            <td>Building B - Basement</td>
+                            <td>High</td>
+                            <td>May 07, 2025</td>
+                            <td><span class="status-badge status-urgent">Urgent</span></td>
+                            <td>Mike Peterson</td>
+                        </tr>
+                        <tr>
+                            <td>Lighting System Check</td>
+                            <td>Parking Garage</td>
+                            <td>Low</td>
+                            <td>May 10, 2025</td>
+                            <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                            <td>Sarah Johnson</td>
+                        </tr>
+                        <tr>
+                            <td>Fire Alarm Testing</td>
+                            <td>All Buildings</td>
+                            <td>Medium</td>
+                            <td>May 12, 2025</td>
+                            <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                            <td>Team C</td>
+                        </tr>
+                        <tr>
+                            <td>Door Access System Update</td>
+                            <td>Main Entrance</td>
+                            <td>Low</td>
+                            <td>May 05, 2025</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                            <td>Tech Support</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <div class="container" id="dashboard-section" style="display: block;">
+        <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">Facility Maintenance Dashboard</h2>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Predictive Alerts</h3>
+                    <span style="color: var(--warning); font-weight: 500;">3 Critical</span>
+                </div>
+                <p>System detected maintenance issues that require attention</p>
+                
+                <div class="alert-list">
+                    <div class="alert-item alert-critical">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">HVAC Failure Predicted</div>
+                            <div class="alert-location">Building A - 3rd Floor</div>
+                        </div>
+                        <div class="alert-time">2h ago</div>
+                    </div>
+                    
+                    <div class="alert-item alert-warning">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Elevator Maintenance Due</div>
+                            <div class="alert-location">Main Tower</div>
+                        </div>
+                        <div class="alert-time">8h ago</div>
+                    </div>
+                    
+                    <div class="alert-item alert-critical">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Water Leak Detection</div>
+                            <div class="alert-location">Building B - Basement</div>
+                        </div>
+                        <div class="alert-time">1d ago</div>
+                    </div>
+                    
+                    <div class="alert-item alert-normal">
+                        <div class="alert-icon">✓</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Lighting System Check</div>
+                            <div class="alert-location">Parking Garage</div>
+                        </div>
+                        <div class="alert-time">2d ago</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>System Health</h3>
+                <p>Overall facility condition and maintenance status</p>
+                
+                <div class="facility-status">
+                    <div class="facility-metric">
+                        <h4>Assets</h4>
+                        <div class="value">142</div>
+                    </div>
+                    <div class="facility-metric">
+                        <h4>Health Score</h4>
+                        <div class="value" style="color: #f0ad4e;">76%</div>
+                    </div>
+                    <div class="facility-metric">
+                        <h4>Open Tasks</h4>
+                        <div class="value">17</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <img src="/api/placeholder/500/250" alt="System health chart" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Maintenance Task</th>
+                        <th>Location</th>
+                        <th>Priority</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HVAC System Repair</td>
+                        <td>Building A - 3rd Floor</td>
+                        <td>High</td>
+                        <td>May 07, 2025</td>
+                        <td><span class="status-badge status-urgent">Urgent</span></td>
+                        <td>John Miller</td>
+                    </tr>
+                    <tr>
+                        <td>Elevator Maintenance</td>
+                        <td>Main Tower</td>
+                        <td>Medium</td>
+                        <td>May 08, 2025</td>
+                        <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                        <td>Elena Rodriguez</td>
+                    </tr>
+                    <tr>
+                        <td>Water Leak Investigation</td>
+                        <td>Building B - Basement</td>
+                        <td>High</td>
+                        <td>May 07, 2025</td>
+                        <td><span class="status-badge status-urgent">Urgent</span></td>
+                        <td>Mike Peterson</td>
+                    </tr>
+                    <tr>
+                        <td>Lighting System Check</td>
+                        <td>Parking Garage</td>
+                        <td>Low</td>
+                        <td>May 10, 2025</td>
+                        <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                        <td>Sarah Johnson</td>
+                    </tr>
+                    <tr>
+                        <td>Fire Alarm Testing</td>
+                        <td>All Buildings</td>
+                        <td>Medium</td>
+                        <td>May 12, 2025</td>
+                        <td><span class="status-badge status-scheduled">Scheduled</span></td>
+                        <td>Team C</td>
+                    </tr>
+                    <tr>
+                        <td>Door Access System Update</td>
+                        <td>Main Entrance</td>
+                        <td>Low</td>
+                        <td>May 05, 2025</td>
+                        <td><span class="status-badge status-completed">Completed</span></td>
+                        <td>Tech Support</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Maintenance Section -->
+    <div class="container" id="maintenance-section" style="display: none;">
+        <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">Maintenance Management</h2>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h3>Maintenance Calendar</h3>
+                <p>Scheduled maintenance tasks for the next 30 days</p>
+                <div class="chart-container">
+                    <img src="/api/placeholder/500/300" alt="Maintenance calendar" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Work Order Management</h3>
+                <p>Create and manage maintenance work orders</p>
+                
+                <div style="margin-top: 1rem;">
+                    <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">+ Create Work Order</button>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <div style="font-weight: 500;">Work Order Statistics</div>
+                        <div style="color: var(--gray);">Last 30 days</div>
+                    </div>
+                    
+                    <div class="facility-status">
+                        <div class="facility-metric">
+                            <h4>Open</h4>
+                            <div class="value">24</div>
+                        </div>
+                        <div class="facility-metric">
+                            <h4>In Progress</h4>
+                            <div class="value">17</div>
+                        </div>
+                        <div class="facility-metric">
+                            <h4>Completed</h4>
+                            <div class="value" style="color: var(--success);">42</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container" style="margin-top: 1.5rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Work Order #</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Created Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>WO-2025-142</td>
+                        <td>HVAC System Repair</td>
+                        <td>Building A - 3rd Floor</td>
+                        <td>May 04, 2025</td>
+                        <td>May 07, 2025</td>
+                        <td><span class="status-badge status-urgent">In Progress</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>WO-2025-141</td>
+                        <td>Elevator Maintenance</td>
+                        <td>Main Tower</td>
+                        <td>May 03, 2025</td>
+                        <td>May 08, 2025</td>
+                        <td><span class="status-badge status-scheduled">Assigned</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>WO-2025-140</td>
+                        <td>Water Leak Investigation</td>
+                        <td>Building B - Basement</td>
+                        <td>May 03, 2025</td>
+                        <td>May 07, 2025</td>
+                        <td><span class="status-badge status-urgent">In Progress</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>WO-2025-139</td>
+                        <td>Door Access System Update</td>
+                        <td>Main Entrance</td>
+                        <td>May 02, 2025</td>
+                        <td>May 05, 2025</td>
+                        <td><span class="status-badge status-completed">Completed</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Assets Section -->
+    <div class="container" id="assets-section" style="display: none;">
+        <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">Asset Management</h2>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div>
+                <input type="text" placeholder="Search assets..." style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; width: 300px;">
+                <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-left: 0.5rem; cursor: pointer;">Search</button>
+            </div>
+            <div>
+                <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">+ Add Asset</button>
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h3>Asset Overview</h3>
+                <p>Summary of all facility assets</p>
+                
+                <div class="facility-status" style="margin-top: 1.5rem;">
+                    <div class="facility-metric">
+                        <h4>Total Assets</h4>
+                        <div class="value">142</div>
+                    </div>
+                    <div class="facility-metric">
+                        <h4>Critical Assets</h4>
+                        <div class="value">37</div>
+                    </div>
+                    <div class="facility-metric">
+                        <h4>Avg. Health Score</h4>
+                        <div class="value" style="color: #f0ad4e;">76%</div>
+                    </div>
+                    <div class="facility-metric">
+                        <h4>Under Maintenance</h4>
+                        <div class="value">12</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Asset Health Distribution</h3>
+                <div class="chart-container" style="height: 200px;">
+                    <img src="/api/placeholder/500/200" alt="Asset health distribution" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container" style="margin-top: 1.5rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Installation Date</th>
+                        <th>Health Score</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HVAC-001</td>
+                        <td>Main HVAC System</td>
+                        <td>HVAC</td>
+                        <td>Building A - 3rd Floor</td>
+                        <td>Jan 15, 2022</td>
+                        <td>64%</td>
+                        <td><span class="status-badge status-urgent">Needs Attention</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>ELV-002</td>
+                        <td>Main Tower Elevator</td>
+                        <td>Elevator</td>
+                        <td>Main Tower</td>
+                        <td>Mar 22, 2021</td>
+                        <td>72%</td>
+                        <td><span class="status-badge status-scheduled">Scheduled Maintenance</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>PLB-005</td>
+                        <td>Water Main System</td>
+                        <td>Plumbing</td>
+                        <td>Building B - Basement</td>
+                        <td>Jun 10, 2023</td>
+                        <td>58%</td>
+                        <td><span class="status-badge status-urgent">Needs Attention</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>LGT-010</td>
+                        <td>Parking Garage Lighting</td>
+                        <td>Lighting</td>
+                        <td>Parking Garage</td>
+                        <td>Sep 05, 2023</td>
+                        <td>85%</td>
+                        <td><span class="status-badge status-scheduled">Scheduled Maintenance</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                    <tr>
+                        <td>SEC-003</td>
+                        <td>Door Access System</td>
+                        <td>Security</td>
+                        <td>Main Entrance</td>
+                        <td>Feb 18, 2024</td>
+                        <td>92%</td>
+                        <td><span class="status-badge status-completed">Good Condition</span></td>
+                        <td><a href="#" style="color: var(--primary);">View</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Analytics Section -->
+    <div class="container" id="analytics-section" style="display: none;">
+        <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">Analytics & Reports</h2>
+        
+        <div class="dashboard">
+            <div class="card" style="grid-column: span 2;">
+                <h3>Maintenance Cost Trends</h3>
+                <p>Monthly maintenance expenses breakdown</p>
+                <div class="chart-container" style="height: 300px; margin-top: 1rem;">
+                    <img src="/api/placeholder/800/300" alt="Maintenance cost trends" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard" style="margin-top: 1.5rem;">
+            <div class="card">
+                <h3>Asset Performance</h3>
+                <p>Key performance indicators for critical assets</p>
+                <div class="chart-container">
+                    <img src="/api/placeholder/500/250" alt="Asset performance" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Predictive Maintenance Impact</h3>
+                <p>Cost savings and downtime reduction</p>
+                <div class="chart-container">
+                    <img src="/api/placeholder/500/250" alt="Predictive maintenance impact" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container" style="margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                <h3 style="margin: 0; color: var(--secondary);">Available Reports</h3>
+                <div>
+                    <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Generate Report</button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Report Name</th>
+                        <th>Description</th>
+                        <th>Last Generated</th>
+                        <th>Generated By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monthly Maintenance Summary</td>
+                        <td>Summary of all maintenance activities in the past month</td>
+                        <td>May 01, 2025</td>
+                        <td>System</td>
+                        <td>
+                            <a href="#" style="color: var(--primary); margin-right: 1rem;">View</a>
+                            <a href="#" style="color: var(--primary);">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Asset Health Analysis</td>
+                        <td>Detailed analysis of asset health and performance</td>
+                        <td>Apr 30, 2025</td>
+                        <td>Sarah Johnson</td>
+                        <td>
+                            <a href="#" style="color: var(--primary); margin-right: 1rem;">View</a>
+                            <a href="#" style="color: var(--primary);">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Maintenance Cost Report</td>
+                        <td>Breakdown of maintenance costs by category</td>
+                        <td>Apr 15, 2025</td>
+                        <td>Mike Peterson</td>
+                        <td>
+                            <a href="#" style="color: var(--primary); margin-right: 1rem;">View</a>
+                            <a href="#" style="color: var(--primary);">Download</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Predictive Maintenance Effectiveness</td>
+                        <td>Analysis of predictive maintenance success rate</td>
+                        <td>Apr 10, 2025</td>
+                        <td>System</td>
+                        <td>
+                            <a href="#" style="color: var(--primary); margin-right: 1rem;">View</a>
+                            <a href="#" style="color: var(--primary);">Download</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="container" id="settings-section" style="display: none;">
+        <h2 style="margin-bottom: 1.5rem; color: var(--secondary);">System Settings</h2>
+        
+        <div class="dashboard">
+            <div class="card" style="grid-column: span 2;">
+                <h3>User Management</h3>
+                <p>Manage user accounts and access permissions</p>
+                
+                <div style="margin-top: 1rem;">
+                    <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">+ Add New User</button>
+                </div>
+                
+                <div class="table-container" style="margin-top: 1.5rem; box-shadow: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Department</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Miller</td>
+                                <td>j.miller@example.com</td>
+                                <td>Maintenance Technician</td>
+                                <td>Facility Operations</td>
+                                <td><span class="status-badge status-completed">Active</span></td>
+                                <td>
+                                    <a href="#" style="color: var(--primary); margin-right: 0.5rem;">Edit</a>
+                                    <a href="#" style="color: var(--gray);">Disable</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Elena Rodriguez</td>
+                                <td>e.rodriguez@example.com</td>
+                                <td>Supervisor</td>
+                                <td>Facility Operations</td>
+                                <td><span class="status-badge status-completed">Active</span></td>
+                                <td>
+                                    <a href="#" style="color: var(--primary); margin-right: 0.5rem;">Edit</a>
+                                    <a href="#" style="color: var(--gray);">Disable</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mike Peterson</td>
+                                <td>m.peterson@example.com</td>
+                                <td>Maintenance Technician</td>
+                                <td>Facility Operations</td>
+                                <td><span class="status-badge status-completed">Active</span></td>
+                                <td>
+                                    <a href="#" style="color: var(--primary); margin-right: 0.5rem;">Edit</a>
+                                    <a href="#" style="color: var(--gray);">Disable</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sarah Johnson</td>
+                                <td>s.johnson@example.com</td>
+                                <td>Facility Manager</td>
+                                <td>Management</td>
+                                <td><span class="status-badge status-completed">Active</span></td>
+                                <td>
+                                    <a href="#" style="color: var(--primary); margin-right: 0.5rem;">Edit</a>
+                                    <a href="#" style="color: var(--gray);">Disable</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard" style="margin-top: 1.5rem;">
+            <div class="card">
+                <h3>Notification Settings</h3>
+                <p>Configure system notification preferences</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <input type="checkbox" id="email-alerts" checked style="margin-right: 0.5rem;">
+                        <label for="email-alerts">Email Alerts</label>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <input type="checkbox" id="sms-notifications" checked style="margin-right: 0.5rem;">
+                        <label for="sms-notifications">SMS Notifications</label>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <input type="checkbox" id="mobile-app-alerts" checked style="margin-right: 0.5rem;">
+                        <label for="mobile-app-alerts">Mobile App Alerts</label>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <input type="checkbox" id="desktop-notifications" style="margin-right: 0.5rem;">
+                        <label for="desktop-notifications">Desktop Notifications</label>
+                    </div>
+                    
+                    <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-top: 0.5rem; cursor: pointer;">Save Preferences</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>System Configuration</h3>
+                <p>Manage system-wide configuration settings</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Alert Sensitivity</label>
+                        <select style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <option>High (Proactive)</option>
+                            <option selected>Medium (Balanced)</option>
+                            <option>Low (Conservative)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Maintenance Schedule Frequency</label>
+                        <select style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <option>Daily</option>
+                            <option selected>Weekly</option>
+                            <option>Monthly</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Data Retention Period</label>
+                        <select style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <option>6 Months</option>
+                            <option>1 Year</option>
+                            <option selected>3 Years</option>
+                            <option>5 Years</option>
+                        </select>
+                    </div>
+                    
+                    <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-top: 0.5rem; cursor: pointer;">Save Configuration</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3>System Information</h3>
+            <p>Current system version and status information</p>
+            
+            <div style="margin-top: 1.5rem;">
+                <div style="display: flex; margin-bottom: 0.75rem;">
+                    <div style="font-weight: 500; width: 200px;">System Version:</div>
+                    <div>FacilityTrack Pro v2.5.3</div>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 0.75rem;">
+                    <div style="font-weight: 500; width: 200px;">Last Updated:</div>
+                    <div>April 20, 2025</div>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 0.75rem;">
+                    <div style="font-weight: 500; width: 200px;">Database Status:</div>
+                    <div style="color: var(--success);">Connected</div>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 0.75rem;">
+                    <div style="font-weight: 500; width: 200px;">Sensor Network Status:</div>
+                    <div style="color: var(--success);">Online (142/142 devices)</div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <button style="background-color: var(--gray); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; margin-right: 0.5rem; cursor: pointer;">Check for Updates</button>
+                    <button style="background-color: var(--secondary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">System Diagnostics</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add JavaScript for tabs functionality -->
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() { -->

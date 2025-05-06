@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Workflow Automation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #6366F1;
+            --secondary: #10B981;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #9CA3AF;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F3F4F6;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+        
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .workflow-actions button {
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+        
+        .content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+        
+        .content h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .button:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .button-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .button-secondary:hover {
+            background-color: #F9FAFB;
+        }
+        
+        .button-success {
+            background-color: var(--secondary);
+        }
+        
+        .button-success:hover {
+            background-color: #0EA271;
+        }
+        
+        .upload-area {
+            border: 2px dashed #E5E7EB;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.2s;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+        
+        .upload-area p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .upload-area input {
+            display: none;
+        }
+        
+        .workflow-step {
+            background-color: #F9FAFB;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .step-status {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            background-color: #E5E7EB;
+        }
+        
+        .status-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+        
+        .status-complete {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+        
+        .status-error {
+            background-color: #FEE2E2;
+            color: #B91C1C;
+        }
+        
+        .document-card {
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.2s;
+        }
+        
+        .document-card:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .document-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #E5E7EB;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .document-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--gray);
+        }
+        
+        .document-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .document-meta {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .document-actions button {
+            padding: 0.4rem;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            color: var(--gray);
+            transition: background-color 0.2s;
+        }
+        
+        .document-actions button:hover {
+            background-color: #F3F4F6;
+            color: var(--dark);
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-item {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-item.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-item:hover:not(.active) {
+            border-bottom: 2px solid #E5E7EB;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .workflow-config {
+            background-color: #F9FAFB;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .workflow-config h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .config-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .config-option {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .config-option:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .config-option.selected {
+            border-color: var(--primary);
+            background-color: #EEF2FF;
+        }
+        
+        .config-option h4 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .config-option p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(1rem);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast-icon {
+            margin-right: 0.75rem;
+        }
+        
+        .toast-success {
+            background-color: var(--secondary);
+        }
+        
+        .toast-error {
+            background-color: var(--error);
+        }
+        
+        .toast-warning {
+            background-color: var(--warning);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            width: 100%;
+            background-color: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .document-details {
+            display: none;
+        }
+        
+        .ai-insights {
+            background-color: #F0F9FF;
+            border-left: 4px solid #38BDF8;
+            padding: 1rem;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-insights h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            color: #0369A1;
+        }
+        
+        .ai-insights p {
+            margin: 0;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Analytics styles */
+        .analytics-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .analytics-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+        
+        .analytics-card h3 {
+            margin-top: 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .analytics-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .analytics-card .trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+        
+        .trend-up {
+            color: #10B981;
+        }
+        
+        .trend-down {
+            color: #EF4444;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Document preview */
+        .document-preview {
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background-color: white;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .document-content {
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+        }
+        
+        /* AI processing settings */
+        .ai-settings {
+            margin-top: 1.5rem;
+        }
+        
+        .ai-settings h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-group {
+            background-color: #F9FAFB;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-group h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+            width: auto;
+        }
+        
+        .checkbox-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* User section */
+        .user-section {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+        
+        .user-info {
+            line-height: 1.2;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>DocFlow AI</h1>
+            <div class="user-section">
+                <div class="user-avatar">JS</div>
+                <div class="user-info">
+                    <div class="user-name">John Smith</div>
+                    <div class="user-role">Admin</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <aside class="sidebar">
+                <h2>Workflow Actions</h2>
+                <div class="workflow-actions">
+                    <button id="uploadBtn" class="button">Upload Document</button>
+                    <button class="button button-secondary">Create Template</button>
+                    <button class="button button-secondary">Manage Rules</button>
+                </div>
+                
+                <h2>Recent Documents</h2>
+                <div id="recentDocuments">
+                    <div class="document-card">
+                        <div class="document-info">
+                            <div class="document-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="document-name">Invoice-April.pdf</div>
+                                <div class="document-meta">Processed 2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="document-actions">
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                </svg>
+                            </button>
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V6h-1.5a.5.5 0 0 1-.5-.5z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                    <path d="M1.5 11.5a.5.5 0 0 1-.5-.5V10H.5a.5.5 0 0 1 0-1H1V8.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1H2v.5a.5.5 0 0 1-.5.5z"/>
+                                    <path d="M2 11a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6.5a.5.5 0 0 0 0 1H7v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V12h.5a.5.5 0 0 0 0-1H11v-.5a.5.5 0 0 0-.5-.5H8.5a.5.5 0 0 0-.5.5v.5h-.5a.5.5 0 0 0 0 1H7v.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5V13h.5a.5.5 0 0 0 .5-.5V8a.5.5 0 0 0-.5-.5H2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="document-card">
+                        <div class="document-info">
+                            <div class="document-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="document-name">Sales-Report.xlsx</div>
+                                <div class="document-meta">Processed yesterday</div>
+                            </div>
+                        </div>
+                        <div class="document-actions">
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                </svg>
+                            </button>
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V6h-1.5a.5.5 0 0 1-.5-.5z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                    <path d="M1.5 11.5a.5.5 0 0 1-.5-.5V10H.5a.5.5 0 0 1 0-1H1V8.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1H2v.5a.5.5 0 0 1-.5.5z"/>
+                                    <path d="M2 11a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6.5a.5.5 0 0 0 0 1H7v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V12h.5a.5.5 0 0 0 0-1H11v-.5a.5.5 0 0 0-.5-.5H8.5a.5.5 0 0 0-.5.5v.5h-.5a.5.5 0 0 0 0 1H7v.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5V13h.5a.5.5 0 0 0 .5-.5V8a.5.5 0 0 0-.5-.5H2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <main class="content">
+                <div class="tabs">
+                    <div class="tab-item active" data-tab="dashboard">Dashboard</div>
+                    <div class="tab-item" data-tab="documents">Documents</div>
+                    <div class="tab-item" data-tab="workflows">Workflows</div>
+                    <div class="tab-item" data-tab="analytics">Analytics</div>
+                </div>
+                
+                <div id="dashboard-tab" class
+
+
+ <!-- https://claude.ai/public/artifacts/fda52f0d-12e3-45ba-93f0-23369e5eb4c2                -->
