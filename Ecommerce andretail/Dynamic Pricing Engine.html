@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Pricing Engine</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --secondary: #64748b;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background-color: var(--card);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1, h2, h3 {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-light {
+            color: var(--text-light);
+        }
+
+        button, .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            background-color: white;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .progress {
+            height: 0.5rem;
+            background-color: var(--border);
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+        }
+
+        .tab-container {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            list-style: none;
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--card);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .rule-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .rule-title {
+            font-weight: 600;
+        }
+
+        .rule-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Dynamic Pricing Engine</h1>
+            <button class="btn btn-primary" id="add-rule-btn">Add New Rule</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="grid-4 mb-4">
+            <div class="stat-card">
+                <div class="stat-title">Active Products</div>
+                <div class="stat-value">2,453</div>
+                <div class="stat-trend trend-up">+5.2% from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Price Changes Today</div>
+                <div class="stat-value">142</div>
+                <div class="stat-trend trend-up">+12.8% from yesterday</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Revenue Impact</div>
+                <div class="stat-value">+$3,245</div>
+                <div class="stat-trend trend-up">+7.1% from baseline</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Active Rules</div>
+                <div class="stat-value">5</div>
+                <div class="stat-trend">No change</div>
+            </div>
+        </div>
+
+        <div class="tab-container">
+            <ul class="tabs">
+                <li class="tab active" data-tab="dashboard">Dashboard</li>
+                <li class="tab" data-tab="rules">Pricing Rules</li>
+                <li class="tab" data-tab="products">Products</li>
+                <li class="tab" data-tab="reports">Reports</li>
+                <li class="tab" data-tab="settings">Settings</li>
+            </ul>
+        </div>
+
+        <div id="dashboard" class="tab-panel active">
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Recent Price Changes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Old Price</th>
+                                <th>New Price</th>
+                                <th>Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Premium Headphones</td>
+                                <td>$129.99</td>
+                                <td>$119.99</td>
+                                <td><span class="badge badge-danger">-7.7%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Wireless Mouse</td>
+                                <td>$35.99</td>
+                                <td>$39.99</td>
+                                <td><span class="badge badge-success">+11.1%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Ultrawide Monitor</td>
+                                <td>$399.99</td>
+                                <td>$379.99</td>
+                                <td><span class="badge badge-danger">-5.0%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Mechanical Keyboard</td>
+                                <td>$89.99</td>
+                                <td>$94.99</td>
+                                <td><span class="badge badge-success">+5.6%</span></td>
+                            </tr>
+                            <tr>
+                                <td>USB-C Dock</td>
+                                <td>$49.99</td>
+                                <td>$49.99</td>
+                                <td><span class="badge">0.0%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <h3>Price Performance</h3>
+                        <div class="chart-container" id="price-performance-chart">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Price Adjustment Opportunities</h3>
+                        <div class="rule-item">
+                            <div class="rule-header">
+                                <div class="rule-title">Drone X500 Pro</div>
+                                <div class="badge badge-warning">High Potential</div>
+                            </div>
+                            <div class="mb-2">Current price: <strong>$349.99</strong> | Suggested: <strong>$379.99</strong></div>
+                            <div class="text-sm text-light">Competitor prices increased by avg. 8.2% in the last 7 days</div>
+                            <div class="mt-4">
+                                <button class="btn btn-sm btn-primary">Apply Suggestion</button>
+                                <button class="btn btn-sm btn-secondary">Ignore</button>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-header">
+                                <div class="rule-title">Smart Home Hub</div>
+                                <div class="badge badge-warning">Medium Potential</div>
+                            </div>
+                            <div class="mb-2">Current price: <strong>$129.99</strong> | Suggested: <strong>$119.99</strong></div>
+                            <div class="text-sm text-light">High stock levels with declining demand (15% drop)</div>
+                            <div class="mt-4">
+                                <button class="btn btn-sm btn-primary">Apply Suggestion</button>
+                                <button class="btn btn-sm btn-secondary">Ignore</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="rules" class="tab-panel">
+            <div class="card">
+                <h3>Active Pricing Rules</h3>
+                
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Competitor-Based Pricing</div>
+                        <div class="rule-actions">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="btn btn-sm btn-secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div class="mb-2">Applied to: <strong>Electronics, Computers</strong></div>
+                    <div class="text-sm">Automatically adjusts prices to be 5% lower than the average competitor price. Updates daily.</div>
+                </div>
+                
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Stock-Based Pricing</div>
+                        <div class="rule-actions">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="btn btn-sm btn-secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div class="mb-2">Applied to: <strong>Fashion, Accessories</strong></div>
+                    <div class="text-sm">Reduces prices by 10-30% as stock levels exceed thresholds. Increases prices for limited stock items.</div>
+                </div>
+                
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Time-Based Discounting</div>
+                        <div class="rule-actions">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="btn btn-sm btn-secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div class="mb-2">Applied to: <strong>Seasonal Products</strong></div>
+                    <div class="text-sm">Gradually reduces prices of seasonal items as the season progresses. End-of-season discounts up to 50%.</div>
+                </div>
+
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Demand-Based Pricing</div>
+                        <div class="rule-actions">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="btn btn-sm btn-secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div class="mb-2">Applied to: <strong>All Categories</strong></div>
+                    <div class="text-sm">Adjusts prices based on website traffic and conversion rates. Higher demand leads to price increases.</div>
+                </div>
+
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Bundle Optimization</div>
+                        <div class="rule-actions">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="btn btn-sm btn-secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div class="mb-2">Applied to: <strong>Bundles & Kits</strong></div>
+                    <div class="text-sm">Dynamically adjusts bundle discounts based on individual product performance and margin targets.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="products" class="tab-panel">
+            <div class="card">
+                <h3>Price Managed Products</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Current Price</th>
+                            <th>Min Price</th>
+                            <th>Max Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Premium Headphones</td>
+                            <td>Electronics</td>
+                            <td>$119.99</td>
+                            <td>$99.99</td>
+                            <td>$149.99</td>
+                            <td>
+                                <div class="text-sm">42 units</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 42%;"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Wireless Mouse</td>
+                            <td>Computers</td>
+                            <td>$39.99</td>
+                            <td>$29.99</td>
+                            <td>$49.99</td>
+                            <td>
+                                <div class="text-sm">127 units</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ultrawide Monitor</td>
+                            <td>Computers</td>
+                            <td>$379.99</td>
+                            <td>$349.99</td>
+                            <td>$429.99</td>
+                            <td>
+                                <div class="text-sm">15 units</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 25%;"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mechanical Keyboard</td>
+                            <td>Computers</td>
+                            <td>$94.99</td>
+                            <td>$79.99</td>
+                            <td>$109.99</td>
+                            <td>
+                                <div class="text-sm">58 units</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 58%;"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>USB-C Dock</td>
+                            <td>Accessories</td>
+                            <td>$49.99</td>
+                            <td>$39.99</td>
+                            <td>$59.99</td>
+                            <td>
+                                <div class="text-sm">94 units</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 70%;"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="reports" class="tab-panel">
+            <div class="card">
+                <h3>Pricing Impact Analysis</h3>
+                <div class="chart-container">
+                    <canvas id="impactChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Competitive Price Monitoring</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Our Price</th>
+                            <th>Competitor A</th>
+                            <th>Competitor B</th>
+                            <th>Competitor C</th>
+                            <th>Price Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Premium Headphones</td>
+                            <td>$119.99</td>
+                            <td>$134.99</td>
+                            <td>$129.99</td>
+                            <td>$124.99</td>
+                            <td><span class="badge badge-success">Lowest</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wireless Mouse</td>
+                            <td>$39.99</td>
+                            <td>$34.99</td>
+                            <td>$39.99</td>
+                            <td>$45.99</td>
+                            <td><span class="badge badge-warning">Mid-range</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ultrawide Monitor</td>
+                            <td>$379.99</td>
+                            <td>$399.99</td>
+                            <td>$389.99</td>
+                            <td>$369.99</td>
+                            <td><span class="badge badge-warning">Mid-range</span></td>
+                        </tr>
+                        <tr>
+                            <td>Mechanical Keyboard</td>
+                            <td>$94.99</td>
+                            <td>$99.99</td>
+                            <td>$89.99</td>
+                            <td>$104.99</td>
+                            <td><span class="badge badge-warning">Mid-range</span></td>
+                        </tr>
+                        <tr>
+                            <td>USB-C Dock</td>
+                            <td>$49.99</td>
+                            <td>$59.99</td>
+                            <td>$54.99</td>
+                            <td>$49.99</td>
+                            <td><span class="badge badge-success">Lowest</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-panel">
+            <div class="card">
+                <h3>General Settings</h3>
+                <form>
+                    <div class="mb-4">
+                        <label for="update-frequency">Price Update Frequency</label>
+                        <select id="update-frequency">
+                            <option>Every hour</option>
+                            <option selected>Every 6 hours</option>
+                            <option>Every 12 hours</option>
+                            <option>Daily</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="price-rounding">Price Rounding Strategy</label>
+                        <select id="price-rounding">
+                            <option>No rounding</option>
+                            <option>Round to nearest dollar</option>
+                            <option selected>Psychological pricing (.99)</option>
+                            <option>Round to nearest 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="price-change-limit">Maximum Price Change (%)</label>
+                        <input type="number" id="price-change-limit" value="15">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label>
+                            <input type="checkbox" checked> Require approval for changes above maximum
+                        </label>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label>
+                            <input type="checkbox" checked> Enable email notifications
+                        </label>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h3>API Connections</h3>
+                <div class="mb-4">
+                    <h4 class="mb-2">Competitor Price Monitoring</h4>
+                    <div class="flex justify-between items-center mb-2">
+                        <div>PriceTracker API</div>
+                        <span class="badge badge-success">Connected</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>CompetitiveScan</div>
+                        <button class="btn btn-sm btn-secondary">Connect</button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="mb-2">E-commerce Platforms</h4>
+                    <div class="flex justify-between items-center mb-2">
+                        <div>Shopify</div>
+                        <span class="badge badge-success">Connected</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <div>WooCommerce</div>
+                        <button class="btn btn-sm btn-secondary">Connect</button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>Magento</div>
+                        <button class="btn btn-sm btn-secondary">Connect</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="rule-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="background-color: white; width: 80%; max-width: 600px; padding: 2rem; border-radius: 0.5rem; margin: 10% auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 class="mb-4">Add New Pricing Rule</h2>
+            <form>
+                <div class="mb-4">
+                    <label for="rule-name">Rule Name</label>
+                    <input type="text" id="rule-name" placeholder="e.g. Holiday Season Pricing">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="rule-type">Rule Type</label>
+                    <select id="rule-type">
+                        <option>Competitor-Based Pricing</option>
+                        <option>Stock-Based Pricing</option>
+                        <option>Time-Based Discounting</option>
+                        <option>Demand-Based Pricing</option>
+                        <option>Bundle Optimization</option>
+                        <option>Custom Rule</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="rule-categories">Apply to Categories</label>
+                    <select id="rule-categories" multiple style="height: 100px;">
+                        <option>Electronics</option>
+                        <option>Computers</option>
+                        <option>Fashion</option>
+                        <option>Accessories</option>
+                        <option>Home & Kitchen</option>
+                        <option>Beauty & Personal Care</option>
+                        <option>Sports & Outdoors</option>
+                        <option>Toys & Games</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="price-adjustment">Price Adjustment</label>
+                    <div class="flex items-center gap-4">
+                        <select id="adjustment-type" style="width: auto;">
+                            <option>Decrease by</option>
+                            <option>Increase by</option>
+                            <option>Set to</option>
+                        </select>
+                        <input type="number" id="adjustment-value" style="width: auto;" value="5">
+                        <select id="adjustment-unit" style="width: auto;">
+                            <option>%</option>
+                            <option>$</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="rule-condition">Condition (When to apply)</label>
+                    <select id="rule-condition">
+                        <option>When competitor prices are higher</option>
+                        <option>When stock level is above threshold</option>
+                        <option>When stock level is below threshold</option>
+                        <option>When demand is increasing</option>
+                        <option>When demand is decreasing</option>
+                        <option>When conversion rate is below target</option>
+                        <option>Always apply</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="rule-limits">Price Limits</label>
+                    <div class="flex gap-4">
+                        <div style="width: 50%;">
+                            <label for="min-price">Minimum Price ($)</label>
+                            <input type="number" id="min-price" placeholder="Min price">
+                        </div>
+                        <div style="width: 50%;">
+                            <label for="max-price">Maximum Price ($)</label>
+                            <input type="number" id="max-price" placeholder="Max price">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-4">
+                    <button type="button" class="btn btn-secondary" id="cancel-rule-btn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-rule-btn">Create Rule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and panels
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding panel
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('rule-modal');
+        const addRuleBtn = document.getElementById('add-rule-btn');
+        const cancelRuleBtn = document.getElementById('cancel-rule-btn');
+        const saveRuleBtn = document.getElementById('save-rule-btn');
+
+        addRuleBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        cancelRuleBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        saveRuleBtn.addEventListener('click', () => {
+            // Create new rule based on form data
+            const ruleName = document.getElementById('rule-name').value || 'New Pricing Rule';
+            const ruleType = document.getElementById('rule-type').value;
+            
+            // Create new rule element
+            const rulesList = document.querySelector('#rules .card');
+            const newRule = document.createElement('div');
+            newRule.className = 'rule-item';
+            newRule.innerHTML = `
+                <div class="rule-header">
+                    <div class="rule-title">${ruleName}</div>
+                    <div class="rule-actions">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <button class="btn btn-sm btn-secondary">Edit</button>
+                    </div>
+                </div>
+                <div class="mb-2">Applied to: <strong>Selected Categories</strong></div>
+                <div class="text-sm">New rule: ${ruleType}</div>
+            `;
+            
+            // Add the new rule to the list
+            rulesList.appendChild(newRule);
+            
+            // Update active rules count
+            const rulesCountElement = document.querySelector('.stat-card:nth-child(4) .stat-value');
+            const currentCount = parseInt(rulesCountElement.textContent);
+            rulesCountElement.textContent = currentCount + 1;
+            
+            // Close the modal
+            modal.style.display = 'none';
+            
+            // Show success message
+            alert('New pricing rule created successfully!');
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Charts
+        const ctxPerformance = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctxPerformance, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Average Margin (%)',
+                        data: [24, 23, 25, 28, 27, 29],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Revenue ($k)',
+                        data: [150, 145, 160, 175, 182, 190],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Margin (%)'
+                        },
+                        min: 20,
+                        max: 35
+                    },
+                    y1: {
+                        position: 'right',
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Revenue ($k)'
+                        },
+                        min: 140,
+                        max: 200,
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Pricing Performance Metrics'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            }
+        });
+
+        // Impact Analysis Chart
+        const ctxImpact = document.getElementById('impactChart').getContext('2d');
+        const impactChart = new Chart(ctxImpact, {
+            type: 'bar',
+            data: {
+                labels: ['Electronics', 'Computers', 'Fashion', 'Accessories', 'Home & Kitchen'],
+                datasets: [
+                    {
+                        label: 'Revenue Change (%)',
+                        data: [8.2, 5.1, -2.3, 12.4, 3.7],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(34, 197, 94, 0.7)'
+                        ]
+                    },
+                    {
+                        label: 'Margin Change (%)',
+                        data: [3.5, 2.2, 4.1, -1.5, 2.8],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(59, 130, 246, 0.7)'
+                        ]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Change (%)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Dynamic Pricing Impact by Category'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            }
+        });
+
+        // Dynamic pricing engine simulation
+        class DynamicPricingEngine {
+            constructor() {
+                this.rules = [];
+                this.products = [];
+                this.competitors = [];
+                this.priceHistory = {};
+            }
+
+            // Add a new pricing rule
+            addRule(rule) {
+                this.rules.push(rule);
+                return rule;
+            }
+
+            // Apply all active rules to products
+            applyRules() {
+                let changedProducts = [];
+                
+                this.products.forEach(product => {
+                    const originalPrice = product.currentPrice;
+                    
+                    // Apply each active rule
+                    this.rules.forEach(rule => {
+                        if (rule.active && this.isRuleApplicable(rule, product)) {
+                            product.currentPrice = this.calculateNewPrice(rule, product);
+                        }
+                    });
+                    
+                    // Apply price limits
+                    product.currentPrice = Math.max(product.minPrice, Math.min(product.maxPrice, product.currentPrice));
+                    
+                    // Apply price rounding strategy
+                    product.currentPrice = this.roundPrice(product.currentPrice);
+                    
+                    // Check if price changed
+                    if (product.currentPrice !== originalPrice) {
+                        changedProducts.push({
+                            product: product,
+                            oldPrice: originalPrice,
+                            newPrice: product.currentPrice
+                        });
+                        
+                        // Update price history
+                        if (!this.priceHistory[product.id]) {
+                            this.priceHistory[product.id] = [];
+                        }
+                        this.priceHistory[product.id].push({
+                            date: new Date(),
+                            price: product.currentPrice
+                        });
+                    }
+                });
+                
+                return changedProducts;
+            }
+            
+            // Check if a rule applies to a product
+            isRuleApplicable(rule, product) {
+                // Check category match
+                if (rule.categories.length > 0 && !rule.categories.includes(product.category)) {
+                    return false;
+                }
+                
+                // Check conditions
+                switch (rule.condition) {
+                    case 'When competitor prices are higher':
+                        return this.getAverageCompetitorPrice(product) > product.currentPrice;
+                    case 'When stock level is above threshold':
+                        return product.stock > rule.stockThreshold;
+                    case 'When stock level is below threshold':
+                        return product.stock < rule.stockThreshold;
+                    case 'When demand is increasing':
+                        return product.demandTrend > 0;
+                    case 'When demand is decreasing':
+                        return product.demandTrend < 0;
+                    case 'Always apply':
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            
+            // Calculate new price based on rule
+            calculateNewPrice(rule, product) {
+                let newPrice = product.currentPrice;
+                
+                switch (rule.type) {
+                    case 'Competitor-Based Pricing':
+                        const avgCompPrice = this.getAverageCompetitorPrice(product);
+                        if (rule.adjustmentType === 'Decrease by') {
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = avgCompPrice * (1 - rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = avgCompPrice - rule.adjustmentValue;
+                            }
+                        } else {
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = avgCompPrice * (1 + rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = avgCompPrice + rule.adjustmentValue;
+                            }
+                        }
+                        break;
+                    
+                    case 'Stock-Based Pricing':
+                        // Adjust price based on stock level
+                        const stockRatio = product.stock / product.maxStock;
+                        if (stockRatio > 0.8) { // High stock
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = product.currentPrice * (1 - rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = product.currentPrice - rule.adjustmentValue;
+                            }
+                        } else if (stockRatio < 0.2) { // Low stock
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = product.currentPrice * (1 + rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = product.currentPrice + rule.adjustmentValue;
+                            }
+                        }
+                        break;
+                        
+                    case 'Time-Based Discounting':
+                        // Example: seasonal products getting cheaper as season progresses
+                        const daysIntoSeason = this.getDaysIntoSeason(product.seasonStart);
+                        const seasonLength = this.getSeasonLength(product.seasonStart, product.seasonEnd);
+                        const seasonProgress = daysIntoSeason / seasonLength;
+                        
+                        if (seasonProgress > 0.7) { // Late in season
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = product.originalPrice * (1 - rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = product.originalPrice - rule.adjustmentValue;
+                            }
+                        }
+                        break;
+                        
+                    case 'Demand-Based Pricing':
+                        // Adjust based on demand trend
+                        if (product.demandTrend > 0.1) { // Demand increasing
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = product.currentPrice * (1 + rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = product.currentPrice + rule.adjustmentValue;
+                            }
+                        } else if (product.demandTrend < -0.1) { // Demand decreasing
+                            if (rule.adjustmentUnit === '%') {
+                                newPrice = product.currentPrice * (1 - rule.adjustmentValue / 100);
+                            } else {
+                                newPrice = product.currentPrice - rule.adjustmentValue;
+                            }
+                        }
+                        break;
+                }
+                
+                return newPrice;
+            }
+            
+            // Get average competitor price for a product
+            getAverageCompetitorPrice(product) {
+                const competitorPrices = this.competitors
+                    .filter(c => c.productId === product.id)
+                    .map(c => c.price);
+                
+                if (competitorPrices.length === 0) {
+                    return product.currentPrice;
+                }
+                
+                return competitorPrices.reduce((sum, price) => sum + price, 0) / competitorPrices.length;
+            }
+            
+            // Helper for time-based pricing
+            getDaysIntoSeason(seasonStart) {
+                const now = new Date();
+                const start = new Date(seasonStart);
+                return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+            }
+            
+            getSeasonLength(seasonStart, seasonEnd) {
+                const start = new Date(seasonStart);
+                const end = new Date(seasonEnd);
+                return Math.floor((end - start) / (1000 * 60 * 60 * 24));
+            }
+            
+            // Price rounding strategy
+            roundPrice(price) {
+                const strategy = document.getElementById('price-rounding').value;
+                
+                switch (strategy) {
+                    case 'No rounding':
+                        return price;
+                    case 'Round to nearest dollar':
+                        return Math.round(price);
+                    case 'Psychological pricing (.99)':
+                        return Math.floor(price) + 0.99;
+                    case 'Round to nearest 5':
+                        return Math.round(price / 5) * 5;
+                    default:
+                        return price;
+                }
+            }
+            
+            // Run the pricing engine
+            run() {
+                console.log('Running dynamic pricing engine...');
+                const changedProducts = this.applyRules();
+                console.log(`${changedProducts.length} products updated`);
+                return changedProducts;
+            }
+        }
+
+        // Initialize the pricing engine (for simulation purposes)
+        const pricingEngine = new DynamicPricingEngine();
+        
+        // Add sample data when the real system would connect to your product database
+        // This is just for demonstration
+        
+        // Simulate running the engine periodically
+        setInterval(() => {
+            // In a real implementation, this would update the UI with new prices
+            console.log('Automatic price update check...');
+        }, 60000); // Check every minute (would be longer in production)
+    </script>
+</body>
+</html>

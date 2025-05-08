@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback Analyzer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #757de8;
+            --primary-dark: #002984;
+            --secondary: #f50057;
+            --text: #212121;
+            --text-light: #757575;
+            --background: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--primary-light);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background: #ff4081;
+        }
+        
+        .file-input-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            resize: vertical;
+            font-size: 0.9rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .review-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+        
+        .review-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .sentiment-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+        
+        .positive { background-color: #4caf50; }
+        .neutral { background-color: #ffc107; }
+        .negative { background-color: #f44336; }
+        
+        .source-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            background: #e0e0e0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .filter-tag.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        .filter-tag:hover {
+            background: #d0d0d0;
+        }
+        
+        .filter-tag.active:hover {
+            background: var(--primary-light);
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-card {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .summary-card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .summary-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .score-positive { color: #4caf50; }
+        .score-neutral { color: #ffc107; }
+        .score-negative { color: #f44336; }
+        
+        .tab-container {
+            margin-top: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            padding: 1rem 0;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .loading::after {
+            content: "";
+            width: 40px;
+            height: 40px;
+            border: 5px solid #ddd;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .keyword-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .keyword {
+            padding: 0.25rem 0.75rem;
+            background: #f1f1f1;
+            border-radius: 16px;
+            font-size: 0.9rem;
+        }
+        
+        .keyword-count {
+            font-size: 0.8rem;
+            margin-left: 0.25rem;
+            color: var(--text-light);
+        }
+        
+        .feedback-source {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            margin-left: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .trend-up {
+            color: #4caf50;
+        }
+        
+        .trend-down {
+            color: #f44336;
+        }
+        
+        .trend-neutral {
+            color: #757575;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-input-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Customer Feedback Analyzer</h1>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Input Feedback Data</h2>
+            <p>Upload a CSV file with customer feedback or enter feedback manually.</p>
+            
+            <div class="file-input-container">
+                <input type="file" id="csvFile" accept=".csv" class="file-input">
+                <button class="btn" id="analyzeFile">Analyze File</button>
+            </div>
+            
+            <h3>Or Enter Feedback Manually</h3>
+            <textarea id="feedbackInput" placeholder="Enter multiple feedback items separated by new lines. Example:
+Great product, I love it! [Source: Amazon]
+The delivery was late and the package was damaged. [Source: Email]
+Average quality but good price. [Source: Website]"></textarea>
+            <button class="btn" id="analyzeText">Analyze Text</button>
+        </div>
+        
+        <div id="resultsContainer" style="display: none;">
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3 id="totalReviews">0</h3>
+                    <p>Total Reviews</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="averageSentiment" class="score-neutral">0%</h3>
+                    <p>Average Sentiment</p>
+                    <div class="trend-indicator" id="sentimentTrend">
+                        <span>+5%</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3 id="positiveCount" class="score-positive">0</h3>
+                    <p>Positive Reviews</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="negativeCount" class="score-negative">0</h3>
+                    <p>Negative Reviews</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Filter by Source</h2>
+                <div class="source-filter" id="sourceFilters">
+                    <div class="filter-tag active" data-source="all">All Sources</div>
+                    <!-- Sources will be added dynamically -->
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="sentiment">Sentiment Analysis</div>
+                        <div class="tab" data-tab="keywords">Keyword Analysis</div>
+                        <div class="tab" data-tab="reviews">Review List</div>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="sentiment">
+                            <div class="dashboard">
+                                <div class="card">
+                                    <h3>Sentiment Distribution</h3>
+                                    <div class="chart-container">
+                                        <canvas id="sentimentChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h3>Sentiment by Source</h3>
+                                    <div class="chart-container">
+                                        <canvas id="sourceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="keywords">
+                            <div class="dashboard">
+                                <div class="card">
+                                    <h3>Common Keywords</h3>
+                                    <div class="chart-container">
+                                        <canvas id="keywordChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h3>Keyword Cloud</h3>
+                                    <div class="keyword-cloud" id="keywordCloud">
+                                        <!-- Keywords will be added dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="reviews">
+                            <div class="card">
+                                <h3>Individual Reviews</h3>
+                                <div class="review-list" id="reviewList">
+                                    <!-- Reviews will be added dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Main data store
+        let feedbackData = [];
+        let filteredData = [];
+        let charts = {};
+        
+        // Simple sentiment analysis function
+        function analyzeSentiment(text) {
+            const positive = [
+                'good', 'great', 'excellent', 'amazing', 'love', 'best', 'perfect', 'awesome',
+                'happy', 'satisfied', 'recommended', 'like', 'helpful', 'positive', 'fantastic',
+                'outstanding', 'wonderful', 'impressive', 'quality', 'recommend', 'easy', 'pleased',
+                'delighted', 'fast', 'reliable', 'efficient', 'worth', 'enjoy', 'thanks', 'thank'
+            ];
+            
+            const negative = [
+                'bad', 'poor', 'terrible', 'horrible', 'hate', 'worst', 'awful', 'disappointed',
+                'disappointing', 'useless', 'waste', 'difficult', 'slow', 'expensive', 'broken',
+                'problem', 'issue', 'fail', 'failed', 'lacking', 'negative', 'unfortunately',
+                'complaint', 'unhappy', 'wouldn\'t recommend', 'not worth', 'frustrating', 'missing',
+                'avoid', 'error', 'delay', 'damaged', 'refund', 'overpriced', 'dissatisfied'
+            ];
+            
+            const lowercaseText = text.toLowerCase();
+            
+            let positiveCount = 0;
+            let negativeCount = 0;
+            
+            // Count positive and negative terms
+            positive.forEach(term => {
+                const regex = new RegExp('\\b' + term + '\\b', 'g');
+                const matches = lowercaseText.match(regex);
+                if (matches) {
+                    positiveCount += matches.length;
+                }
+            });
+            
+            negative.forEach(term => {
+                const regex = new RegExp('\\b' + term + '\\b', 'g');
+                const matches = lowercaseText.match(regex);
+                if (matches) {
+                    negativeCount += matches.length;
+                }
+            });
+            
+            // Calculate sentiment score (-1 to 1)
+            let score = 0;
+            if (positiveCount > 0 || negativeCount > 0) {
+                score = (positiveCount - negativeCount) / (positiveCount + negativeCount);
+            }
+            
+            // Determine sentiment category
+            let sentiment = 'neutral';
+            if (score > 0.2) sentiment = 'positive';
+            else if (score < -0.2) sentiment = 'negative';
+            
+            return {
+                score,
+                sentiment,
+                positiveTerms: positiveCount,
+                negativeTerms: negativeCount
+            };
+        }
+        
+        // Extract keywords from text
+        function extractKeywords(text) {
+            const stopWords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 
+                              'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 
+                              'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 
+                              'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 
+                              'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 
+                              'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 
+                              'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 
+                              'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 
+                              'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 
+                              'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 
+                              'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 
+                              'should', 'now', 'll', 'm', 'o', 're', 've', 'y', 'would', 'could'];
+            
+            // Tokenize and clean the text
+            const words = text.toLowerCase()
+                .replace(/[^\w\s]/g, '')
+                .split(/\s+/)
+                .filter(word => word.length > 2 && !stopWords.includes(word));
+            
+            return words;
+        }
+        
+        // Extract source from text
+        function extractSource(text) {
+            const sourceMatch = text.match(/\[Source: (.+?)\]$/);
+            return sourceMatch ? sourceMatch[1] : 'Unknown';
+        }
+        
+        // Process review data
+        function processReview(text) {
+            const source = extractSource(text);
+            const cleanText = text.replace(/\[Source: (.+?)\]$/, '').trim();
+            const sentimentResult = analyzeSentiment(cleanText);
+            const keywords = extractKeywords(cleanText);
+            
+            return {
+                text: cleanText,
+                source: source,
+                sentiment: sentimentResult.sentiment,
+                score: sentimentResult.score,
+                positiveTerms: sentimentResult.positiveTerms,
+                negativeTerms: sentimentResult.negativeTerms,
+                keywords: keywords,
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        // Process CSV file
+        function processCsvFile(file) {
+            return new Promise((resolve, reject) => {
+                Papa.parse(file, {
+                    header: true,
+                    dynamicTyping: true,
+                    complete: (results) => {
+                        const processed = [];
+                        
+                        results.data.forEach(row => {
+                            // Skip empty rows
+                            if (!row.feedback || typeof row.feedback !== 'string' || row.feedback.trim() === '') {
+                                return;
+                            }
+                            
+                            let reviewText = row.feedback.trim();
+                            let source = row.source || 'CSV Import';
+                            
+                            if (!reviewText.includes('[Source:')) {
+                                reviewText += ` [Source: ${source}]`;
+                            }
+                            
+                            processed.push(processReview(reviewText));
+                        });
+                        
+                        resolve(processed);
+                    },
+                    error: (error) => {
+                        reject(error);
+                    }
+                });
+            });
+        }
+        
+        // Process text input
+        function processTextInput(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            const processed = [];
+            
+            lines.forEach(line => {
+                // Add default source if not present
+                if (!line.includes('[Source:')) {
+                    line += ' [Source: Manual Input]';
+                }
+                
+                processed.push(processReview(line));
+            });
+            
+            return processed;
+        }
+        
+        // Update the dashboard with new data
+        function updateDashboard(data) {
+            filteredData = data;
+            
+            // Update summary cards
+            document.getElementById('totalReviews').textContent = data.length;
+            
+            const positiveCount = data.filter(item => item.sentiment === 'positive').length;
+            const negativeCount = data.filter(item => item.sentiment === 'negative').length;
+            const neutralCount = data.filter(item => item.sentiment === 'neutral').length;
+            
+            document.getElementById('positiveCount').textContent = positiveCount;
+            document.getElementById('negativeCount').textContent = negativeCount;
+            
+            // Calculate average sentiment score
+            const avgScore = data.reduce((sum, item) => sum + item.score, 0) / data.length;
+            const avgPercentage = Math.round((avgScore + 1) * 50); // Convert -1 to 1 score to 0-100 scale
+            
+            const avgSentimentEl = document.getElementById('averageSentiment');
+            avgSentimentEl.textContent = avgPercentage + '%';
+            
+            // Set sentiment color class
+            avgSentimentEl.className = '';
+            if (avgScore > 0.2) avgSentimentEl.classList.add('score-positive');
+            else if (avgScore < -0.2) avgSentimentEl.classList.add('score-negative');
+            else avgSentimentEl.classList.add('score-neutral');
+            
+            // Simulated trend (for demonstration)
+            const trendEl = document.getElementById('sentimentTrend');
+            trendEl.innerHTML = '';
+            
+            const trendValue = Math.random() > 0.5 ? 
+                '+' + (Math.random() * 5 + 1).toFixed(1) + '%' : 
+                '-' + (Math.random() * 3 + 0.5).toFixed(1) + '%';
+            
+            const trendClass = trendValue.startsWith('+') ? 'trend-up' : 'trend-down';
+            trendEl.innerHTML = `<span class="${trendClass}">${trendValue}</span>`;
+            
+            // Update source filters
+            updateSourceFilters(data);
+            
+            // Update charts
+            updateCharts(data);
+            
+            // Update review list
+            updateReviewList(data);
+            
+            // Show results container
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+        
+        // Update source filters
+        function updateSourceFilters(data) {
+            const sourceFiltersEl = document.getElementById('sourceFilters');
+            const existingFilters = Array.from(sourceFiltersEl.querySelectorAll('.filter-tag'))
+                .map(el => el.getAttribute('data-source'));
+            
+            // Get unique sources
+            const sources = [...new Set(data.map(item => item.source))];
+            
+            // Add new sources
+            sources.forEach(source => {
+                if (source !== 'Unknown' && !existingFilters.includes(source)) {
+                    const filterTag = document.createElement('div');
+                    filterTag.className = 'filter-tag';
+                    filterTag.setAttribute('data-source', source);
+                    filterTag.textContent = source;
+                    
+                    filterTag.addEventListener('click', () => {
+                        // Handle filter click
+                        document.querySelectorAll('.filter-tag').forEach(tag => {
+                            tag.classList.remove('active');
+                        });
+                        filterTag.classList.add('active');
+                        
+                        // Filter data
+                        if (source === 'all') {
+                            updateDashboard(feedbackData);
+                        } else {
+                            const filtered = feedbackData.filter(item => item.source === source);
+                            updateDashboard(filtered);
+                        }
+                    });
+                    
+                    sourceFiltersEl.appendChild(filterTag);
+                }
+            });
+        }
+        
+        // Update charts
+        function updateCharts(data) {
+            // Destroy existing charts
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            
+            // Sentiment Chart
+            const sentimentCounts = {
+                positive: data.filter(item => item.sentiment === 'positive').length,
+                neutral: data.filter(item => item.sentiment === 'neutral').length,
+                negative: data.filter(item => item.sentiment === 'negative').length
+            };
+            
+            charts.sentiment = new Chart(
+                document.getElementById('sentimentChart'),
+                {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Positive', 'Neutral', 'Negative'],
+                        datasets: [{
+                            data: [sentimentCounts.positive, sentimentCounts.neutral, sentimentCounts.negative],
+                            backgroundColor: ['#4caf50', '#ffc107', '#f44336']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                }
+            );
+            
+            // Source Chart
+            const sources = [...new Set(data.map(item => item.source))];
+            const sourceData = sources.map(source => {
+                const sourceItems = data.filter(item => item.source === source);
+                const avgScore = sourceItems.reduce((sum, item) => sum + item.score, 0) / sourceItems.length;
+                return { source, score: avgScore };
+            });
+            
+            charts.source = new Chart(
+                document.getElementById('sourceChart'),
+                {
+                    type: 'bar',
+                    data: {
+                        labels: sourceData.map(item => item.source),
+                        datasets: [{
+                            label: 'Average Sentiment Score',
+                            data: sourceData.map(item => (item.score + 1) * 50), // Convert to 0-100 scale
+                            backgroundColor: sourceData.map(item => {
+                                if (item.score > 0.2) return '#4caf50';
+                                if (item.score < -0.2) return '#f44336';
+                                return '#ffc107';
+                            })
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Sentiment Score (0-100)'
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+            
+            // Keyword Chart
+            const keywords = {};
+            data.forEach(item => {
+                item.keywords.forEach(keyword => {
+                    keywords[keyword] = (keywords[keyword] || 0) + 1;
+                });
+            });
+            
+            // Sort keywords by frequency
+            const sortedKeywords = Object.entries(keywords)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            charts.keyword = new Chart(
+                document.getElementById('keywordChart'),
+                {
+                    type: 'bar',
+                    data: {
+                        labels: sortedKeywords.map(item => item[0]),
+                        datasets: [{
+                            label: 'Frequency',
+                            data: sortedKeywords.map(item => item[1]),
+                            backgroundColor: '#3f51b5'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Occurrences'
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+            
+            // Update keyword cloud
+            const keywordCloud = document.getElementById('keywordCloud');
+            keywordCloud.innerHTML = '';
+            
+            sortedKeywords.forEach(([keyword, count]) => {
+                const keywordEl = document.createElement('div');
+                keywordEl.className = 'keyword';
+                keywordEl.innerHTML = `${keyword} <span class="keyword-count">${count}</span>`;
+                keywordCloud.appendChild(keywordEl);
+            });
+        }
+        
+        // Update review list
+        function updateReviewList(data) {
+            const reviewList = document.getElementById('reviewList');
+            reviewList.innerHTML = '';
+            
+            data.forEach(item => {
+                const reviewItem = document.createElement('div');
+                reviewItem.className = 'review-item';
+                
+                const sentimentIndicator = document.createElement('div');
+                sentimentIndicator.className = `sentiment-indicator ${item.sentiment}`;
+                
+                const reviewContent = document.createElement('div');
+                reviewContent.className = 'review-content';
+                reviewContent.textContent = item.text;
+                
+                const sourceEl = document.createElement('div');
+                sourceEl.className = 'feedback-source';
+                sourceEl.textContent = `Source: ${item.source}`;
+                
+                reviewContent.appendChild(sourceEl);
+                reviewItem.appendChild(sentimentIndicator);
+                reviewItem.appendChild(reviewContent);
+                reviewList.appendChild(reviewItem);
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Hide all tab panes
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('active');
+                    });
+                    
+                    // Show corresponding tab pane
+                    const tabName = tab.getAttribute('data-tab');
+                    document.getElementById(tabName).classList.add('active');
+                });
+            });
+            
+            // Setup file upload
+            document.getElementById('analyzeFile').addEventListener('click', async () => {
+                const fileInput = document.getElementById('csvFile');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    alert('Please select a CSV file to upload');
+                    return;
+                }
+                
+                try {
+                    const results = await processCsvFile(file);
+                    feedbackData = results;
+                    updateDashboard(feedbackData);
+                } catch (error) {
+                    console.error('Error processing CSV:', error);
+                    alert('Error processing CSV file. Please ensure the file is valid and try again.');
+                }
+            });
+            
+            // Setup text input analysis
+            document.getElementById('analyzeText').addEventListener('click', () => {
+                const textarea = document.getElementById('feedbackInput');
+                const text = textarea.value.trim();
+                
+                if (!text) {
+                    alert('Please enter some feedback text to analyze');
+                    return;
+                }
+                
+                const results = processTextInput(text);
+                feedbackData = results;
+                updateDashboard(feedbackData);
+            });
+            
+            // Add some sample data for demo purposes
+            const sampleFeedback = [
+                "I absolutely love this product! It's made my life so much easier. [Source: Amazon]",
+                "The customer service was terrible. I waited for an hour and nobody helped me. [Source: Email]",
+                "Product works as expected. Nothing special but gets the job done. [Source: Website]",
+                "Shipping was fast and the packaging was secure. Very happy with my purchase. [Source: Google Reviews]",
+                "The app keeps crashing whenever I try to save my progress. Very frustrating. [Source: App Store]",
+                "Good value for money, but the quality could be better. [Source: Trustpilot]",
+                "Fantastic company to deal with. Had a small issue and they resolved it immediately. [Source: BBB]",
+                "Instructions were confusing and hard to follow. [Source: Product Survey]",
+                "Average experience. Not bad but nothing exceptional either. [Source: Facebook]",
+                "The product arrived damaged and customer service was slow to respond. [Source: Email]",
+                "Best purchase I've made this year! Highly recommend to everyone. [Source: Instagram]",
+                "Simple to set up and use. Perfect for beginners. [Source: Website]"
+            ];
+            
+            document.getElementById('feedbackInput').value = sampleFeedback.join('\n');
+        });
+        
+        // Add demo data when "Analyze Text" is clicked automatically after page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('analyzeText').click();
+            }, 500);
+        });
