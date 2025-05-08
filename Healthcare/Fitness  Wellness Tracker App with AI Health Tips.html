@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness & Wellness Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --secondary-dark: #1976D2;
+            --text: #333;
+            --text-light: #666;
+            --bg-light: #f9f9f9;
+            --bg-card: #fff;
+            --border: #ddd;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-header .more {
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: var(--bg-card);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card h3 {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-card .change.positive {
+            color: var(--success);
+        }
+
+        .stat-card .change.negative {
+            color: var(--danger);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .progress-container {
+            padding: 10px 0;
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-labels {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .progress-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .progress-value {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .progress-bar {
+            background-color: #eee;
+            border-radius: 10px;
+            height: 8px;
+            width: 150px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .profile-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(76, 175, 80, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .ai-tip {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(76, 175, 80, 0.1));
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .goals-container {
+            margin-top: 20px;
+        }
+
+        .goal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .goal-item:last-child {
+            border-bottom: none;
+        }
+
+        .goal-info {
+            flex: 1;
+        }
+
+        .goal-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .goal-progress {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .connected-devices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(33, 150, 243, 0.05);
+        }
+
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .device-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(33, 150, 243, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+        }
+
+        .device-status {
+            font-size: 12px;
+            color: var(--success);
+        }
+
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 500px;
+            max-width: 90%;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                VitalTrack
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">Workouts</a></li>
+                    <li><a href="#">Nutrition</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Steps Today</h3>
+                        <div class="value">8,724</div>
+                        <div class="change positive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            12% from yesterday
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Calories Burned</h3>
+                        <div class="value">386</div>
+                        <div class="change positive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            8% from average
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Minutes</h3>
+                        <div class="value">42</div>
+                        <div class="change negative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            5% from goal
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Hours Slept</h3>
+                        <div class="value">7.3</div>
+                        <div class="change positive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            10% from average
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Activity History</h2>
+                        <span class="more" id="view-activity-history">View all</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Latest Workouts</h2>
+                        <span class="more" id="add-workout">Add workout</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 1L13 7M13 7l-3-3M13 7l-3 3M5 10L2 7l3-3"/><path d="M17 20h2c1.7 0 3-1.3 3-3V7c0-1.7-1.3-3-3-3h-2M9 20H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h2"/></svg>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Strength Training</div>
+                                <div class="activity-time">Today, 8:30 AM • 45 minutes • 320 calories</div>
+                                <div class="ai-tip">
+                                    <strong>AI Tip:</strong> Your strength has improved by 12% since last month. Consider increasing weights for your bicep curls.
+                                </div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Morning Run</div>
+                                <div class="activity-time">Yesterday, 6:15 AM • 32 minutes • 280 calories</div>
+                                <div class="ai-tip">
+                                    <strong>AI Tip:</strong> Your pace is improving! Try interval training to break through your current plateau.
+                                </div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20.5H7M7 15.5h10M7 10.5h10M16.5 5.5h-9"/></svg>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Yoga Session</div>
+                                <div class="activity-time">2 days ago • 60 minutes • 180 calories</div>
+                                <div class="ai-tip">
+                                    <strong>AI Tip:</strong> Your flexibility has improved. Consider adding more advanced poses to your routine.
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Weekly Health Report</h2>
+                        <span class="more" id="view-health-report">View full report</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-item">
+                            <div class="progress-labels">
+                                <div class="progress-title">Daily Steps</div>
+                                <div class="progress-value">8,724 / 10,000</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 87%; background-color: var(--primary);"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels">
+                                <div class="progress-title">Active Minutes</div>
+                                <div class="progress-value">42 / 60</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%; background-color: var(--warning);"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels">
+                                <div class="progress-title">Water Intake</div>
+                                <div class="progress-value">1.6L / 2.5L</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 64%; background-color: var(--secondary);"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels">
+                                <div class="progress-title">Sleep Quality</div>
+                                <div class="progress-value">85%</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%; background-color: var(--success);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-tip">
+                        <strong>AI Weekly Insights:</strong> Your sleep quality has improved by 15% since implementing a consistent bedtime routine. Continue this practice for optimal recovery.
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="card">
+                    <div class="profile">
+                        <div class="profile-img">JS</div>
+                        <div class="profile-info">
+                            <h3>John Smith</h3>
+                            <p>Premium Member</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-full" id="update-profile">Update Profile</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Today's AI Health Tip</h2>
+                    </div>
+                    <div class="ai-tip">
+                        Based on your recent activity patterns, try incorporating a 10-minute stretching routine after your workouts to improve recovery and reduce muscle soreness. This simple addition can lead to a 20% improvement in flexibility over time.
+                    </div>
+                    <button class="btn btn-secondary btn-full" style="margin-top: 15px;" id="get-more-tips">Get More Tips</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Your Goals</h2>
+                        <span class="more" id="add-goal">Add Goal</span>
+                    </div>
+                    <div class="goals-container">
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <div class="goal-title">Lose 5 lbs</div>
+                                <div class="goal-progress">3 lbs lost - 60% complete</div>
+                            </div>
+                            <div class="progress-bar" style="width: 80px;">
+                                <div class="progress-fill" style="width: 60%; background-color: var(--primary);"></div>
+                            </div>
+                        </div>
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <div class="goal-title">Run 5K in 25 min</div>
+                                <div class="goal-progress">Current best: 27:30</div>
+                            </div>
+                            <div class="progress-bar" style="width: 80px;">
+                                <div class="progress-fill" style="width: 84%; background-color: var(--success);"></div>
+                            </div>
+                        </div>
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <div class="goal-title">Meditate Daily</div>
+                                <div class="goal-progress">18/30 days completed</div>
+                            </div>
+                            <div class="progress-bar" style="width: 80px;">
+                                <div class="progress-fill" style="width: 60%; background-color: var(--warning);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Connected Devices</h2>
+                        <span class="more" id="add-device">Add Device</span>
+                    </div>
+                    <div class="connected-devices">
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12H3v9h18v-9h-8"/><path d="M12 2v10M9 5l3-3 3 3"/></svg>
+                                </div>
+                                <div>Fitbit Charge 5</div>
+                            </div>
+                            <div class="device-status">Connected</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                                </div>
+                                <div>Apple Health</div>
+                            </div>
+                            <div class="device-status">Connected</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-info">
+                                <div class="device-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                                </div>
+                                <div>Withings Scale</div>
+                            </div>
+                            <div class="device-status">Connected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Workout Modal -->
+    <div class="modal" id="workoutModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeWorkoutModal">&times;</span>
+            <h2 style="margin-bottom: 20px;">Add New Workout</h2>
+            <form id="workoutForm">
+                <div class="form-group">
+                    <label for="workoutType">Workout Type</label>
+                    <select class="form-control" id="workoutType">
+                        <option value="running">Running</option>
+                        <option value="cycling">Cycling</option>
+                        <option value="swimming">Swimming</option>
+                        <option value="strength">Strength Training</option>
+                        <option value="yoga">Yoga</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="workoutDate">Date</label>
+                    <input type="date" class="form-control" id="workoutDate">
+                </div>
+                <div class="form-group">
+                    <label for="workoutDuration">Duration (minutes)</label>
+                    <input type="number" class="form-control" id="workoutDuration" min="1" max="300">
+                </div>
+                <div class="form-group">
+                    <label for="workoutCalories">Calories Burned</label>
+                    <input type="number" class="form-control" id="workoutCalories" min="0" max="2000">
+                </div>
+                <div class="form-group">
+                    <label for="workoutNotes">Notes</label>
+                    <textarea class="form-control" id="workoutNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Save Workout</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Goal Modal -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeGoalModal">&times;</span>
+            <h2 style="margin-bottom: 20px;">Add New Goal</h2>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="goalTitle">Goal Title</label>
+                    <input type="text" class="form-control" id="goalTitle" placeholder="e.g., Run 5K in 25 minutes">
+                </div>
+                <div class="form-group">
+                    <label for="goalCategory">Category</label>
+                    <select class="form-control" id="goalCategory">
+                        <option value="fitness">Fitness</option>
+                        <option value="nutrition">Nutrition</option>
+                        <option value="weight">Weight</option>
+                        <option value="wellness">Wellness</option>
+                        <option value="sleep">Sleep</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="goalTarget">Target Value</label>
+                    <input type="text" class="form-control" id="goalTarget" placeholder="e.g., 25 minutes">
+                </div>
+                <div class="form-group">
+                    <label for="goalDeadline">Deadline</label>
+                    <input type="date" class="form-control" id="goalDeadline">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Save Goal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Device Modal -->
+    <div class="modal" id="deviceModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeDeviceModal">&times;</span>
+            <h2 style="margin-bottom: 20px;">Connect New Device</h2>
+            <form id="deviceForm">
+                <div class="form-group">
+                    <label for="deviceType">Device Type</label>
+                    <select class="form-control" id="deviceType">
+                        <option value="fitness-tracker">Fitness Tracker</option>
+                        <option value="smartwatch">Smartwatch</option>
+                        <option value="smart-scale">Smart Scale</option>
+                        <option value="heart-monitor">Heart Rate Monitor</option>
+                        <option value="blood-pressure">Blood Pressure Monitor</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deviceBrand">Brand</label>
+                    <select class="form-control" id="deviceBrand">
+                        <option value="fitbit">Fitbit</option>
+                        <option value="apple">Apple</option>
+                        <option value="garmin">Garmin</option>
+                        <option value="samsung">Samsung</option>
+                        <option value="withings">Withings</option>
+                        <option value="xiaomi">Xiaomi</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deviceModel">Model</label>
+                    <input type="text" class="form-control" id="deviceModel" placeholder="e.g., Charge 5">
+                </div>
+                <button type="button" class="btn btn-secondary btn-full" style="margin-bottom: 10px;">Search for Devices</button>
+                <button type="submit" class="btn btn-primary btn-full">Connect Device</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI Tips Modal -->
+    <div class="modal" id="tipsModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeTipsModal">&times;</span>
+            <h2 style="margin-bottom: 20px;">Personalized AI Health Tips</h2>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.08V8l-8-5-8 5v8l8 5 8-5v-3.08A3 3 0 0 1 18 6c0 1.66 1.34 3 3 3v2.08z"/><path d="M2 21v-8M22 21v-8"/></svg>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Recovery Optimization</div>
+                        <div class="activity-time">Based on your sleep and activity data</div>
+                        <div class="ai-tip">
+                            Your training intensity has increased 25% over the past two weeks while your sleep quality has decreased. Consider adding an additional rest day this week to prevent overtraining and improve recovery.
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5c0-1.1.9-2 2-2h2"/><path d="M17 3h2c1.1 0 2 .9 2 2v2"/><path d="M21 17v2c0 1.1-.9 2-2 2h-2"/><path d="M7 21H5c-1.1 0-2-.9-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Workout Variety</div>
+                        <div class="activity-time">Based on your recent activity history</div>
+                        <div class="ai-tip">
+                            You've been focusing primarily on cardio exercises. Adding 2 strength training sessions per week can improve your metabolic rate by up to 15% and enhance overall fitness. Try incorporating bodyweight exercises like push-ups, squats, and lunges.
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/><path d="M2 20h20"/><path d="M9 12h6"/><path d="M12 15V9"/></svg>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Nutrition Suggestion</div>
+                        <div class="activity-time">Based on your workout patterns</div>
+                        <div class="ai-tip">
+                            Your post-workout nutrition window is crucial. Try consuming 20-30g of protein within 30 minutes after your strength training sessions to optimize muscle recovery and growth. Good options include a protein shake, Greek yogurt, or lean meat.
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Hydration Reminder</div>
+                        <div class="activity-time">Based on your water intake trends</div>
+                        <div class="ai-tip">
+                            Your hydration levels typically drop in the afternoon. Set reminders to drink water at 2PM and 4PM. Even mild dehydration can reduce performance by up to 10%. Aim for 2.5L daily, with an additional 500ml for every hour of intense exercise.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-full" style="margin-top: 15px;">Save to My Tips</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Activity Chart
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            const activityLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            const activityChart = new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: activityLabels,
+                    datasets: [
+                        {
+                            label: 'Steps',
+                            data: [9203, 7800, 8500, 6700, 9500, 12200, 8724],
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            borderColor: 'rgba(76, 175, 80, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            pointBackgroundColor: 'rgba(76, 175, 80, 1)',
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'Active Minutes',
+                            data: [35, 28, 45, 30, 55, 68, 42],
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            borderColor: 'rgba(33, 150, 243, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            pointBackgroundColor: 'rgba(33, 150, 243, 1)',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 6
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#333',
+                            bodyColor: '#666',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        if (label.includes('Steps')) {
+                                            label += context.parsed.y.toLocaleString();
+                                        } else {
+                                            label += context.parsed.y + ' mins';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                },
+                                color: '#666'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                },
+                                color: '#666'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Modal functionality
+            const modals = {
+                workout: document.getElementById('workoutModal'),
+                goal: document.getElementById('goalModal'),
+                device: document.getElementById('deviceModal'),
+                tips: document.getElementById('tipsModal')
+            };
+
+            // Open modal buttons
+            document.getElementById('add-workout').addEventListener('click', () => {
+                modals.workout.style.display = 'flex';
+            });
+            
+            document.getElementById('add-goal').addEventListener('click', () => {
+                modals.goal.style.display = 'flex';
+            });
+            
+            document.getElementById('add-device').addEventListener('click', () => {
+                modals.device.style.display = 'flex';
+            });
+            
+            document.getElementById('get-more-tips').addEventListener('click', () => {
+                modals.tips.style.display = 'flex';
+            });
+
+            // Close modal buttons
+            document.getElementById('closeWorkoutModal').addEventListener('click', () => {
+                modals.workout.style.display = 'none';
+            });
+            
+            document.getElementById('closeGoalModal').addEventListener('click', () => {
+                modals.goal.style.display = 'none';
+            });
+            
+            document.getElementById('closeDeviceModal').addEventListener('click', () => {
+                modals.device.style.display = 'none';
+            });
+            
+            document.getElementById('closeTipsModal').addEventListener('click', () => {
+                modals.tips.style.display = 'none';
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', (event) => {
+                for (const [key, modal] of Object.entries(modals)) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                }
+            });
+
+            // Set today's date as default in date inputs
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10);
+            document.getElementById('workoutDate').value = formattedDate;
+            
+            // Form submission handling
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // In a real app, this would handle the form data
+                    alert('Form submitted! In a real application, this data would be saved to your account.');
+                    
+                    // Close the modal
+                    const modalId = e.target.closest('.modal').id;
+                    modals[modalId.replace('Modal', '')].style.display = 'none';
+                });
+            });
+
+            // AI health tips generation (simulated)
+            const generateAITip = () => {
+                const tips = [
+                    "Based on your sleep patterns, try to maintain a consistent bedtime to improve recovery.",
+                    "Your running pace has improved by 5% this month. Try interval training to break through your current plateau.",
+                    "Consider adding more protein to your post-workout meals to support muscle recovery.",
+                    "Your heart rate variability indicates potential overtraining. Consider an additional rest day this week.",
+                    "Hydration levels typically drop in your afternoon workouts. Set reminders to drink water regularly."
+                ];
+                return tips[Math.floor(Math.random() * tips.length)];
+            };
+            
+            // Simulate AI tip update
+            document.getElementById('get-more-tips').addEventListener('click', () => {
+                const aiTipElement = document.querySelector('.sidebar .ai-tip');
+                aiTipElement.innerHTML = `<strong>AI Health Tip:</strong> ${generateAITip()}`;
+            });
+        });
+    </script>
+</body>
+</html>

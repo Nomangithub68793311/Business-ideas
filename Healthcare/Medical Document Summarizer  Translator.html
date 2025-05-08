@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Document Summarizer & Translator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5. Allopurinol 300mg daily
+
+ALLERGIES:
+Penicillin (hives)
+
+SOCIAL HISTORY:
+Former smoker (quit 5 years ago), 30 pack-year history. Occasional alcohol use. Works as an accountant.
+
+FAMILY HISTORY:
+Father died of myocardial infarction at age 62. Mother alive with history of hypertension and diabetes.
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 148/92, HR 88, RR 18, Temp 98.6°F, SpO2 97% on room air
+General: Alert and oriented, in no acute distress
+HEENT: Normocephalic, atraumatic, pupils equal, round and reactive to light
+Cardiovascular: Regular rate and rhythm, S1 and S2 normal, no murmurs, rubs, or gallops
+Respiratory: Clear to auscultation bilaterally, no wheezes, rales, or rhonchi
+Abdomen: Soft, non-tender, non-distended, no hepatosplenomegaly
+Extremities: No edema, pulses 2+ throughout
+
+LABORATORY RESULTS:
+CBC: WNL
+Comprehensive Metabolic Panel: WNL except glucose 142 mg/dL
+Lipid Panel: Total Cholesterol 220 mg/dL, LDL 145 mg/dL, HDL 38 mg/dL, Triglycerides 185 mg/dL
+Cardiac Enzymes: Troponin I 0.04 ng/mL (slightly elevated)
+BNP: 150 pg/mL (mildly elevated)
+HbA1c: 7.2%
+
+DIAGNOSTIC STUDIES:
+ECG: Sinus rhythm with T-wave inversions in leads V3-V6
+Chest X-ray: No acute cardiopulmonary process
+Echocardiogram: EF 50%, mild LVH, no significant valvular abnormalities
+Stress Test: Positive for ischemia in the anterolateral wall
+
+ASSESSMENT AND PLAN:
+1. Acute Coronary Syndrome (Unstable Angina vs. NSTEMI) - ICD-10: I21.4
+   - Admit to telemetry unit
+   - Cardiology consultation
+   - Continue aspirin, start clopidogrel 75mg daily
+   - Start metoprolol 25mg twice daily
+   - Schedule for cardiac catheterization tomorrow morning
+
+2. Hypertension - ICD-10: I10
+   - Continue lisinopril 20mg daily
+   - Add amlodipine 5mg daily
+   - Goal BP < 130/80 mmHg
+
+3. Hyperlipidemia - ICD-10: E78.5
+   - Continue atorvastatin 40mg daily
+   - Recheck lipid panel in 3 months
+
+4. Type 2 Diabetes Mellitus - ICD-10: E11.9
+   - Continue metformin 1000mg twice daily
+   - Endocrinology consultation
+   - Goal HbA1c < 7.0%
+
+Follow-up in cardiology clinic in 2 weeks after discharge.
+
+_____________________
+Dr. Sarah Johnson, MD
+Cardiology4.1/papaparse.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e88e5;
+            --primary-dark: #1565c0;
+            --secondary: #26a69a;
+            --light-gray: #f5f5f5;
+            --mid-gray: #e0e0e0;
+            --dark-gray: #757575;
+            --danger: #e53935;
+            --success: #43a047;
+            --warning: #ffb300;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+        
+        .subtitle {
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--mid-gray);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+        
+        textarea, input[type="text"], select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--mid-gray);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        textarea:focus, input[type="text"]:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+        }
+        
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .button-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .options-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .options-col {
+            flex: 1;
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: var(--light-gray);
+            border-radius: 12px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--mid-gray);
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--mid-gray);
+            border-radius: 8px;
+            padding: 2rem;
+            background-color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+            background-color: rgba(30, 136, 229, 0.05);
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .file-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-gray);
+        }
+        
+        .stat-box {
+            background-color: var(--light-gray);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-title {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.2rem;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background-color: rgba(67, 160, 71, 0.1);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+        
+        .alert-error {
+            background-color: rgba(229, 57, 53, 0.1);
+            border-left: 4px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .summary-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-header {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-text {
+            color: var(--dark-gray);
+        }
+        
+        .tag {
+            display: inline-block;
+            background: var(--light-gray);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-gray);
+        }
+        
+        .tag-primary {
+            background-color: rgba(30, 136, 229, 0.1);
+            color: var(--primary);
+        }
+        
+        .tag-warning {
+            background-color: rgba(255, 179, 0, 0.1);
+            color: var(--warning);
+        }
+        
+        .tag-danger {
+            background-color: rgba(229, 57, 53, 0.1);
+            color: var(--danger);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--mid-gray);
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-label {
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .metrics {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-box {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .translation-history {
+            margin-top: 2rem;
+        }
+
+        pre {
+            background-color: var(--light-gray);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            background-color: rgba(255, 179, 0, 0.2);
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MediScan Pro</h1>
+        <div class="subtitle">Medical Document Summarizer & Translator</div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="input-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Document Input</h2>
+                        <div class="tabs">
+                            <div class="tab active" data-tab="text-input">Text Input</div>
+                            <div class="tab" data-tab="file-upload">File Upload</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content active" id="text-input">
+                        <label for="medical-text">Paste Medical Text:</label>
+                        <textarea id="medical-text" placeholder="Paste medical document, clinical notes, or prescription here..."></textarea>
+                    </div>
+                    
+                    <div class="tab-content" id="file-upload">
+                        <div class="file-upload" id="upload-area">
+                            <div class="file-icon">📄</div>
+                            <p>Drag & drop files or click to browse</p>
+                            <p class="badge">Supported formats: PDF, DOC, DOCX, TXT</p>
+                            <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt">
+                        </div>
+                        <div id="file-info" class="hidden">
+                            <div class="stat-box">
+                                <div class="stat-title">File Name</div>
+                                <div class="stat-value" id="file-name">document.pdf</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="options-row">
+                        <div class="options-col">
+                            <label for="operation-type">Operation:</label>
+                            <select id="operation-type">
+                                <option value="summarize">Summarize</option>
+                                <option value="translate">Translate</option>
+                                <option value="analyze">Analyze</option>
+                                <option value="extract">Extract Key Information</option>
+                            </select>
+                        </div>
+                        <div class="options-col">
+                            <label for="target-language">Target Language (for Translation):</label>
+                            <select id="target-language">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ru">Russian</option>
+                                <option value="ar">Arabic</option>
+                                <option value="hi">Hindi</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ja">Japanese</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="process-btn" class="process-btn">Process Document</button>
+                        <button id="clear-btn" class="button-secondary">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Settings</h2>
+                    </div>
+                    
+                    <div class="options-row">
+                        <div class="options-col">
+                            <label>Summary Length:</label>
+                            <select id="summary-length">
+                                <option value="brief">Brief</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="detailed">Detailed</option>
+                            </select>
+                        </div>
+                        <div class="options-col">
+                            <label>Medical Specialty Focus:</label>
+                            <select id="specialty">
+                                <option value="general">General</option>
+                                <option value="cardiology">Cardiology</option>
+                                <option value="neurology">Neurology</option>
+                                <option value="oncology">Oncology</option>
+                                <option value="pediatrics">Pediatrics</option>
+                                <option value="psychiatry">Psychiatry</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="options-row">
+                        <div class="options-col">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="highlight-keywords">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Highlight Key Terms</span>
+                            </label>
+                        </div>
+                        <div class="options-col">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="include-medical-codes">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Include Medical Codes</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-row">
+                        <div class="options-col">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="flag-critical">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Flag Critical Info</span>
+                            </label>
+                        </div>
+                        <div class="options-col">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="simplify-language">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Simplify Language</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Results</h2>
+                        <div id="processing-indicator" class="hidden">
+                            <span class="spinner"></span> Processing...
+                        </div>
+                    </div>
+                    
+                    <div id="results-container">
+                        <div id="alert-box" class="hidden"></div>
+                        
+                        <div class="metrics hidden" id="document-metrics">
+                            <div class="metric-box">
+                                <div class="metric-value" id="word-count">0</div>
+                                <div class="metric-label">Words</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-value" id="readability-score">0</div>
+                                <div class="metric-label">Readability</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-value" id="medical-terms">0</div>
+                                <div class="metric-label">Medical Terms</div>
+                            </div>
+                        </div>
+                        
+                        <div id="summary-container" class="hidden">
+                            <h3>Document Summary</h3>
+                            <div id="summary-content"></div>
+                        </div>
+                        
+                        <div id="translation-container" class="hidden">
+                            <h3>Translation</h3>
+                            <div id="translation-content"></div>
+                        </div>
+                        
+                        <div id="analysis-container" class="hidden">
+                            <h3>Analysis</h3>
+                            <div id="analysis-content"></div>
+                        </div>
+                        
+                        <div id="key-info-container" class="hidden">
+                            <h3>Key Information</h3>
+                            <div id="key-info-content"></div>
+                        </div>
+                        
+                        <div id="empty-state">
+                            <div style="text-align: center; padding: 3rem 0;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                                <h3>No Document Processed Yet</h3>
+                                <p>Enter text or upload a file and click "Process Document" to get started.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group hidden" id="action-buttons">
+                        <button id="copy-btn">Copy to Clipboard</button>
+                        <button id="download-btn" class="button-secondary">Download</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Dictionary & References</h2>
+                    </div>
+                    
+                    <div id="reference-container">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="medical-dictionary">Medical Dictionary</div>
+                            <div class="tab" data-tab="drug-interactions">Drug Interactions</div>
+                        </div>
+                        
+                        <div class="tab-content active" id="medical-dictionary">
+                            <div class="options-row">
+                                <div class="options-col">
+                                    <label for="term-search">Search Medical Term:</label>
+                                    <input type="text" id="term-search" placeholder="Enter medical term...">
+                                </div>
+                                <div class="options-col" style="display: flex; align-items: flex-end;">
+                                    <button id="search-term-btn">Search</button>
+                                </div>
+                            </div>
+                            
+                            <div id="term-results"></div>
+                        </div>
+                        
+                        <div class="tab-content" id="drug-interactions">
+                            <div class="options-row">
+                                <div class="options-col">
+                                    <label for="drug-search">Search Medications:</label>
+                                    <input type="text" id="drug-search" placeholder="Enter medication names separated by commas...">
+                                </div>
+                                <div class="options-col" style="display: flex; align-items: flex-end;">
+                                    <button id="search-drug-btn">Check Interactions</button>
+                                </div>
+                            </div>
+                            
+                            <div id="drug-results"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            
+            // Remove active class from all tabs and contents
+            const parentTabs = tab.parentElement.querySelectorAll('.tab');
+            parentTabs.forEach(t => t.classList.remove('active'));
+            
+            // Find the parent container for tab contents
+            const tabContentsContainer = tab.closest('.card').querySelector('.tab-content') ? 
+                                        tab.closest('.card') : 
+                                        tab.closest('div').nextElementSibling;
+            
+            const tabContents = tabContentsContainer.querySelectorAll('.tab-content');
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            tab.classList.add('active');
+            const activeContent = document.getElementById(tabId);
+            if (activeContent) {
+                activeContent.classList.add('active');
+            }
+        });
+    });
+    
+    // File upload functionality
+    const fileInput = document.getElementById('file-input');
+    const uploadArea = document.getElementById('upload-area');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--primary)';
+        uploadArea.style.backgroundColor = 'rgba(30, 136, 229, 0.05)';
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = 'var(--mid-gray)';
+        uploadArea.style.backgroundColor = 'var(--light-gray)';
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--mid-gray)';
+        uploadArea.style.backgroundColor = 'var(--light-gray)';
+        
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelection(e.dataTransfer.files[0]);
+        }
+    });
+    
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFileSelection(fileInput.files[0]);
+        }
+    });
+    
+    function handleFileSelection(file) {
+        fileInfo.classList.remove('hidden');
+        fileName.textContent = file.name;
+        
+        // For demo purposes, let's simulate file reading
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const medicalText = document.getElementById('medical-text');
+            if (file.type === 'text/plain') {
+                medicalText.value = e.target.result;
+            } else {
+                // For demo, we'll show sample text for non-text files
+                medicalText.value = sampleDocs.cardiology;
+            }
+        };
+        
+        if (file.type === 'text/plain') {
+            reader.readAsText(file);
+        }
+    }
+    
+    // Process button functionality
+    const processBtn = document.getElementById('process-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const processingIndicator = document.getElementById('processing-indicator');
+    const emptyState = document.getElementById('empty-state');
+    const actionButtons = document.getElementById('action-buttons');
+    const documentMetrics = document.getElementById('document-metrics');
+    
+    processBtn.addEventListener('click', () => {
+        const medicalText = document.getElementById('medical-text').value.trim();
+        if (!medicalText) {
+            showAlert('Please enter or upload medical text to process.', 'error');
+            return;
+        }
+        
+        // Show processing
+        processingIndicator.classList.remove('hidden');
+        
+        // Simulate processing delay
+        setTimeout(() => {
+            processDocument(medicalText);
+            processingIndicator.classList.add('hidden');
+        }, 1500);
+    });
+    
+    clearBtn.addEventListener('click', () => {
+        document.getElementById('medical-text').value = '';
+        resetResults();
+    });
+    
+    function resetResults() {
+        emptyState.classList.remove('hidden');
+        actionButtons.classList.add('hidden');
+        documentMetrics.classList.add('hidden');
+        
+        document.getElementById('summary-container').classList.add('hidden');
+        document.getElementById('translation-container').classList.add('hidden');
+        document.getElementById('analysis-container').classList.add('hidden');
+        document.getElementById('key-info-container').classList.add('hidden');
+        
+        document.getElementById('alert-box').classList.add('hidden');
+        fileInfo.classList.add('hidden');
+    }
+    
+    function showAlert(message, type) {
+        const alertBox = document.getElementById('alert-box');
+        alertBox.className = 'alert alert-' + type;
+        alertBox.textContent = message;
+        alertBox.classList.remove('hidden');
+        
+        setTimeout(() => {
+            alertBox.classList.add('hidden');
+        }, 5000);
+    }
+    
+    function processDocument(text) {
+        const operationType = document.getElementById('operation-type').value;
+        const summaryLength = document.getElementById('summary-length').value;
+        const specialty = document.getElementById('specialty').value;
+        const highlightKeywords = document.getElementById('highlight-keywords').checked;
+        const includeMedicalCodes = document.getElementById('include-medical-codes').checked;
+        const flagCritical = document.getElementById('flag-critical').checked;
+        const simplifyLanguage = document.getElementById('simplify-language').checked;
+        const targetLanguage = document.getElementById('target-language').value;
+        
+        // Hide empty state
+        emptyState.classList.add('hidden');
+        
+        // Show appropriate containers based on operation
+        document.getElementById('summary-container').classList.add('hidden');
+        document.getElementById('translation-container').classList.add('hidden');
+        document.getElementById('analysis-container').classList.add('hidden');
+        document.getElementById('key-info-container').classList.add('hidden');
+        
+        // Calculate and show metrics
+        const wordCount = text.split(/\s+/).filter(Boolean).length;
+        const medicalTermCount = countMedicalTerms(text);
+        const readabilityScore = calculateReadabilityScore(text);
+        
+        document.getElementById('word-count').textContent = wordCount;
+        document.getElementById('medical-terms').textContent = medicalTermCount;
+        document.getElementById('readability-score').textContent = readabilityScore;
+        documentMetrics.classList.remove('hidden');
+        
+        // Process based on operation type
+        switch (operationType) {
+            case 'summarize':
+                processForSummary(text, summaryLength, specialty, highlightKeywords, includeMedicalCodes, flagCritical, simplifyLanguage);
+                break;
+            case 'translate':
+                processForTranslation(text, targetLanguage, highlightKeywords, includeMedicalCodes);
+                break;
+            case 'analyze':
+                processForAnalysis(text, specialty, highlightKeywords, includeMedicalCodes, flagCritical);
+                break;
+            case 'extract':
+                processForKeyInfo(text, specialty, highlightKeywords, includeMedicalCodes, flagCritical);
+                break;
+        }
+        
+        // Show action buttons
+        actionButtons.classList.remove('hidden');
+    }
+    
+    function countMedicalTerms(text) {
+        let count = 0;
+        const lowerText = text.toLowerCase();
+        
+        for (const term of medicalKeyTerms) {
+            const regex = new RegExp('\\b' + term + '\\b', 'gi');
+            const matches = lowerText.match(regex);
+            if (matches) {
+                count += matches.length;
+            }
+        }
+        
+        return count;
+    }
+    
+    function calculateReadabilityScore(text) {
+        // Simplified Flesch-Kincaid implementation
+        const words = text.split(/\s+/).filter(Boolean).length;
+        const sentences = text.split(/[.!?]+/).filter(Boolean).length;
+        const syllables = countSyllables(text);
+        
+        if (sentences === 0) return 0;
+        
+        const avgWordsPerSentence = words / sentences;
+        const avgSyllablesPerWord = syllables / words;
+        
+        const score = 206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord);
+        return Math.min(100, Math.max(0, Math.round(score)));
+    }
+    
+    function countSyllables(text) {
+        // Simplified syllable counting
+        const lowerText = text.toLowerCase().replace(/[^\w\s]|_/g, '');
+        const words = lowerText.split(/\s+/).filter(Boolean);
+        
+        let syllableCount = 0;
+        for (const word of words) {
+            // Count vowel groups as syllables
+            const syllables = word.match(/[aeiouy]{1,2}/g);
+            syllableCount += syllables ? syllables.length : 1;
+        }
+        
+        return syllableCount;
+    }
+    
+    function processForSummary(text, length, specialty, highlight, includeCodes, flagCritical, simplify) {
+        const container = document.getElementById('summary-container');
+        const content = document.getElementById('summary-content');
+        
+        // Generate summary based on length setting
+        let summary = generateSummary(text, length);
+        
+        // Apply highlighting if needed
+        if (highlight) {
+            summary = highlightMedicalTerms(summary);
+        }
+        
+        // Include medical codes if needed
+        if (includeCodes) {
+            summary += generateMedicalCodes(text);
+        }
+        
+        // Flag critical info if needed
+        if (flagCritical) {
+            summary = flagCriticalInfo(summary);
+        }
+        
+        // Simplify language if needed
+        if (simplify) {
+            summary = simplifyMedicalLanguage(summary);
+        }
+        
+        content.innerHTML = summary;
+        container.classList.remove('hidden');
+    }
+    
+    function processForTranslation(text, language, highlight, includeCodes) {
+        const container = document.getElementById('translation-container');
+        const content = document.getElementById('translation-content');
+        
+        // Generate translation based on target language
+        let translation = translateText(text, language);
+        
+        // Apply highlighting if needed
+        if (highlight) {
+            translation = highlightMedicalTerms(translation);
+        }
+        
+        // Include medical codes if needed
+        if (includeCodes) {
+            translation += generateMedicalCodes(text);
+        }
+        
+        content.innerHTML = translation;
+        container.classList.remove('hidden');
+    }
+    
+    function processForAnalysis(text, specialty, highlight, includeCodes, flagCritical) {
+        const container = document.getElementById('analysis-container');
+        const content = document.getElementById('analysis-content');
+        
+        // Generate analysis
+        let analysis = generateAnalysis(text, specialty);
+        
+        // Apply highlighting if needed
+        if (highlight) {
+            analysis = highlightMedicalTerms(analysis);
+        }
+        
+        // Include medical codes if needed
+        if (includeCodes) {
+            analysis += generateMedicalCodes(text);
+        }
+        
+        // Flag critical info if needed
+        if (flagCritical) {
+            analysis = flagCriticalInfo(analysis);
+        }
+        
+        content.innerHTML = analysis;
+        container.classList.remove('hidden');
+    }
+    
+    function processForKeyInfo(text, specialty, highlight, includeCodes, flagCritical) {
+        const container = document.getElementById('key-info-container');
+        const content = document.getElementById('key-info-content');
+        
+        // Extract key information
+        let keyInfo = extractKeyInfo(text, specialty);
+        
+        // Apply highlighting if needed
+        if (highlight) {
+            keyInfo = highlightMedicalTerms(keyInfo);
+        }
+        
+        // Include medical codes if needed
+        if (includeCodes) {
+            keyInfo += generateMedicalCodes(text);
+        }
+        
+        // Flag critical info if needed
+        if (flagCritical) {
+            keyInfo = flagCriticalInfo(keyInfo);
+        }
+        
+        content.innerHTML = keyInfo;
+        container.classList.remove('hidden');
+    }
+    
+    function generateSummary(text, length) {
+        // For demo purposes, we'll create different length summaries
+        const sections = text.split('\n\n').filter(Boolean);
+        
+        if (length === 'brief') {
+            // Brief summary - just the assessment and plan
+            const assessmentSection = sections.find(s => s.toLowerCase().includes('assessment') || s.toLowerCase().includes('impression'));
+            return assessmentSection ? 
+                   '<div class="summary-item"><div class="summary-header">Key Assessment</div><div class="summary-text">' + assessmentSection + '</div></div>' : 
+                   '<div class="summary-item"><div class="summary-text">No assessment found in document.</div></div>';
+        } else if (length === 'detailed') {
+            // Detailed summary - most sections with original organization
+            let result = '';
+            
+            const keyHeaders = ['chief complaint', 'history', 'physical examination', 'laboratory', 'diagnostic', 'assessment', 'plan'];
+            
+            for (const section of sections) {
+                if (keyHeaders.some(header => section.toLowerCase().includes(header))) {
+                    const headerMatch = section.match(/^([A-Z\s]+):/);
+                    const header = headerMatch ? headerMatch[1] : 'Section';
+                    result += '<div class="summary-item"><div class="summary-header">' + header + '</div><div class="summary-text">' + section + '</div></div>';
+                }
+            }
+            
+            return result || '<div class="summary-item"><div class="summary-text">Could not generate a detailed summary from this document.</div></div>';
+        } else {
+            // Medium summary - main points
+            let result = '';
+            
+            // Try to extract chief complaint
+            const chiefComplaint = sections.find(s => s.toLowerCase().includes('chief complaint'));
+            if (chiefComplaint) {
+                result += '<div class="summary-item"><div class="summary-header">Chief Complaint</div><div class="summary-text">' + chiefComplaint.split('\n').slice(1).join('\n') + '</div></div>';
+            }
+            
+            // Try to extract key findings
+            const findings = sections.find(s => s.toLowerCase().includes('physical examination'));
+            if (findings) {
+                const keyVitals = findings.split('\n').find(l => l.toLowerCase().includes('vital signs'));
+                result += '<div class="summary-item"><div class="summary-header">Key Findings</div><div class="summary-text">' + (keyVitals || 'No specific key findings identified.') + '</div></div>';
+            }
+            
+            // Try to extract assessment
+            const assessment = sections.find(s => s.toLowerCase().includes('assessment') || s.toLowerCase().includes('impression'));
+            if (assessment) {
+                result += '<div class="summary-item"><div class="summary-header">Assessment</div><div class="summary-text">' + assessment + '</div></div>';
+            }
+            
+            return result || '<div class="summary-item"><div class="summary-text">Could not generate a summary from this document.</div></div>';
+        }
+    }
+    
+    function translateText(text, language) {
+        // For demo purposes, we'll simulate translation for a few common phrases
+        // In a real application, this would connect to a translation API
+        
+        const translations = {
+            'es': {
+                'chief complaint': 'motivo de consulta',
+                'history of present illness': 'historia de la enfermedad actual',
+                'past medical history': 'antecedentes médicos',
+                'medications': 'medicamentos',
+                'allergies': 'alergias',
+                'physical examination': 'examen físico',
+                'laboratory results': 'resultados de laboratorio',
+                'assessment': 'evaluación',
+                'plan': 'plan',
+                'follow-up': 'seguimiento',
+                'hypertension': 'hipertensión',
+                'diabetes': 'diabetes',
+                'chest pain': 'dolor torácico',
+                'shortness of breath': 'dificultad para respirar',
+                'myocardial infarction': 'infarto de miocardio',
+                'heart attack': 'ataque cardíaco'
+            },
+            'fr': {
+                'chief complaint': 'motif de consultation',
+                'history of present illness': 'histoire de la maladie actuelle',
+                'past medical history': 'antécédents médicaux',
+                'medications': 'médicaments',
+                'allergies': 'allergies',
+                'physical examination': 'examen physique',
+                'laboratory results': 'résultats de laboratoire',
+                'assessment': 'évaluation',
+                'plan': 'plan',
+                'follow-up': 'suivi',
+                'hypertension': 'hypertension',
+                'diabetes': 'diabète',
+                'chest pain': 'douleur thoracique',
+                'shortness of breath': 'essoufflement',
+                'myocardial infarction': 'infarctus du myocarde',
+                'heart attack': 'crise cardiaque'
+            }
+        };
+        
+        // If we don't have a translation for this language, return original
+        if (!translations[language]) {
+            return '<div class="alert alert-error">Translation not available for selected language. For this demo, please try Spanish (es) or French (fr).</div>' +
+                   '<div class="summary-item"><div class="summary-text">' + text + '</div></div>';
+        }
+        
+        // Simple word-by-word replacement for demo
+        let translatedText = text;
+        for (const [eng, trans] of Object.entries(translations[language])) {
+            const regex = new RegExp('\\b' + eng + '\\b', 'gi');
+            translatedText = translatedText.replace(regex, trans);
+        }
+        
+        return '<div class="summary-item"><div class="summary-text">' + translatedText + '</div></div>';
+    }
+    
+    function generateAnalysis(text, specialty) {
+        // For demo purposes, we'll generate a mock analysis
+        let analysis = '<div class="summary-item"><div class="summary-header">Document Analysis</div><div class="summary-text">';
+        
+        // Add specialty-specific analysis
+        if (specialty === 'cardiology') {
+            analysis += '<p>This document appears to be a <strong>cardiology consultation</strong> for a patient presenting with chest pain and shortness of breath.</p>';
+            
+            const hasStTest = text.toLowerCase().includes('stress test');
+            const hasEkg = text.toLowerCase().includes('ecg') || text.toLowerCase().includes('ekg') || text.toLowerCase().includes('electrocardiogram');
+            const hasTroponin = text.toLowerCase().includes('troponin');
+            
+            analysis += '<p>Cardiac workup includes:';
+            if (hasEkg) analysis += ' ECG/EKG,';
+            if (hasTroponin) analysis += ' Cardiac enzymes (Troponin),';
+            if (hasStTest) analysis += ' Stress test,';
+            analysis = analysis.replace(/,$/, '');
+            analysis += '</p>';
+            
+            // Look for cardiac risk factors
+            const riskFactors = [];
+            if (text.toLowerCase().includes('hypertension')) riskFactors.push('Hypertension');
+            if (text.toLowerCase().includes('diabetes')) riskFactors.push('Diabetes');
+            if (text.toLowerCase().includes('hyperlipidemia') || text.toLowerCase().includes('cholesterol')) riskFactors.push('Hyperlipidemia');
+            if (text.toLowerCase().includes('smoker')) riskFactors.push('Smoking history');
+            
+            if (riskFactors.length > 0) {
+                analysis += '<p>Cardiac risk factors identified: ' + riskFactors.join(', ') + '</p>';
+            }
+            
+            analysis += '<p>Impression: Patient presenting with symptoms and findings consistent with <strong>Acute Coronary Syndrome</strong>.</p>';
+        } else if (specialty === 'neurology') {
+            analysis += '<p>This document does not contain specific neurological focus. Consider selecting Cardiology specialty for more relevant analysis of this sample.</p>';
+        } else {
+            analysis += '<p>General medical document analysis:</p>';
+            analysis += '<ul>';
+            analysis += '<li>Patient presents with cardiopulmonary symptoms</li>';
+            analysis += '<li>Multiple chronic conditions identified</li>';
+            analysis += '<li>Diagnostic testing indicates cardiac involvement</li>';
+            analysis += '<li>Treatment plan addresses both acute and chronic conditions</li>';
+            analysis += '</ul>';
+        }
+        
+        analysis += '</div></div>';
+        
+        // Add statistics section
+        analysis += '<div class="summary-item"><div class="summary-header">Document Statistics</div><div class="summary-text">';
+        analysis += '<p>Document Length: ' + text.split(/\s+/).filter(Boolean).length + ' words</p>';
+        analysis += '<p>Medical Terms: ' + countMedicalTerms(text) + ' instances</p>';
+        
+        // Count ICD codes
+        const icdMatches = text.match(/ICD-10: [A-Z0-9.]+/g);
+        analysis += '<p>ICD-10 Codes: ' + (icdMatches ? icdMatches.length : 0) + ' instances</p>';
+        
+        analysis += '</div></div>';
+        
+        return analysis;
+    }
+    
+    function extractKeyInfo(text, specialty) {
+        // Extract key information based on recognizable patterns
+        let keyInfo = '';
+        
+        // Extract patient info
+        const patientMatch = text.match(/PATIENT:\s*([^\n]+)/);
+        const dobMatch = text.match(/DOB:\s*([^\n]+)/);
+        if (patientMatch || dobMatch) {
+            keyInfo += '<div class="summary-item"><div class="summary-header">Patient Information</div><div class="summary-text">';
+            if (patientMatch) keyInfo += '<p><strong>Name:</strong> ' + patientMatch[1] + '</p>';
+            if (dobMatch) keyInfo += '<p><strong>DOB:</strong> ' + dobMatch[1] + '</p>';
+            keyInfo += '</div></div>';
+        }
+        
+        // Extract chief complaint
+        const ccMatch = text.match(/CHIEF COMPLAINT:([^\n]+)/);
+        if (ccMatch) {
+            keyInfo += '<div class="summary-item"><div class="summary-header">Chief Complaint</div><div class="summary-text">';
+            keyInfo += ccMatch[1].trim();
+            keyInfo += '</div></div>';
+        }
+        
+        // Extract vital signs
+        const vitalsMatch = text.match(/Vital Signs:([^\n]+)/);
+        if (vitalsMatch) {
+            keyInfo += '<div class="summary-item"><div class="summary-header">Vital Signs</div><div class="summary-text">';
+            keyInfo += vitalsMatch[1].trim();
+            keyInfo += '</div></div>';
+        }
+        
+        // Extract medications
+        if (text.includes('MEDICATIONS:')) {
+            keyInfo += '<div class="summary-item"><div class="summary-header">Medications</div><div class="summary-text">';
+            const medSection = text.split('MEDICATIONS:')[1].split(/\n\s*\n/)[0];
+            const meds = medSection.split('\n').filter(line => line.trim().match(/^\d+\./));
+            keyInfo += '<ul>';
+            meds.forEach(med => {
+                keyInfo += '<li>' + med.replace(/^\d+\./, '').trim() + '</li>';
+            });
+            keyInfo += '</ul>';
+            keyInfo += '</div></div>';
+        }
+        
+        // Extract assessment and plan
+        if (text.includes('ASSESSMENT AND PLAN:')) {
+            keyInfo += '<div class="summary-item"><div class="summary-header">Assessment & Plan</div><div class="summary-text">';
+            const assessmentSection = text.split('ASSESSMENT AND PLAN:')[1].split('Follow-up')[0];
+            const assessmentItems = assessmentSection.split(/\d+\./).filter(Boolean);
+            keyInfo += '<ul>';
+            assessmentItems.forEach(item => {
+                // Extract diagnosis and ICD code
+                const icdMatch = item.match(/ICD-10:\s*([A-Z0-9.]+)/);
+                const firstLine = item.split('\n')[0].trim();
+                
+                if (firstLine) {
+                    keyInfo += '<li><strong>' + firstLine + (icdMatch ? ' (' + icdMatch[1] + ')' : '') + '</strong>';
+                    
+                    // Extract plan items
+                    const planItems = item.split('\n').slice(1).filter(l => l.trim().startsWith('-'));
+                    if (planItems.length > 0) {
+                        keyInfo += '<ul>';
+                        planItems.forEach(plan => {
+                            keyInfo += '<li>' + plan.replace(/^-/, '').trim() + '</li>';
+                        });
+                        keyInfo += '</ul>';
+                    }
+                    
+                    keyInfo += '</li>';
+                }
+            });
+            keyInfo += '</ul>';
+            keyInfo += '</div></div>';
+        }
+        
+        return keyInfo || '<div class="summary-item"><div class="summary-text">No structured key information could be extracted from this document.</div></div>';
+    }
+    
+    function highlightMedicalTerms(html) {
+        let highlightedHtml = html;
+        
+        medicalKeyTerms.forEach(term => {
+            const regex = new RegExp('\\b(' + term + ')\\b', 'gi');
+            highlightedHtml = highlightedHtml.replace(regex, '<span class="highlight">$1</span>');
+        });
+        
+        return highlightedHtml;
+    }
+    
+    function generateMedicalCodes(text) {
+        // Extract ICD-10 codes from text
+        const icdMatches = text.match(/ICD-10:\s*([A-Z0-9.]+)/g);
+        
+        let codeHtml = '<div class="summary-item"><div class="summary-header">Medical Codes</div><div class="summary-text">';
+        
+        if (icdMatches && icdMatches.length > 0) {
+            codeHtml += '<p><strong>ICD-10 Codes Found:</strong></p>';
+            codeHtml += '<ul>';
+            
+            icdMatches.forEach(match => {
+                const code = match.replace('ICD-10:', '').trim();
+                codeHtml += '<li>' + code + ' - ' + (medicalCodes[code] || 'Unknown code') + '</li>';
+            });
+            
+            codeHtml += '</ul>';
+        } else {
+            // If no codes found in the text, suggest possible codes based on content
+            codeHtml += '<p><strong>Suggested ICD-10 Codes:</strong></p>';
+            codeHtml += '<ul>';
+            
+            if (text.toLowerCase().includes('hypertension')) {
+                codeHtml += '<li>I10 - Essential (primary) hypertension</li>';
+            }
+            
+            if (text.toLowerCase().includes('diabetes')) {
+                codeHtml += '<li>E11.9 - Type 2 diabetes mellitus without complications</li>';
+            }
+            
+            if (text.toLowerCase().includes('chest pain')) {
+                codeHtml += '<li>R07.9 - Chest pain, unspecified</li>';
+            }
+            
+            if (text.toLowerCase().includes('myocardial infarction') || text.toLowerCase().includes('heart attack')) {
+                codeHtml += '<li>I21.9 - Acute myocardial infarction, unspecified</li>';
+            }
+        const medicalDictionary = {
+            "hypertension": "High blood pressure, a common condition in which the long-term force of the blood against your artery walls is high enough that it may eventually cause health problems.",
+            "myocardial infarction": "Commonly known as a heart attack, occurs when blood flow decreases or stops to a part of the heart, causing damage to the heart muscle.",
+            "diabetes mellitus": "A group of metabolic disorders characterized by a high blood sugar level over a prolonged period, often referred to simply as diabetes.",
+            "dyspnea": "Difficult or labored breathing; shortness of breath.",
+            "tachycardia": "A heart rate that exceeds the normal resting rate, generally a resting heart rate over 100 beats per minute.",
+            "bradycardia": "A slower than normal heart rate, typically defined as a heart rate of less than 60 beats per minute.",
+            "hepatomegaly": "Enlargement of the liver beyond its normal size.",
+            "splenomegaly": "Enlargement of the spleen beyond its normal size.",
+            "thrombocytopenia": "Low blood platelet count, which can result in difficulty forming blood clots.",
+            "arrhythmia": "Irregular heartbeat or abnormal heart rhythm.",
+            "hyperlipidemia": "Abnormally elevated levels of any or all lipids and/or lipoproteins in the blood.",
+            "metastasis": "The spread of cancer cells from the place where they first formed to another part of the body.",
+            "osteoporosis": "A condition in which bones become weak and brittle.",
+            "nephropathy": "Damage, disease, or abnormal functioning of the kidney.",
+            "neuropathy": "Damage or dysfunction of one or more nerves that typically results in numbness, tingling, muscle weakness and pain.",
+            "retinopathy": "Damage to the retina of the eyes, which may cause vision impairment.",
+            "asthma": "A condition in which a person's airways become inflamed, narrow and swell and produce extra mucus, which makes it difficult to breathe.",
+            "copd": "Chronic Obstructive Pulmonary Disease, a chronic inflammatory lung disease that causes obstructed airflow from the lungs.",
+            "anemia": "A condition in which you lack enough healthy red blood cells to carry adequate oxygen to your body's tissues.",
+            "hypothyroidism": "A condition in which the thyroid gland doesn't produce enough thyroid hormone.",
+            "hyperthyroidism": "A condition in which the thyroid gland produces too much thyroid hormone."
+        };
+
+        // Sample drug interactions for demonstration
+        const drugInteractions = {
+            "warfarin": {
+                "aspirin": "Increased risk of bleeding. Avoid combination if possible.",
+                "ibuprofen": "Increased risk of bleeding. Avoid combination if possible.",
+                "ciprofloxacin": "May increase warfarin effect, leading to increased risk of bleeding.",
+                "amiodarone": "May increase warfarin effect, leading to increased risk of bleeding.",
+                "simvastatin": "Generally safe, but may require closer monitoring."
+            },
+            "lisinopril": {
+                "potassium supplements": "Increased risk of hyperkalemia (high potassium levels).",
+                "spironolactone": "Increased risk of hyperkalemia (high potassium levels).",
+                "nsaids": "May decrease effectiveness of lisinopril and increase risk of kidney damage.",
+                "lithium": "May increase lithium levels, potentially leading to toxicity."
+            },
+            "metformin": {
+                "iodinated contrast media": "Increased risk of lactic acidosis, especially in patients with kidney dysfunction.",
+                "alcohol": "Increased risk of lactic acidosis and hypoglycemia.",
+                "cimetidine": "May increase metformin levels, potentially increasing side effects."
+            },
+            "simvastatin": {
+                "grapefruit juice": "Increased risk of myopathy and rhabdomyolysis.",
+                "clarithromycin": "Increased risk of myopathy and rhabdomyolysis.",
+                "cyclosporine": "Increased risk of myopathy and rhabdomyolysis."
+            },
+            "aspirin": {
+                "warfarin": "Increased risk of bleeding. Avoid combination if possible.",
+                "nsaids": "Increased risk of GI bleeding and ulceration.",
+                "ssris": "Increased risk of bleeding."
+            }
+        };
+
+        // Medical key terms for highlighting
+        const medicalKeyTerms = [
+            "hypertension", "myocardial infarction", "diabetes mellitus", "dyspnea", "tachycardia", 
+            "bradycardia", "hepatomegaly", "splenomegaly", "thrombocytopenia", "arrhythmia", 
+            "hyperlipidemia", "metastasis", "osteoporosis", "nephropathy", "neuropathy", 
+            "retinopathy", "asthma", "copd", "anemia", "hypothyroidism", "hyperthyroidism",
+            "heart attack", "stroke", "cancer", "tumor", "carcinoma", "hyperglycemia", "hypoglycemia",
+            "fibrillation", "embolism", "thrombosis", "ischemia", "stenosis", "insufficiency",
+            "failure", "disorder", "syndrome", "disease", "infection", "inflammation"
+        ];
+
+        // Common medical codes
+        const medicalCodes = {
+            "I10": "Essential (primary) hypertension",
+            "E11.9": "Type 2 diabetes mellitus without complications",
+            "I21.9": "Acute myocardial infarction, unspecified",
+            "J44.9": "Chronic obstructive pulmonary disease, unspecified",
+            "J45.909": "Unspecified asthma, uncomplicated",
+            "K21.9": "Gastro-esophageal reflux disease without esophagitis",
+            "M54.5": "Low back pain",
+            "F41.1": "Generalized anxiety disorder",
+            "F32.9": "Major depressive disorder, single episode, unspecified",
+            "G89.29": "Other chronic pain",
+            "N18.9": "Chronic kidney disease, unspecified",
+            "I50.9": "Heart failure, unspecified"
+        };
+
+        // Sample medical documents for demonstration
+        const sampleDocs = {
+            "cardiology": `CARDIOLOGY CONSULTATION NOTE\nPATIENT: John Doe\nDOB: 01/15/1965\nDATE: 05/08/2025\n\nCHIEF COMPLAINT: Chest pain and shortness of breath\n\nHISTORY OF PRESENT ILLNESS:\nThe patient is a 60-year-old male with a history of hypertension and hyperlipidemia who presents with complaints of intermittent chest pain and shortness of breath for the past 3 weeks. The pain is described as a pressure-like sensation in the center of his chest, radiating to his left arm, lasting approximately 5-10 minutes, and is often precipitated by exertion and relieved by rest. He also reports associated diaphoresis and nausea during these episodes. He denies palpitations, syncope, or orthopnea.\n\nPAST MEDICAL HISTORY:\n1. Hypertension, diagnosed 12 years ago\n2. Hyperlipidemia, diagnosed 8 years ago\n3. Type 2 Diabetes Mellitus, diagnosed 5 years ago\n4. Gout\n\nMEDICATIONS:\n1. Lisinopril 20mg daily\n2. Atorvastatin 40mg daily\n3. Metformin 1000mg twice daily\n4. Aspirin 81mg daily\n5.`}
+            <script/>

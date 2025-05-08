@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediConnect - Telemedicine & Symptom Checker</title>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #10b981;
+      --danger: #ef4444;
+      --background: #f9fafb;
+      --text: #1f2937;
+      --gray-light: #f3f4f6;
+      --gray: #9ca3af;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    header {
+      background-color: white;
+      box-shadow: var(--shadow);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .logo-icon {
+      margin-right: 0.5rem;
+      color: var(--primary);
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    nav a:hover {
+      color: var(--primary);
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+    }
+    
+    .hero {
+      padding: 4rem 0;
+      text-align: center;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--gray);
+      max-width: 36rem;
+      margin: 0 auto 2rem;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 3rem 0;
+    }
+    
+    .feature-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      transition: transform 0.3s;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-card h3 {
+      margin-bottom: 0.75rem;
+    }
+    
+    .app-section {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      margin: 2rem 0;
+      overflow: hidden;
+    }
+    
+    .app-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .app-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    
+    .app-tab {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .app-tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .app-content {
+      padding: 2rem;
+    }
+    
+    .symptom-checker {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .input-group label {
+      font-weight: 500;
+    }
+    
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      padding: 0.75rem;
+      border: 1px solid var(--gray);
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      width: 100%;
+    }
+    
+    .input-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .symptoms-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .symptom-tag {
+      background-color: var(--gray-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .symptom-tag .remove {
+      cursor: pointer;
+      color: var(--gray);
+    }
+    
+    .symptom-tag .remove:hover {
+      color: var(--danger);
+    }
+    
+    .results {
+      display: none;
+      margin-top: 2rem;
+    }
+    
+    .results.active {
+      display: block;
+    }
+    
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .results-content {
+      background-color: var(--gray-light);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+    }
+    
+    .possible-conditions {
+      margin-top: 1.5rem;
+    }
+    
+    .condition-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .condition-severity {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+    }
+    
+    .severity-high {
+      background-color: var(--danger);
+    }
+    
+    .severity-medium {
+      background-color: #f59e0b;
+    }
+    
+    .severity-low {
+      background-color: var(--secondary);
+    }
+    
+    .condition-info {
+      flex: 1;
+    }
+    
+    .condition-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .doctor-connect {
+      display: none;
+      margin-top: 2rem;
+    }
+    
+    .doctor-connect.active {
+      display: block;
+    }
+    
+    .doctors-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .doctor-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    
+    .doctor-img {
+      height: 10rem;
+      width: 100%;
+      object-fit: cover;
+    }
+    
+    .doctor-info {
+      padding: 1rem;
+    }
+    
+    .doctor-info h4 {
+      margin-bottom: 0.25rem;
+    }
+    
+    .doctor-specialty {
+      color: var(--gray);
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .doctor-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .rating-stars {
+      color: #f59e0b;
+    }
+    
+    .doctor-availability {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    footer {
+      background-color: white;
+      padding: 3rem 0;
+      margin-top: 4rem;
+      border-top: 1px solid var(--gray-light);
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    
+    .footer-column h4 {
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-links a {
+      text-decoration: none;
+      color: var(--gray);
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    
+    .copyright {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--gray-light);
+      color: var(--gray);
+      font-size: 0.875rem;
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        gap: 1rem;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1.125rem;
+      }
+      
+      .app-tabs {
+        overflow-x: auto;
+      }
+      
+      .app-tab {
+        padding: 1rem;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+        MediConnect
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Doctors</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <a href="#" class="btn btn-outline">Sign In</a>
+        <a href="#" class="btn">Register</a>
+      </div>
+    </div>
+  </header>
+  
+  <main class="container">
+    <section class="hero">
+      <h1>Virtual Healthcare for You</h1>
+      <p>Check your symptoms and connect with qualified doctors online from anywhere, anytime.</p>
+      <a href="#symptom-checker" class="btn">Check Your Symptoms</a>
+    </section>
+    
+    <section class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+            <line x1="16" y1="8" x2="2" y2="22"></line>
+            <line x1="17.5" y1="15" x2="9" y2="15"></line>
+          </svg>
+        </div>
+        <h3>AI Symptom Checker</h3>
+        <p>Describe your symptoms and get an instant analysis with possible conditions and recommended next steps.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15.6 11.6L22 7v10l-6.4-4.5v-1zM4 5h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2z" />
+          </svg>
+        </div>
+        <h3>Video Consultations</h3>
+        <p>Connect with qualified healthcare professionals through secure, high-quality video calls.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <h3>Appointment Scheduling</h3>
+        <p>Easily book, reschedule or cancel appointments with doctors at your convenience.</p>
+      </div>
+    </section>
+    
+    <section id="symptom-checker" class="app-section">
+      <div class="app-header">
+        <h2>MediConnect Health Assistant</h2>
+        <div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v4M12 16h.01"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="app-tabs">
+        <div class="app-tab active" data-tab="symptom-checker">Symptom Checker</div>
+        <div class="app-tab" data-tab="doctor-connect">Connect with Doctor</div>
+        <div class="app-tab" data-tab="medical-history">Medical History</div>
+        <div class="app-tab" data-tab="prescriptions">Prescriptions</div>
+      </div>
+      <div class="app-content">
+        <div class="symptom-checker active">
+          <h3>Tell us about your symptoms</h3>
+          <p>Our AI-powered symptom checker will analyze your symptoms and provide you with possible causes. This is not a diagnosis but can help guide your next steps.</p>
+          
+          <form id="symptom-form">
+            <div class="input-group">
+              <label for="age">Age</label>
+              <input type="number" id="age" name="age" min="1" max="120" required>
+            </div>
+            
+            <div class="input-group">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender" required>
+                <option value="">Select your gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+            
+            <div class="input-group">
+              <label for="symptoms">Describe your symptoms</label>
+              <textarea id="symptoms" name="symptoms" placeholder="For example: I've had a headache for the past 3 days with sensitivity to light and some nausea..." required></textarea>
+            </div>
+            
+            <div class="input-group">
+              <label>Common symptoms (optional)</label>
+              <div class="symptoms-tags">
+                <div class="symptom-tag">
+                  Headache
+                  <span class="remove">✕</span>
+                </div>
+                <div class="symptom-tag">
+                  Fever
+                  <span class="remove">✕</span>
+                </div>
+                <div class="symptom-tag">
+                  Nausea
+                  <span class="remove">✕</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="input-group">
+              <label>Duration</label>
+              <select id="duration" name="duration">
+                <option value="">Select duration</option>
+                <option value="today">Started today</option>
+                <option value="days">Days</option>
+                <option value="week">About a week</option>
+                <option value="weeks">Several weeks</option>
+                <option value="month">A month or longer</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn-secondary">Check Symptoms</button>
+          </form>
+          
+          <div class="results" id="results">
+            <div class="results-header">
+              <h3>Symptom Analysis Results</h3>
+              <button class="btn btn-outline" id="back-to-form">Edit Symptoms</button>
+            </div>
+            
+            <div class="results-content">
+              <p>Based on your description, we've identified the following symptoms:</p>
+              <div class="symptoms-tags">
+                <div class="symptom-tag">
+                  Headache
+                </div>
+                <div class="symptom-tag">
+                  Light sensitivity
+                </div>
+                <div class="symptom-tag">
+                  Nausea
+                </div>
+                <div class="symptom-tag">
+                  Duration: 3 days
+                </div>
+              </div>
+              
+              <div class="possible-conditions">
+                <h4>Possible conditions to discuss with a doctor:</h4>
+                
+                <div class="condition-card">
+                  <div class="condition-severity severity-high">75%</div>
+                  <div class="condition-info">
+                    <h4>Migraine</h4>
+                    <p>A neurological condition that causes recurring headaches often with light sensitivity and nausea.</p>
+                  </div>
+                  <div class="condition-actions">
+                    <button class="btn btn-outline">Learn More</button>
+                  </div>
+                </div>
+                
+                <div class="condition-card">
+                  <div class="condition-severity severity-medium">45%</div>
+                  <div class="condition-info">
+                    <h4>Tension Headache</h4>
+                    <p>Common headache with mild to moderate pain, often described as a tight band around the head.</p>
+                  </div>
+                  <div class="condition-actions">
+                    <button class="btn btn-outline">Learn More</button>
+                  </div>
+                </div>
+                
+                <div class="condition-card">
+                  <div class="condition-severity severity-low">20%</div>
+                  <div class="condition-info">
+                    <h4>Sinusitis</h4>
+                    <p>Inflammation of the sinuses that can cause headaches, particularly around the forehead and eyes.</p>
+                  </div>
+                  <div class="condition-actions">
+                    <button class="btn btn-outline">Learn More</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="disclaimer">
+                <p><strong>Note:</strong> This is not a medical diagnosis. Always consult with a healthcare professional for proper diagnosis and treatment.</p>
+              </div>
+              
+              <div style="margin-top: 2rem; text-align: center;">
+                <button class="btn" id="connect-doctor-btn">Connect with a Doctor Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="doctor-connect" id="doctor-connect">
+          <h3>Available Doctors</h3>
+          <p>Select a doctor to schedule a video consultation about your symptoms.</p>
+          
+          <div class="doctors-list">
+            <div class="doctor-card">
+              <img src="/api/placeholder/400/320" alt="Doctor" class="doctor-img">
+              <div class="doctor-info">
+                <h4>Dr. Sarah Johnson</h4>
+                <div class="doctor-specialty">Neurologist</div>
+                <div class="doctor-rating">
+                  <div class="rating-stars">★★★★★</div>
+                  <span>4.9 (124 reviews)</span>
+                </div>
+                <div class="doctor-availability">Available today</div>
+                <button class="btn">Schedule Appointment</button>
+              </div>
+            </div>
+            
+            <div class="doctor-card">
+              <img src="/api/placeholder/400/320" alt="Doctor" class="doctor-img">
+              <div class="doctor-info">
+                <h4>Dr. Michael Chen</h4>
+                <div class="doctor-specialty">Family Medicine</div>
+                <div class="doctor-rating">
+                  <div class="rating-stars">★★★★★</div>
+                  <span>4.8 (97 reviews)</span>
+                </div>
+                <div class="doctor-availability">Available in 2 hours</div>
+                <button class="btn">Schedule Appointment</button>
+              </div>
+            </div>
+            
+            <div class="doctor-card">
+              <img src="/api/placeholder/400/320" alt="Doctor" class="doctor-img">
+              <div class="doctor-info">
+                <h4>Dr. Emily Rodriguez</h4>
+                <div class="doctor-specialty">Internal Medicine</div>
+                <div class="doctor-rating">
+                  <div class="rating-stars">★★★★☆</div>
+                  <span>4.7 (86 reviews)</span>
+                </div>
+                <div class="doctor-availability">Available tomorrow</div>
+                <button class="btn">Schedule Appointment</button>
+              </div>
+            </div>
+            
+            <div class="doctor-card">
+              <img src="/api/placeholder/400/320" alt="Doctor" class="doctor-img">
+              <div class="doctor-info">
+                <h4>Dr. James Wilson</h4>
+                <div class="doctor-specialty">General Practitioner</div>
+                <div class="doctor-rating">
+                  <div class="rating-stars">★★★★☆</div>
+                  <span>4.6 (112 reviews)</span>
+                </div>
+                <div class="doctor-availability">Available today</div>
+                <button class="btn">Schedule Appointment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h4>MediConnect</h4>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">How It Works</a></li>
+            <li><a href="#">Doctors</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>For Patients</h4>
+          <ul class="footer-links">
+            <li><a href="#">Find Doctors</a></li>
+            <li><a href="#">Symptom Checker</a></li>
+            <li><a href="#">Medical Records</a></li>
+            <li><a href="#">Prescriptions</a></li>
+            <li><a href="#">Insurance</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>For Doctors</h4>
+          <ul class="footer-links">
+            <li><a href="#">Join as Doctor</a></li>
+            <li><a href="#">Doctor Dashboard</a></li>
+            <li><a href="#">Practice Management</a></li>
+            <li><a href="#">Telemedicine Tools</a></li>
+            <li><a href="#">Medical Resources</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <ul class="footer-links">
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">HIPAA Compliance</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Accessibility</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 MediConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Toggle between symptom checker and results
+    const symptomForm = document.getElementById('symptom-form');
+    const resultsSection = document.getElementById('results');
+    const backToFormBtn = document.getElementById('back-to-form');
+    const connectDoctorBtn = document.getElementById('connect-doctor-btn');
+    const doctorConnectSection = document.getElementById('doctor-connect');
+    
+    // Tab navigation
+    const tabs = document.querySelectorAll('.app-tab');
+    
+    // Show results when form is submitted
+    symptomForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Hide the form
+      symptomForm.style.display = 'none';
+      
+      // Show the results
+      resultsSection.classList.add('active');
+    });
+    
+    // Back to form button
+    backToFormBtn.addEventListener('click', function() {
+      // Show the form
+      symptomForm.style.display = 'block';
+      
+      // Hide the results
+      resultsSection.classList.remove('active');
+    });
+    
+    // Connect with doctor button
+    connectDoctorBtn.addEventListener('click', function() {
+      // Hide symptom checker
+      document.querySelector('.symptom-checker').classList.remove('active');
+      
+      // Show doctor connect section
+      doctorConnectSection.classList.add('active');
+      
+      // Update tabs
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.tab === 'doctor-connect') {
+          tab.classList.add('active');
+        }
+      });
+    });
+    
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        this.classList.add('active');
+        
+        // Hide all content sections
+        document.querySelectorAll('.symptom-checker, .doctor-connect').forEach(section => {
+          section.classList.remove('active');
+        });
+        
+        // Show content for active tab
+        if (this.dataset.tab === 'symptom-checker') {
+          document.querySelector('.symptom-checker').classList.add('active');
+        } else if (this.dataset.tab === 'doctor-connect') {
+          doctorConnectSection.classList.add('active');
+        }
+      });
+    });
+    
+    // Remove symptom tags
+    document.querySelectorAll('.remove').forEach(removeBtn => {
+      removeBtn.addEventListener('click', function() {
+        this.parentElement.remove();
+      });
+    });
+    
+    // Common symptoms to add (this would be more interactive in a real app)
+    const commonSymptoms = [
+      'Headache', 'Fever', 'Cough', 'Sore throat', 'Fatigue', 'Dizziness', 
+      'Shortness of breath', 'Chest pain', 'Abdominal pain', 'Nausea', 
+      'Vomiting', 'Diarrhea', 'Constipation', 'Back pain', 'Joint pain',
+      'Muscle aches', 'Skin rash', 'Blurred vision', 'Ear pain'
+    ];
+    
+    // Add symptom input and tag creation
+    const symptomsTextarea = document.getElementById('symptoms');
+    const symptomsTagsContainer = document.querySelector('.symptoms-tags');
+    
+    // Function to create a symptom tag
+    function createSymptomTag(symptom) {
+      const tagDiv = document.createElement('div');
+      tagDiv.className = 'symptom-tag';
+      tagDiv.innerHTML = `
+        ${symptom}
+        <span class="remove">✕</span>
+      `;
+      
+      // Add click event to remove button
+      tagDiv.querySelector('.remove').addEventListener('click', function() {
+        tagDiv.remove();
+      });
+      
+      return tagDiv;
+    }
+    
+    // Add autocomplete dropdown for symptoms
+    const symptomsContainer = document.querySelector('.input-group:nth-child(3)');
+    const autocompleteDiv = document.createElement('div');
+    autocompleteDiv.className = 'autocomplete-dropdown hidden';
+    autocompleteDiv.style.cssText = `
+      background-color: white;
+      border: 1px solid var(--gray);
+      border-radius: 0.375rem;
+      max-height: 200px;
+      overflow-y: auto;
+      position: absolute;
+      width: calc(100% - 2px);
+      z-index: 5;
+    `;
+    symptomsContainer.style.position = 'relative';
+    symptomsContainer.appendChild(autocompleteDiv);
+    
+    // Listen for input in symptoms textarea
+    symptomsTextarea.addEventListener('input', function() {
+      const value = this.value.toLowerCase();
+      if (value.length < 2) {
+        autocompleteDiv.classList.add('hidden');
+        return;
+      }
+      
+      // Filter symptoms that match input
+      const matchingSymptoms = commonSymptoms.filter(symptom => 
+        symptom.toLowerCase().includes(value)
+      ).slice(0, 5); // Limit to 5 results
+      
+      if (matchingSymptoms.length === 0) {
+        autocompleteDiv.classList.add('hidden');
+        return;
+      }
+      
+      // Create dropdown items
+      autocompleteDiv.innerHTML = '';
+      matchingSymptoms.forEach(symptom => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.textContent = symptom;
+        item.style.cssText = `
+          padding: 0.75rem;
+          cursor: pointer;
+          border-bottom: 1px solid var(--gray-light);
+        `;
+        item.addEventListener('mouseover', function() {
+          this.style.backgroundColor = 'var(--gray-light)';
+        });
+        item.addEventListener('mouseout', function() {
+          this.style.backgroundColor = 'transparent';
+        });
+        item.addEventListener('click', function() {
+          // Add symptom as tag
+          symptomsTagsContainer.appendChild(createSymptomTag(symptom));
+          
+          // Clear input and hide dropdown
+          symptomsTextarea.value = '';
+          autocompleteDiv.classList.add('hidden');
+        });
+        autocompleteDiv.appendChild(item);
+      });
+      
+      autocompleteDiv.classList.remove('hidden');
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!symptomsContainer.contains(event.target)) {
+        autocompleteDiv.classList.add('hidden');
+      }
+    });
+    
+    // Dynamic symptom analysis with AI
+    symptomForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const symptoms = document.getElementById('symptoms').value;
+      const duration = document.getElementById('duration').value;
+      
+      // Get selected symptom tags
+      const symptomTags = [];
+      document.querySelectorAll('.symptoms-tags .symptom-tag').forEach(tag => {
+        symptomTags.push(tag.textContent.trim().replace('✕', '').trim());
+      });
+      
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.textContent = 'Analyzing...';
+      submitBtn.disabled = true;
+      
+      // Simulate AI analysis (would be a real API call in production)
+      setTimeout(() => {
+        // Update results with user's input
+        updateResults(age, gender, symptoms, symptomTags, duration);
+        
+        // Hide the form
+        symptomForm.style.display = 'none';
+        
+        // Show the results
+        resultsSection.classList.add('active');
+        
+        // Reset button
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
+      }, 1500);
+    });
+    
+    // Function to update results based on user input
+    function updateResults(age, gender, symptomsText, symptomTags, duration) {
+      // Update symptoms tags in results
+      const resultsSymptomsTags = document.querySelector('#results .symptoms-tags');
+      resultsSymptomsTags.innerHTML = '';
+      
+      // Add symptoms from the textarea
+      const extractedSymptoms = extractSymptomsFromText(symptomsText);
+      extractedSymptoms.forEach(symptom => {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'symptom-tag';
+        tagDiv.textContent = symptom;
+        resultsSymptomsTags.appendChild(tagDiv);
+      });
+      
+      // Add symptoms from selected tags
+      symptomTags.forEach(symptom => {
+        if (!extractedSymptoms.includes(symptom)) {
+          const tagDiv = document.createElement('div');
+          tagDiv.className = 'symptom-tag';
+          tagDiv.textContent = symptom;
+          resultsSymptomsTags.appendChild(tagDiv);
+        }
+      });
+      
+      // Add age if provided
+      if (age) {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'symptom-tag';
+        tagDiv.textContent = `Age: ${age}`;
+        resultsSymptomsTags.appendChild(tagDiv);
+      }
+      
+      // Add gender if provided
+      if (gender && gender !== '') {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'symptom-tag';
+        tagDiv.textContent = `Gender: ${gender}`;
+        resultsSymptomsTags.appendChild(tagDiv);
+      }
+      
+      // Add duration if provided
+      if (duration && duration !== '') {
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'symptom-tag';
+        tagDiv.textContent = `Duration: ${getDurationText(duration)}`;
+        resultsSymptomsTags.appendChild(tagDiv);
+      }
+      
+      // Generate conditions based on symptoms (simplified AI simulation)
+      const conditions = getPossibleConditions(extractedSymptoms.concat(symptomTags));
+      
+      // Update conditions in results
+      const conditionsContainer = document.querySelector('.possible-conditions');
+      conditionsContainer.innerHTML = '<h4>Possible conditions to discuss with a doctor:</h4>';
+      
+      conditions.forEach(condition => {
+        const conditionCard = document.createElement('div');
+        conditionCard.className = 'condition-card';
+        conditionCard.innerHTML = `
+          <div class="condition-severity severity-${condition.severityClass}">${condition.matchPercentage}%</div>
+          <div class="condition-info">
+            <h4>${condition.name}</h4>
+            <p>${condition.description}</p>
+          </div>
+          <div class="condition-actions">
+            <button class="btn btn-outline">Learn More</button>
+          </div>
+        `;
+        
+        // Add event listener to Learn More button
+        conditionCard.querySelector('.btn').addEventListener('click', function() {
+          showConditionDetails(condition);
+        });
+        
+        conditionsContainer.appendChild(conditionCard);
+      });
+    }
+    
+    // Function to extract symptoms from text
+    function extractSymptomsFromText(text) {
+      // Simple extraction (in a real app, this would use NLP/AI)
+      const extractedSymptoms = [];
+      const lowercaseText = text.toLowerCase();
+      
+      commonSymptoms.forEach(symptom => {
+        if (lowercaseText.includes(symptom.toLowerCase())) {
+          extractedSymptoms.push(symptom);
+        }
+      });
+      
+      // Additional keywords that might indicate symptoms
+      const keywordMapping = {
+        'pain in my head': 'Headache',
+        'can\'t sleep': 'Insomnia',
+        'runny nose': 'Nasal congestion',
+        'can\'t breathe': 'Shortness of breath',
+        'throwing up': 'Vomiting',
+        'feel sick': 'Nausea',
+        'stomachache': 'Abdominal pain'
+      };
+      
+      for (const [keyword, symptom] of Object.entries(keywordMapping)) {
+        if (lowercaseText.includes(keyword) && !extractedSymptoms.includes(symptom)) {
+          extractedSymptoms.push(symptom);
+        }
+      }
+      
+      return extractedSymptoms;
+    }
+    
+    // Function to get duration text
+    function getDurationText(duration) {
+      const durationMap = {
+        'today': 'Started today',
+        'days': 'Several days',
+        'week': 'About a week',
+        'weeks': 'Several weeks',
+        'month': 'A month or longer'
+      };
+      
+      return durationMap[duration] || duration;
+    }
+    
+    // Health conditions database (simplified)
+    const healthConditions = [
+      {
+        name: 'Common Cold',
+        symptoms: ['Cough', 'Sore throat', 'Nasal congestion', 'Sneezing', 'Fatigue'],
+        description: 'A viral infection of the upper respiratory tract that typically improves within 7-10 days.',
+        severity: 'low'
+      },
+      {
+        name: 'Influenza (Flu)',
+        symptoms: ['Fever', 'Cough', 'Sore throat', 'Fatigue', 'Muscle aches', 'Headache'],
+        description: 'A contagious respiratory illness caused by influenza viruses that can cause mild to severe illness.',
+        severity: 'medium'
+      },
+      {
+        name: 'Migraine',
+        symptoms: ['Headache', 'Light sensitivity', 'Nausea', 'Dizziness', 'Blurred vision'],
+        description: 'A neurological condition that causes recurring headaches often with light sensitivity and nausea.',
+        severity: 'medium'
+      },
+      {
+        name: 'Tension Headache',
+        symptoms: ['Headache', 'Fatigue', 'Muscle aches'],
+        description: 'Common headache with mild to moderate pain, often described as a tight band around the head.',
+        severity: 'low'
+      },
+      {
+        name: 'Sinusitis',
+        symptoms: ['Headache', 'Nasal congestion', 'Facial pain', 'Cough'],
+        description: 'Inflammation of the sinuses that can cause headaches, particularly around the forehead and eyes.',
+        severity: 'low'
+      },
+      {
+        name: 'Gastroenteritis',
+        symptoms: ['Nausea', 'Vomiting', 'Diarrhea', 'Abdominal pain', 'Fever'],
+        description: 'Inflammation of the stomach and intestines that causes symptoms such as vomiting and diarrhea.',
+        severity: 'medium'
+      },
+      {
+        name: 'Appendicitis',
+        symptoms: ['Abdominal pain', 'Nausea', 'Vomiting', 'Fever'],
+        description: 'Inflammation of the appendix that causes severe pain in the lower right abdomen. Requires immediate medical attention.',
+        severity: 'high'
+      },
+      {
+        name: 'COVID-19',
+        symptoms: ['Fever', 'Cough', 'Fatigue', 'Shortness of breath', 'Sore throat', 'Headache'],
+        description: 'A respiratory illness caused by the SARS-CoV-2 virus with symptoms ranging from mild to severe.',
+        severity: 'high'
+      },
+      {
+        name: 'Acid Reflux',
+        symptoms: ['Chest pain', 'Abdominal pain', 'Nausea', 'Sore throat'],
+        description: 'A condition where stomach acid flows back into the esophagus, causing irritation and discomfort.',
+        severity: 'low'
+      },
+      {
+        name: 'Allergic Reaction',
+        symptoms: ['Skin rash', 'Shortness of breath', 'Cough', 'Fatigue', 'Nasal congestion'],
+        description: 'An immune system response to a substance that the body mistakenly identifies as harmful.',
+        severity: 'medium'
+      }
+    ];
+    
+    // Function to get possible conditions based on symptoms
+    function getPossibleConditions(symptoms) {
+      if (!symptoms || symptoms.length === 0) {
+        return [];
+      }
+      
+      // Calculate match percentage for each condition
+      const matches = healthConditions.map(condition => {
+        const matchingSymptoms = condition.symptoms.filter(s => 
+          symptoms.some(userS => userS.toLowerCase() === s.toLowerCase())
+        );
+        
+        const matchPercentage = Math.round(
+          (matchingSymptoms.length / condition.symptoms.length) * 100
+        );
+        
+        return {
+          ...condition,
+          matchPercentage: matchPercentage,
+          severityClass: condition.severity,
+          matchingSymptoms
+        };
+      });
+      
+      // Filter and sort by match percentage
+      return matches
+        .filter(m => m.matchPercentage > 0)
+        .sort((a, b) => b.matchPercentage - a.matchPercentage)
+        .slice(0, 5); // Top 5 matches
+    }
+    
+    // Function to show condition details in a modal
+    function showConditionDetails(condition) {
+      // Create modal container
+      const modalContainer = document.createElement('div');
+      modalContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      `;
+      
+      // Create modal content
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background-color: white;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+      `;
+      
+      // Build recommended actions based on severity
+      let recommendedActions = '';
+      if (condition.severity === 'high') {
+        recommendedActions = `
+          <li>Seek immediate medical attention or schedule a telemedicine consultation as soon as possible.</li>
+          <li>Monitor your symptoms closely for any changes or worsening.</li>
+          <li>Prepare a list of questions for your healthcare provider.</li>
+        `;
+      } else if (condition.severity === 'medium') {
+        recommendedActions = `
+          <li>Schedule a telemedicine consultation within the next 24-48 hours.</li>
+          <li>Rest and stay hydrated while monitoring your symptoms.</li>
+          <li>Avoid activities that might worsen your symptoms.</li>
+        `;
+      } else {
+        recommendedActions = `
+          <li>Schedule a non-urgent telemedicine consultation if symptoms persist.</li>
+          <li>Try appropriate over-the-counter remedies for symptom relief.</li>
+          <li>Rest and maintain good hydration and nutrition.</li>
+        `;
+      }
+      
+      // Create modal HTML
+      modalContent.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="margin: 0;">${condition.name}</h3>
+          <button class="close-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <div class="condition-severity severity-${condition.severityClass}" style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 1rem; color: white; font-weight: bold;">
+            ${condition.severity.charAt(0).toUpperCase() + condition.severity.slice(1)} Priority
+          </div>
+          <span style="margin-left: 0.5rem; color: var(--gray);">Match: ${condition.matchPercentage}%</span>
+        </div>
+        
+        <h4 style="margin-bottom: 0.5rem;">Description</h4>
+        <p style="margin-bottom: 1.5rem;">${condition.description}</p>
+        
+        <h4 style="margin-bottom: 0.5rem;">Common Symptoms</h4>
+        <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+          ${condition.symptoms.map(s => `<li>${s}</li>`).join('')}
+        </ul>
+        
+        <h4 style="margin-bottom: 0.5rem;">Recommended Next Steps</h4>
+        <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+          ${recommendedActions}
+        </ul>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+          <button class="btn connect-doctor-modal">Connect with a Doctor</button>
+        </div>
+        
+        <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+          <strong>Disclaimer:</strong> This information is for educational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.
+        </p>
+      `;
+      
+      // Add modal to body
+      modalContainer.appendChild(modalContent);
+      document.body.appendChild(modalContainer);
+      
+      // Close modal when clicking the X or outside the modal
+      modalContainer.addEventListener('click', function(e) {
+        if (e.target === modalContainer) {
+          modalContainer.remove();
+        }
+      });
+      
+      modalContent.querySelector('.close-modal').addEventListener('click', function() {
+        modalContainer.remove();
+      });
+      
+      // Connect with doctor button in modal
+      modalContent.querySelector('.connect-doctor-modal').addEventListener('click', function() {
+        modalContainer.remove();
+        
+        // Hide symptom checker
+        document.querySelector('.symptom-checker').classList.remove('active');
+        
+        // Show doctor connect section
+        doctorConnectSection.classList.add('active');
+        
+        // Update tabs
+        tabs.forEach(tab => {
+          tab.classList.remove('active');
+          if (tab.dataset.tab === 'doctor-connect') {
+            tab.classList.add('active');
+          }
+        });
+      });
+    }
+    
+    // Initialize the app with some symptom tags
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clear existing symptom tags from template
+      symptomsTagsContainer.innerHTML = '';
+      
+      // Add some initial symptom suggestions
+      ['Headache', 'Fever', 'Cough'].forEach(symptom => {
+        symptomsTagsContainer.appendChild(createSymptomTag(symptom));
+      });
+    });
