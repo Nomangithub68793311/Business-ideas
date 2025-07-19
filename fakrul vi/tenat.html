@@ -1,0 +1,1321 @@
+</div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Issue</th>
+                                    <th>Location</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>May 18, 2025</td>
+                                    <td>AC not cooling properly</td>
+                                    <td>Living Room</td>
+                                    <td>Medium</td>
+                                    <td><span class="status status-pending">Scheduled</span></td>
+                                    <td><button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>May 10, 2025</td>
+                                    <td>Leaking kitchen faucet</td>
+                                    <td>Kitchen</td>
+                                    <td>Low</td>
+                                    <td><span class="status status-approved">Resolved</span></td>
+                                    <td><button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Apr 25, 2025</td>
+                                    <td>Broken door handle</td>
+                                    <td>Bathroom</td>
+                                    <td>Low</td>
+                                    <td><span class="status status-approved">Resolved</span></td>
+                                    <td><button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Details</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="maintenance-form" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h3>New Maintenance Request</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="issue-title">Issue Title</label>
+                            <input type="text" id="issue-title" class="form-control" placeholder="Brief description of the issue">
+                        </div>
+                        <div class="form-group">
+                            <label for="issue-location">Location</label>
+                            <select id="issue-location" class="form-control">
+                                <option value="">Select Location</option>
+                                <option value="Living Room">Living Room</option>
+                                <option value="Kitchen">Kitchen</option>
+                                <option value="Master Bedroom">Master Bedroom</option>
+                                <option value="Bedroom 2">Bedroom 2</option>
+                                <option value="Bathroom">Bathroom</option>
+                                <option value="Balcony">Balcony</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="issue-priority">Priority</label>
+                            <select id="issue-priority" class="form-control">
+                                <option value="Low">Low - Not urgent</option>
+                                <option value="Medium">Medium - Needs attention soon</option>
+                                <option value="High">High - Urgent issue</option>
+                                <option value="Emergency">Emergency - Immediate attention required</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="issue-description">Detailed Description</label>
+                            <textarea id="issue-description" class="form-control" rows="4" placeholder="Please provide details about the issue..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="issue-photo">Upload Photos (optional)</label>
+                            <input type="file" id="issue-photo" class="form-control" multiple>
+                        </div>
+                        <div class="form-group">
+                            <label for="access-instructions">Access Instructions</label>
+                            <textarea id="access-instructions" class="form-control" rows="2" placeholder="Any special instructions for maintenance staff to access your unit..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Available Times</label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                <label style="display: flex; align-items: center; width: 180px;">
+                                    <input type="checkbox" style="margin-right: 5px;"> Weekday mornings
+                                </label>
+                                <label style="display: flex; align-items: center; width: 180px;">
+                                    <input type="checkbox" style="margin-right: 5px;"> Weekday afternoons
+                                </label>
+                                <label style="display: flex; align-items: center; width: 180px;">
+                                    <input type="checkbox" style="margin-right: 5px;"> Weekday evenings
+                                </label>
+                                <label style="display: flex; align-items: center; width: 180px;">
+                                    <input type="checkbox" style="margin-right: 5px;"> Weekend mornings
+                                </label>
+                                <label style="display: flex; align-items: center; width: 180px;">
+                                    <input type="checkbox" style="margin-right: 5px;"> Weekend afternoons
+                                </label>
+                                <label style="display: flex; align-items: center; width: 180px;">
+                                    <input type="checkbox" style="margin-right: 5px;"> Weekend evenings
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline" onclick="hideMaintenanceForm()">Cancel</button>
+                        <button class="btn btn-primary">Submit Request</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div id="notifications" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Notifications</h3>
+                        <div>
+                            <button class="btn btn-outline">Mark All as Read</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; justify-content: space-between; padding: 15px; background-color: #f1f5f9; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid var(--primary-color);">
+                            <div>
+                                <h4>Building Maintenance Notice</h4>
+                                <p style="color: #666; font-size: 0.9rem;">May 20, 2025</p>
+                                <p>Water will be shut off on May 25th from 10 AM to 2 PM due to routine maintenance of the building's plumbing system.</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Mark as Read</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 15px; background-color: #f1f5f9; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid var(--primary-color);">
+                            <div>
+                                <h4>Maintenance Request Update</h4>
+                                <p style="color: #666; font-size: 0.9rem;">May 19, 2025</p>
+                                <p>Your maintenance request (AC not cooling properly) has been scheduled for May 22nd between 1 PM and 3 PM.</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Mark as Read</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 15px; background-color: #f1f5f9; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid var(--primary-color);">
+                            <div>
+                                <h4>Community Event</h4>
+                                <p style="color: #666; font-size: 0.9rem;">May 18, 2025</p>
+                                <p>Join us for a community BBQ this weekend at the courtyard. RSVP at the leasing office.</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Mark as Read</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 15px; background-color: #fff; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid #ccc;">
+                            <div>
+                                <h4>Rent Payment Confirmed</h4>
+                                <p style="color: #666; font-size: 0.9rem;">May 1, 2025</p>
+                                <p>Your rent payment of $1,250.00 for May has been received and processed. Thank you!</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem; visibility: hidden;">Mark as Read</button>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 15px; background-color: #fff; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid #ccc;">
+                            <div>
+                                <h4>Maintenance Request Completed</h4>
+                                <p style="color: #666; font-size: 0.9rem;">May 10, 2025</p>
+                                <p>Your maintenance request (Leaking kitchen faucet) has been completed. Please let us know if you have any further issues.</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem; visibility: hidden;">Mark as Read</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline">Load More</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Notification Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px;">Notification Preferences</h4>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> Email notifications
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> SMS notifications
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> In-app notifications
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="margin-bottom: 10px;">Notification Types</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> Maintenance updates
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> Payment reminders
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> Building announcements
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> Community events
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;"> Lease updates
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" style="margin-right: 10px;"> Marketing/Promotions
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">Save Preferences</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="section">
+                <div class="settings-grid">
+                    <div class="settings-nav">
+                        <ul>
+                            <li><a href="#" class="active" onclick="showSettingsTab('profile')">Profile</a></li>
+                            <li><a href="#" onclick="showSettingsTab('contact')">Contact Information</a></li>
+                            <li><a href="#" onclick="showSettingsTab('password')">Password</a></li>
+                            <li><a href="#" onclick="showSettingsTab('payment')">Payment Methods</a></li>
+                            <li><a href="#" onclick="showSettingsTab('documents')">Documents</a></li>
+                            <li><a href="#" onclick="showSettingsTab('privacy')">Privacy & Security</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="settings-content">
+                        <!-- Profile Settings -->
+                        <div id="profile-settings" class="card settings-tab active">
+                            <div class="card-header">
+                                <h3>Profile Settings</h3>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: flex; margin-bottom: 20px;">
+                                    <div style="width: 100px; height: 100px; background-color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold; margin-right: 20px;">
+                                        JD
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-outline" style="margin-bottom: 10px;">Upload Photo</button>
+                                        <p style="color: #666; font-size: 0.9rem;">Supported formats: JPG, PNG. Max size: 5MB</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profile-first-name">First Name</label>
+                                    <input type="text" id="profile-first-name" class="form-control" value="John">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-last-name">Last Name</label>
+                                    <input type="text" id="profile-last-name" class="form-control" value="Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-date-of-birth">Date of Birth</label>
+                                    <input type="date" id="profile-date-of-birth" class="form-control" value="1990-05-15">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-occupation">Occupation</label>
+                                    <input type="text" id="profile-occupation" class="form-control" value="Software Developer">
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information Settings -->
+                        <div id="contact-settings" class="card settings-tab">
+                            <div class="card-header">
+                                <h3>Contact Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="contact-email">Email Address</label>
+                                    <input type="email" id="contact-email" class="form-control" value="john.doe@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-phone">Phone Number</label>
+                                    <input type="tel" id="contact-phone" class="form-control" value="(555) 123-4567">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-emergency">Emergency Contact Name</label>
+                                    <input type="text" id="contact-emergency" class="form-control" value="Jane Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-emergency-relation">Relationship</label>
+                                    <input type="text" id="contact-emergency-relation" class="form-control" value="Sister">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-emergency-phone">Emergency Contact Phone</label>
+                                    <input type="tel" id="contact-emergency-phone" class="form-control" value="(555) 987-6543">
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Password Settings -->
+                        <div id="password-settings" class="card settings-tab">
+                            <div class="card-header">
+                                <h3>Change Password</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="current-password">Current Password</label>
+                                    <input type="password" id="current-password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-password">New Password</label>
+                                    <input type="password" id="new-password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm-password">Confirm New Password</label>
+                                    <input type="password" id="confirm-password" class="form-control">
+                                </div>
+                                <div style="background-color: #f1f5f9; padding: 15px; border-radius: 4px; margin-top: 20px;">
+                                    <h4 style="margin-bottom: 10px;">Password Requirements</h4>
+                                    <ul style="padding-left: 20px; margin-bottom: 0;">
+                                        <li>At least 8 characters long</li>
+                                        <li>Must include at least one uppercase letter</li>
+                                        <li>Must include at least one lowercase letter</li>
+                                        <li>Must include at least one number</li>
+                                        <li>Must include at least one special character</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Update Password</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Methods Settings -->
+                        <div id="payment-settings" class="card settings-tab">
+                            <div class="card-header">
+                                <h3>Payment Methods</h3>
+                                <button class="btn btn-outline">Add Payment Method</button>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="far fa-credit-card" style="font-size: 1.5rem; margin-right: 15px;"></i>
+                                        <div>
+                                            <h4>Visa ending in 1234</h4>
+                                            <p style="color: #666; font-size: 0.9rem;">Expires 05/2026</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="status status-approved" style="margin-right: 10px;">Default</span>
+                                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Edit</button>
+                                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Remove</button>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 4px;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-university" style="font-size: 1.5rem; margin-right: 15px;"></i>
+                                        <div>
+                                            <h4>Bank Account ending in 5678</h4>
+                                            <p style="color: #666; font-size: 0.9rem;">First National Bank</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Set as Default</button>
+                                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Edit</button>
+                                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Documents Settings -->
+                        <div id="documents-settings" class="card settings-tab">
+                            <div class="card-header">
+                                <h3>Documents</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Document</th>
+                                            <th>Date Uploaded</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Lease Agreement</td>
+                                            <td>Jan 1, 2025</td>
+                                            <td><span class="status status-approved">Current</span></td>
+                                            <td>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Proof of Income</td>
+                                            <td>Jan 1, 2025</td>
+                                            <td><span class="status status-approved">Verified</span></td>
+                                            <td>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</button>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Update</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ID Verification</td>
+                                            <td>Jan 1, 2025</td>
+                                            <td><span class="status status-approved">Verified</span></td>
+                                            <td>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</button>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Update</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Renter's Insurance</td>
+                                            <td>Mar 15, 2025</td>
+                                            <td><span class="status status-approved">Current</span></td>
+                                            <td>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</button>
+                                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Update</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div style="margin-top: 20px;">
+                                    <button class="btn btn-primary">Upload New Document</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Privacy Settings -->
+                        <div id="privacy-settings" class="card settings-tab">
+                            <div class="card-header">
+                                <h3>Privacy & Security</h3>
+                            </div>
+                            <div class="card-body">
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="margin-bottom: 10px;">Two-Factor Authentication</h4>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background-color: #f1f5f9; border-radius: 4px;">
+                                        <div>
+                                            <p style="margin-bottom: 5px;">Enhance your account security with two-factor authentication</p>
+                                            <p style="color: #666; font-size: 0.9rem;">Status: <span style="color: #e74c3c; font-weight: 500;">Not Enabled</span></p>
+                                        </div>
+                                        <button class="btn btn-primary">Enable</button>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="margin-bottom: 10px;">Session Management</h4>
+                                    <p style="margin-bottom: 15px;">You're currently logged in on these devices:</p>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 10px;">
+                                        <div>
+                                            <h4>Current Device - Chrome on Windows</h4>
+                                            <p style="color: #666; font-size: 0.9rem;">Last active: Just now</p>
+                                        </div>
+                                        <button class="btn btn-outline" disabled style="padding: 5px 10px; font-size: 0.8rem;">Current</button>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 4px;">
+                                        <div>
+                                            <h4>Safari on iPhone</h4>
+                                            <p style="color: #666; font-size: 0.9rem;">Last active: Yesterday</p>
+                                        </div>
+                                        <button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Sign Out</button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 style="margin-bottom: 10px;">Data Privacy</h4>
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <label style="display: flex; align-items: center;">
+                                            <input type="checkbox" checked style="margin-right: 10px;"> Allow usage data collection to improve services
+                                        </label>
+                                        <label style="display: flex; align-items: center;">
+                                            <input type="checkbox" checked style="margin-right: 10px;"> Receive personalized recommendations
+                                        </label>
+                                        <label style="display: flex; align-items: center;">
+                                            <input type="checkbox" style="margin-right: 10px;"> Share anonymized data with third parties
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary">Save Privacy Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show selected section
+        function showSection(sectionId) {
+            // Update active sidebar link
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.sidebar-menu a[href="#${sectionId}"]`).classList.add('active');
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6fb3b8;
+            --bg-color: #f7f9fc;
+            --sidebar-bg: #2c3e50;
+            --text-color: #333;
+            --light-text: #f4f6f9;
+            --border-color: #e1e5eb;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: var(--light-text);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 15px 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h3 {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .sidebar-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 250px;
+        }
+        
+        .page-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-icon {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        /* Card Styles */
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .card-header h3 {
+            color: var(--primary-color);
+        }
+        
+        .card-body {
+            margin-bottom: 15px;
+        }
+        
+        .card-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            text-align: right;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: rgba(74, 111, 165, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .stat-info h4 {
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3d5d8a;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a9a9f;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        
+        .table tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-denied {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Settings Page */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        
+        .settings-nav {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 15px;
+        }
+        
+        .settings-nav ul {
+            list-style: none;
+        }
+        
+        .settings-nav li {
+            margin-bottom: 10px;
+        }
+        
+        .settings-nav a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .settings-nav a:hover, .settings-nav a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar-header h3, .sidebar-header p {
+                display: none;
+            }
+            
+            .sidebar-menu a span {
+                display: none;
+            }
+            
+            .sidebar-menu a i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>TenantPortal</h3>
+                <p>Welcome back!</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#dashboard" class="active" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#lease" onclick="showSection('lease')">
+                        <i class="fas fa-file-contract"></i>
+                        <span>Lease Details</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#rent" onclick="showSection('rent')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Rent Requests</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#maintenance" onclick="showSection('maintenance')">
+                        <i class="fas fa-tools"></i>
+                        <span>Maintenance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#notifications" onclick="showSection('notifications')">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#settings" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="page-header">
+                <h2 id="section-title">Dashboard</h2>
+                <div class="user-actions">
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-avatar">JD</div>
+                        <span>John Doe</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Unit Number</h4>
+                            <p>A-203</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Lease Ends</h4>
+                            <p>Dec 31, 2025</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Rent Due</h4>
+                            <p>$1,250</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Open Repairs</h4>
+                            <p>2</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>May 15, 2025</td>
+                                    <td>Rent Payment</td>
+                                    <td>Monthly rent payment processed</td>
+                                    <td><span class="status status-approved">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>May 10, 2025</td>
+                                    <td>Maintenance</td>
+                                    <td>Leaking kitchen faucet</td>
+                                    <td><span class="status status-approved">Resolved</span></td>
+                                </tr>
+                                <tr>
+                                    <td>May 5, 2025</td>
+                                    <td>Notification</td>
+                                    <td>Building inspection scheduled</td>
+                                    <td><span class="status status-pending">Upcoming</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Announcements</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);">
+                            <h4>Building Maintenance</h4>
+                            <p style="color: #666; font-size: 0.9rem;">May 20, 2025</p>
+                            <p>Water will be shut off on May 25th from 10 AM to 2 PM due to routine maintenance of the building's plumbing system.</p>
+                        </div>
+                        <div>
+                            <h4>Community BBQ</h4>
+                            <p style="color: #666; font-size: 0.9rem;">May 18, 2025</p>
+                            <p>Join us for a community BBQ this weekend at the courtyard. RSVP at the leasing office.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lease Details Section -->
+            <div id="lease" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lease Information</h3>
+                        <button class="btn btn-outline">Download PDF</button>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h4 style="margin-bottom: 15px;">Lease Details</h4>
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Start Date:</td>
+                                        <td>January 1, 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">End Date:</td>
+                                        <td>December 31, 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Monthly Rent:</td>
+                                        <td>$1,250.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Security Deposit:</td>
+                                        <td>$1,250.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Pet Deposit:</td>
+                                        <td>$300.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Late Fee:</td>
+                                        <td>$50.00 after the 5th</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 15px;">Property Details</h4>
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Unit:</td>
+                                        <td>A-203</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Size:</td>
+                                        <td>850 sq ft</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Bedrooms:</td>
+                                        <td>2</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Bathrooms:</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Parking Spot:</td>
+                                        <td>B-42</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: 600;">Storage Unit:</td>
+                                        <td>S-15</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin: 20px 0 15px;">Lease Terms</h4>
+                        <div style="height: 200px; overflow-y: auto; border: 1px solid var(--border-color); padding: 15px; border-radius: 4px;">
+                            <p style="margin-bottom: 10px;">This Residential Lease Agreement ("Agreement") is entered into on January 1, 2025 between John Doe ("Tenant") and Skyline Properties ("Landlord").</p>
+                            <p style="margin-bottom: 10px;"><strong>1. Property:</strong> Landlord leases to Tenant unit A-203 located at 123 Main Street, Anytown, USA.</p>
+                            <p style="margin-bottom: 10px;"><strong>2. Term:</strong> The lease term begins on January 1, 2025 and ends on December 31, 2025.</p>
+                            <p style="margin-bottom: 10px;"><strong>3. Rent:</strong> Tenant agrees to pay $1,250.00 per month, due on the 1st of each month.</p>
+                            <p style="margin-bottom: 10px;"><strong>4. Security Deposit:</strong> Tenant has paid a security deposit of $1,250.00 to be held in accordance with state law.</p>
+                            <p style="margin-bottom: 10px;"><strong>5. Occupants:</strong> The premises shall be occupied by Tenant and approved occupants only.</p>
+                            <p style="margin-bottom: 10px;"><strong>6. Utilities:</strong> Tenant is responsible for all utilities including electricity, gas, water, and internet.</p>
+                            <p style="margin-bottom: 10px;"><strong>7. Maintenance:</strong> Tenant shall keep the premises clean and in good condition. Tenant shall promptly notify Landlord of any defects or maintenance needs.</p>
+                            <p style="margin-bottom: 10px;"><strong>8. Alterations:</strong> Tenant shall not make alterations to the premises without prior written consent from Landlord.</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">Request Lease Renewal</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rent Requests Section -->
+            <div id="rent" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Rent Payment History</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>May 1, 2025</td>
+                                    <td>$1,250.00</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status status-approved">Paid</span></td>
+                                    <td><a href="#" class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Apr 1, 2025</td>
+                                    <td>$1,250.00</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status status-approved">Paid</span></td>
+                                    <td><a href="#" class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Mar 1, 2025</td>
+                                    <td>$1,250.00</td>
+                                    <td>Bank Transfer</td>
+                                    <td><span class="status status-approved">Paid</span></td>
+                                    <td><a href="#" class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Feb 1, 2025</td>
+                                    <td>$1,250.00</td>
+                                    <td>Bank Transfer</td>
+                                    <td><span class="status status-approved">Paid</span></td>
+                                    <td><a href="#" class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 1, 2025</td>
+                                    <td>$1,250.00</td>
+                                    <td>Credit Card</td>
+                                    <td><span class="status status-approved">Paid</span></td>
+                                    <td><a href="#" class="btn btn-outline" style="padding: 5px 10px; font-size: 0.8rem;">Download</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Make a Payment</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <div class="form-group">
+                                    <label for="payment-amount">Amount</label>
+                                    <input type="text" id="payment-amount" class="form-control" value="$1,250.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment-date">Payment Date</label>
+                                    <input type="date" id="payment-date" class="form-control" value="2025-06-01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment-method">Payment Method</label>
+                                    <select id="payment-method" class="form-control">
+                                        <option value="credit-card">Credit Card</option>
+                                        <option value="bank-transfer">Bank Transfer</option>
+                                        <option value="paypal">PayPal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label for="credit-card">Credit Card Number</label>
+                                    <input type="text" id="credit-card" class="form-control" placeholder="**** **** **** 1234">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div class="form-group">
+                                        <label for="expiry">Expiry Date</label>
+                                        <input type="text" id="expiry" class="form-control" placeholder="MM/YY">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cvv">CVV</label>
+                                        <input type="text" id="cvv" class="form-control" placeholder="123">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name-on-card">Name on Card</label>
+                                    <input type="text" id="name-on-card" class="form-control" placeholder="John Doe">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">Submit Payment</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Payment Request</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="request-type">Request Type</label>
+                            <select id="request-type" class="form-control">
+                                <option value="payment-extension">Payment Extension</option>
+                                <option value="payment-plan">Payment Plan</option>
+                                <option value="rent-adjustment">Rent Adjustment</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="request-details">Details</label>
+                            <textarea id="request-details" class="form-control" rows="4" placeholder="Please provide details about your request..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="request-date">Requested Date</label>
+                            <input type="date" id="request-date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">Submit Request</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Section -->
+            <div id="maintenance" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Maintenance Requests</h3>
+                        <button class="btn btn-primary" onclick="showMaintenanceForm()">New Request</button>

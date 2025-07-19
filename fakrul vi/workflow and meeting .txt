@@ -1,0 +1,40 @@
+i am developing a tenant and lease management software for a property manager.a property manager can be the owner or anyone else.this software will have property manager module which will have a 20 features.a tenanat module ,a owner module and a manager module.
+this software will have a setting section from where the property manger can maaintain his website like single vendor and a website for multi vendor where he and can let others post their lisitng in the website.
+now in these  websites they can list their  tolet rooms and flat and apartmanets.now i a telling ypu the workflow of the website.first they will list their room ,flats,apartmanets in websites.and they will will do it by a form whivh will be hosted on a link.then the customers will fill the form and the information will come into the property management software.then the propert manager will check the form and will run the tenant screening thee will be all rules in the tebnant screening section the
+prpertty manager will input all the rulses for tenant screeing.if the tenat form passed the tenanat screeing section he will be sent into the lease sectionafter that their staus will be what ?give me a suggestion chat.after the tenannat receives the lease form via email he will check and if he is agrreed  he will be moved into the teant feature..after that the tenanat willl have his userame and password and the url to login and continue activities.he can chaeck his leases,ret notification and can request his maintenance or any flat isssue in the maintenance section then this will be notified to the property manger in the noification sectionas the tenant continues to stay in the flat ,he wil do such kin of thign if not any exception arises.
+for owner the property manager can submit a form to the owner or the owner can submit a form to property manager fot the rent.the question is how the property manager will connect to  the owner and the owner to the property mananger to rent the building.may be it could br manually or via a website
+for owner and property manager thing will work like this they will manually conatct the owner and vice versa .or they ad in website like Find a Property Manager,  List Yourself as a Manager,Post a Property to Be Managed
+then after the supervision of the forms submitted by onwer it will be reviewed then after approved the owner will e sent the lease paper and the property will be added in the property section just like the tenant in the tenat section.after that the owner will sent the login credential and dashboard thing via email the uasername and password
+.from owner panel the owner can see all hia propert on and off .can check the maintenance notification,rent management and different setting ..now this the whole thing for the property mangement software for the mvp version .it will be scaled later fi worked well.now uderstanding all these give me whole workflow for of total software so that i can get idea of each and every thing and i can develop very shortly the software and sell it
+
+
+
+hey chat i want to develop a teanat and a leae management system for property manager whic is call a propert management system. i understand everything like how the tenant will find the rooms to rent like by a submitted form and things but i am stuggling with the idea that how the onwer and property manger will will talk to them at first place like manually or via a website or how it can be suggest me .becasue i am struggling with this idea ti implememnt in my website
+
+
+
+
+questions
+
+
+.where the property maanger will run their ads?in their websites or other website like zillow?
+
+
+ ................. question to fakrul via.........................
+
+1.when the tenant will be given the dashboard and when the owner?form submission ->form review -> tenant screen ->lease sent -> incluson in tenat list
+ form submission ->form review-> owner screen -> lease sent -> inclusion in oweres -> inclusion in property
+
+
+2.workflow and feature meeting with fakrul vi?
+
+
+
+
+
+
+
+i have recently learn real state and all .i am building a tenant and lease management software for property managers. now i want to find out individuals ,tech savvy or small to 
+mid to enterprize companies who needs this software .i want to get the project work from linkedin.i have 14000 followers in linked in .how can i find these individuals or small to
+ mid to enterprize companies what to serch to find them.how to approach them .tell me all details to find them,work with thme ,give them satisfaction and move to next client and 
+ scale my business 

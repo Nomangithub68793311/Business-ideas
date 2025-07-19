@@ -1,0 +1,92 @@
+
+first think about this prompt
+......................................
+
+well .torayvino is a water purifier company .they sell water purifing kit for home and corporate office.i develop them the 
+ecomerce site .they are my client.now i myself want to sell it .beacuse every house hold needs the water purifier .
+so tell which other products and those products is sold by some company and i can make them the websites and also sell 
+their products to the household and corporate office .give me those product ideas like torayvino a water purifier product
+ which sold in dhaka city .they start ti here .they will scale .but think about it and tell me for which type of products 
+ i can make ecommerce site  and i can also sell it in house hold and corporate office in dhaka.give me those product ideas 
+ and those companies who yet didnt make their ecommerce site.thses are starting multinational company.give me ideas
+
+
+1.know the broad niche and its subniches
+
+then about this prompt
+......................................
+
+i am building tPet Care: Vet Appointment + Pet Medical Record Management App ..now tell me which industry i mean which 
+  broad industry it belongs to and is it a niche or subniche .plz explain in details
+
+2.try to know the features and workflow
+
+then think about this prompt
+.............................
+
+Pet Care: Vet Appointment + Pet Medical Record Management App  how many user roles should this software should have  such vet 
+panel pet parents panel and what other panels ?give me detailed description and functionalities for each and work flow
+
+
+3.100 use cases
+then think about this prompt
+.............................
+
+100 Use Cases of Pet Care: Vet Appointment + Pet Medical Record Management App give me first
+
+
+4.100 cutomer segment
+then think about this prompt
+.............................
+
+📘 100 Customer Segments for SmartEd (EdTech Software)
+
+
+
+5.100 ways to sell
+then think about this prompt
+.............................
+
+100 Ways to Sell & Customer Segments - Pet Care App
+
+
+
+6.try to know that is it a new market or product or it has any competitors and other things
+then think about this prompt Ask this question to charGpt must.....
+.............................
+give me the list of competitors if any and how we are different .give me some competitor list direct or indirect for
+ my Education: SmartEd: AI Exam, Lesson, Quiz, Tracker & Communication Suiteand i am different and what different features i can 
+ integrate to sell it in codecanyon ot other channelsof course this is not school manangement system
+
+
+
+7.find out the opportunities and pitch to the client
+
+8 if no,repeat the process
+
+9.if yes,fix budget,start the work,finish the work,think marketign and sales in the time of development
+
+
+then think about this prompt
+.............................
+i am building this SmartEd is a complete EdTech software designed for teachers, students, and parents, each with their own
+ dedicated dashboard. Teachers can create exams, plan lessons, track student performance, and communicate with parents. 
+ Students access lessons, take quizzes, and monitor progress, while parents receive real-time updates on attendance,
+  grades, and feedback.give me 100 marketing ways to sell this software
+
+
+i am building this SmartEd is a complete EdTech software designed for teachers, students, and parents, each with their own
+ dedicated dashboard. Teachers can create exams, plan lessons, track student performance, and communicate with parents. 
+ Students access lessons, take quizzes, and monitor progress, while parents receive real-time updates on attendance,
+  grades, and feedback.give me 100 marketing ways to sell this software
+
+
+
+
+i am building this tenant and lease management system for property manager.where there will three dashboard such as property manger,owner 
+tenat and a single and multi vendro website for giving to to the site. give me 100 marketing ways to sell this software
+
+
+
+
+

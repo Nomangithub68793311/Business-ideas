@@ -1,0 +1,435 @@
+<!-- import React, { useState } from 'react';
+import { 
+  Search, Plus, ChevronDown, MoreHorizontal, Building, User, 
+  Calendar, DollarSign, FileText, Check, X
+} from 'lucide-react';
+
+export default function PropertyLeaseManagement() {
+  // State for active tab
+  const [activeTab, setActiveTab] = useState('properties');
+  
+  // Sample data for properties
+  const [properties, setProperties] = useState([
+    {
+      id: 1,
+      name: "Lakeside Apartments",
+      address: "123 Lake St, Cityville",
+      units: 12,
+      occupancyRate: 83,
+      totalRent: 14500
+    },
+    {
+      id: 2,
+      name: "Sunset Residences",
+      address: "456 Sunset Blvd, Townsburg",
+      units: 8,
+      occupancyRate: 75,
+      totalRent: 9600
+    },
+    {
+      id: 3,
+      name: "Greenview Townhomes",
+      address: "789 Green Ave, Villageton",
+      units: 6,
+      occupancyRate: 100,
+      totalRent: 8400
+    }
+  ]);
+  
+  // Sample data for leases
+  const [leases, setLeases] = useState([
+    {
+      id: 1,
+      propertyName: "Lakeside Apartments",
+      unit: "3B",
+      tenant: "Sarah Johnson",
+      startDate: "01/01/2025",
+      endDate: "12/31/2025",
+      rent: 1200,
+      status: "Active"
+    },
+    {
+      id: 2,
+      propertyName: "Sunset Residences",
+      unit: "5A",
+      tenant: "Michael Brown",
+      startDate: "03/15/2025",
+      endDate: "03/14/2026",
+      rent: 1450,
+      status: "Active"
+    },
+    {
+      id: 3,
+      propertyName: "Lakeside Apartments",
+      unit: "2C",
+      tenant: "Jennifer Davis",
+      startDate: "11/01/2024",
+      endDate: "05/18/2025",
+      rent: 1150,
+      status: "Expiring Soon"
+    },
+    {
+      id: 4,
+      propertyName: "Greenview Townhomes",
+      unit: "4",
+      tenant: "Robert Wilson",
+      startDate: "02/01/2025", 
+      endDate: "01/31/2026",
+      rent: 1400,
+      status: "Active"
+    }
+  ]);
+  
+  // State for showing add property/lease modal
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState('');
+  
+  const openModal = (type) => {
+    setModalType(type);
+    setShowModal(true);
+  };
+  
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  
+  return (
+    <div className="flex flex-col h-screen bg-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow p-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">Property & Lease Management</h1>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <input 
+                type="text" 
+                placeholder="Search..." 
+                className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
+            <div className="flex items-center bg-gray-100 rounded-full p-1">
+              <span className="text-gray-600 h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                AM
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      {/* Tabs */}
+      <div className="bg-white border-b">
+        <div className="flex space-x-1 px-4">
+          <button 
+            className={`px-4 py-3 font-medium text-sm ${activeTab === 'properties' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('properties')}
+          >
+            Properties
+          </button>
+          <button 
+            className={`px-4 py-3 font-medium text-sm ${activeTab === 'leases' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('leases')}
+          >
+            Leases
+          </button>
+        </div>
+      </div>
+      
+      {/* Main Content */}
+      <main className="flex-1 p-6 overflow-auto">
+        {/* Properties Tab */}
+        {activeTab === 'properties' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-800">Properties</h2>
+              <button 
+                className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                onClick={() => openModal('property')}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Property
+              </button>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Units</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Occupancy</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Rent</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {properties.map((property) => (
+                    <tr key={property.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-10 w-10 rounded-md bg-blue-100 flex items-center justify-center">
+                            <Building className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">{property.name}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.address}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.units}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="text-sm text-gray-900 mr-2">{property.occupancyRate}%</div>
+                          <div className="w-16 bg-gray-200 rounded-full h-2">
+                            <div className={`h-2 rounded-full ${property.occupancyRate > 80 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{ width: `${property.occupancyRate}%` }}></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${property.totalRent}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button className="text-gray-400 hover:text-gray-600">
+                          <MoreHorizontal className="h-5 w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+        
+        {/* Leases Tab */}
+        {activeTab === 'leases' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-800">Leases</h2>
+              <button 
+                className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                onClick={() => openModal('lease')}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Lease
+              </button>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property/Unit</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tenant</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rent</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {leases.map((lease) => (
+                    <tr key={lease.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{lease.propertyName}</div>
+                        <div className="text-sm text-gray-500">Unit {lease.unit}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                            <User className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <div className="ml-3 text-sm text-gray-900">{lease.tenant}</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{lease.startDate} - {lease.endDate}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${lease.rent}/month</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          lease.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                          lease.status === 'Expiring Soon' ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {lease.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button className="text-gray-400 hover:text-gray-600">
+                          <MoreHorizontal className="h-5 w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </main>
+      
+      {/* Add Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center border-b px-6 py-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                {modalType === 'property' ? 'Add New Property' : 'Add New Lease'}
+              </h3>
+              <button onClick={closeModal} className="text-gray-400 hover:text-gray-500">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              {modalType === 'property' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Property Name</label>
+                    <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Address</label>
+                    <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Number of Units</label>
+                      <input type="number" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Property Type</label>
+                      <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option>Apartment</option>
+                        <option>House</option>
+                        <option>Townhouse</option>
+                        <option>Condo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {modalType === 'lease' && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Property</label>
+                      <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        {properties.map(property => (
+                          <option key={property.id}>{property.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Unit</label>
+                      <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Tenant Name</label>
+                    <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Start Date</label>
+                      <input type="date" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">End Date</label>
+                      <input type="date" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Monthly Rent</label>
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500 sm:text-sm">$</span>
+                      </div>
+                      <input type="text" className="pl-7 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="0.00" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="mt-6 flex justify-end space-x-3">
+                <button 
+                  onClick={closeModal}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Quick Stats Section */}
+      <div className="bg-white border-t p-4">
+        <div className="grid grid-cols-4 gap-4">
+          <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+            <div className="flex items-center">
+              <div className="rounded-full bg-blue-100 p-2 mr-3">
+                <Building className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Properties</div>
+                <div className="text-lg font-semibold">{properties.length}</div>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 rounded-lg bg-green-50 border border-green-100">
+            <div className="flex items-center">
+              <div className="rounded-full bg-green-100 p-2 mr-3">
+                <FileText className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Active Leases</div>
+                <div className="text-lg font-semibold">{leases.filter(l => l.status === 'Active').length}</div>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-100">
+            <div className="flex items-center">
+              <div className="rounded-full bg-yellow-100 p-2 mr-3">
+                <Calendar className="h-5 w-5 text-yellow-600" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Expiring Soon</div>
+                <div className="text-lg font-semibold">{leases.filter(l => l.status === 'Expiring Soon').length}</div>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 rounded-lg bg-purple-50 border border-purple-100">
+            <div className="flex items-center">
+              <div className="rounded-full bg-purple-100 p-2 mr-3">
+                <DollarSign className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Monthly Revenue</div>
+                <div className="text-lg font-semibold">${leases.reduce((sum, lease) => sum + lease.rent, 0)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+} -->
+
+https://claude.ai/public/artifacts/7dab76e5-985b-4abf-880f-a7cc8cd7e180
+
+
+
+resindential
+Commercial
+affordable housing
+self storage
+asssociations
+manufactured housing

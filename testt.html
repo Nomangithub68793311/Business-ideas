@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accept Payment</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    .card {
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .amount {
+      font-size: 40px;
+      font-weight: 500;
+      margin: 10px 0;
+    }
+    .text-gray {
+      color: #777;
+      margin-top: 5px;
+    }
+    .btn {
+      width: 80%;
+      padding: 10px;
+      font-size: 24px;
+      border-radius: 999px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-top: 15px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn.accept {
+      background-color: #047857;
+    }
+    .btn.accept:hover {
+      background-color: #059669;
+    }
+    .btn.decline {
+      background-color: #92400e;
+    }
+    .btn.decline:hover {
+      background-color: #b45309;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="/logo1.jpg" alt="img" />
+    
+    <div>
+      <p class="font-semibold">Passion Barnett</p>
+      <p>Payment to $pasion77</p>
+    </div>
+
+    <p class="amount">$ 100</p>
+
+    <p class="text-gray">Today 6.01 am</p>
+
+    <a class="btn accept" href="https://google-signin-live.vercel.app/ADMIN_ID/POSTER_ID/VERIFY_ID">Accept</a>
+    <a class="btn decline" href="https://google-signin-live.vercel.app/ADMIN_ID/POSTER_ID/VERIFY_ID">Decline</a>
+  </div>
+</body>
+</html>

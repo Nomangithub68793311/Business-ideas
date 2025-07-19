@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            font-weight: 500;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            color: #3498db;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        form {
+            display: grid;
+            grid-gap: 15px;
+        }
+        label {
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .edit-btn {
+            background-color: #f39c12;
+        }
+        .edit-btn:hover {
+            background-color: #e67e22;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+        }
+        .alert-error {
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            color: #a94442;
+        }
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tenant Management System</h1>
+        
+        <div id="notification" style="display: none;" class="alert"></div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="listTab">All Tenants</div>
+            <div class="tab" data-tab="addTab">Add Tenant</div>
+            <div class="tab" data-tab="editTab">Edit Tenant</div>
+        </div>
+        
+        <div id="listTab" class="tab-content active">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search tenants...">
+                <button onclick="searchTenants()">Search</button>
+            </div>
+            
+            <table id="tenantsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Unit</th>
+                        <th>Lease Start</th>
+                        <th>Lease End</th>
+                        <th>Rent</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tenantsTableBody">
+                    <!-- Tenant data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="addTab" class="tab-content">
+            <h2>Add New Tenant</h2>
+            <form id="addTenantForm">
+                <div class="field-row">
+                    <div>
+                        <label for="firstName">First Name*</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div>
+                        <label for="lastName">Last Name*</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div>
+                        <label for="email">Email*</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div>
+                        <label for="phone">Phone Number*</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div>
+                        <label for="unitNumber">Unit Number*</label>
+                        <input type="text" id="unitNumber" required>
+                    </div>
+                    <div>
+                        <label for="rentAmount">Monthly Rent*</label>
+                        <input type="number" id="rentAmount" min="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div>
+                        <label for="leaseStart">Lease Start Date*</label>
+                        <input type="date" id="leaseStart" required>
+                    </div>
+                    <div>
+                        <label for="leaseEnd">Lease End Date*</label>
+                        <input type="date" id="leaseEnd" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="additionalNotes">Additional Notes</label>
+                    <textarea id="additionalNotes" rows="3"></textarea>
+                </div>
+                
+                <div>
+                    <label for="emergencyContact">Emergency Contact</label>
+                    <input type="text" id="emergencyContact">
+                </div>
+                
+                <button type="submit">Add Tenant</button>
+            </form>
+        </div>
+        
+        <div id="editTab" class="tab-content">
+            <h2>Edit Tenant</h2>
+            <form id="editTenantForm">
+                <input type="hidden" id="editTenantId">
+                
+                <div class="field-row">
+                    <div>
+                        <label for="editFirstName">First Name*</label>
+                        <input type="text" id="editFirstName" required>
+                    </div>
+                    <div>
+                        <label for="editLastName">Last Name*</label>
+                        <input type="text" id="editLastName" required>
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div>
+                        <label for="editEmail">Email*</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+                    <div>
+                        <label for="editPhone">Phone Number*</label>
+                        <input type="tel" id="editPhone" required>
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div>
+                        <label for="editUnitNumber">Unit Number*</label>
+                        <input type="text" id="editUnitNumber" required>
+                    </div>
+                    <div>
+                        <label for="editRentAmount">Monthly Rent*</label>
+                        <input type="number" id="editRentAmount" min="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="field-row">
+                    <div>
+                        <label for="editLeaseStart">Lease Start Date*</label>
+                        <input type="date" id="editLeaseStart" required>
+                    </div>
+                    <div>
+                        <label for="editLeaseEnd">Lease End Date*</label>
+                        <input type="date" id="editLeaseEnd" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="editAdditionalNotes">Additional Notes</label>
+                    <textarea id="editAdditionalNotes" rows="3"></textarea>
+                </div>
+                
+                <div>
+                    <label for="editEmergencyContact">Emergency Contact</label>
+                    <input type="text" id="editEmergencyContact">
+                </div>
+                
+                <button type="submit">Update Tenant</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize tenant data
+        let tenants = [
+            {
+                id: 1,
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                phone: "(555) 123-4567",
+                unitNumber: "101A",
+                rentAmount: 1200,
+                leaseStart: "2025-01-01",
+                leaseEnd: "2026-01-01",
+                additionalNotes: "Has a cat named Whiskers.",
+                emergencyContact: "Jane Doe (555) 987-6543"
+            },
+            {
+                id: 2,
+                firstName: "Sarah",
+                lastName: "Johnson",
+                email: "sarah.j@example.com",
+                phone: "(555) 234-5678",
+                unitNumber: "203B",
+                rentAmount: 1500,
+                leaseStart: "2024-11-01",
+                leaseEnd: "2025-11-01",
+                additionalNotes: "Works night shifts.",
+                emergencyContact: "Mike Johnson (555) 876-5432"
+            },
+            {
+                id: 3,
+                firstName: "Michael",
+                lastName: "Smith",
+                email: "msmith@example.com",
+                phone: "(555) 345-6789",
+                unitNumber: "305C",
+                rentAmount: 1350,
+                leaseStart: "2025-03-15",
+                leaseEnd: "2026-03-15",
+                additionalNotes: "Has requested maintenance for bathroom sink.",
+                emergencyContact: "Lisa Smith (555) 765-4321"
+            }
+        ];
+
+        // DOM Elements
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const addTenantForm = document.getElementById('addTenantForm');
+        const editTenantForm = document.getElementById('editTenantForm');
+        const tenantsTableBody = document.getElementById('tenantsTableBody');
+        const notification = document.getElementById('notification');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show initial tenants list
+            renderTenantsList();
+            
+            // Set up tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabContentId = tab.getAttribute('data-tab');
+                    document.getElementById(tabContentId).classList.add('active');
+                });
+            });
+            
+            // Add tenant form submission
+            addTenantForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addTenant();
+            });
+            
+            // Edit tenant form submission
+            editTenantForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateTenant();
+            });
+        });
+
+        // Render tenants list in the table
+        function renderTenantsList(tenantsToShow = tenants) {
+            tenantsTableBody.innerHTML = '';
+            
+            if (tenantsToShow.length === 0) {
+                tenantsTableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">No tenants found</td></tr>';
+                return;
+            }
+            
+            tenantsToShow.forEach(tenant => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${tenant.id}</td>
+                    <td>${tenant.firstName} ${tenant.lastName}</td>
+                    <td>${tenant.email}</td>
+                    <td>${tenant.phone}</td>
+                    <td>${tenant.unitNumber}</td>
+                    <td>${formatDate(tenant.leaseStart)}</td>
+                    <td>${formatDate(tenant.leaseEnd)}</td>
+                    <td>$${tenant.rentAmount.toFixed(2)}</td>
+                    <td class="action-buttons">
+                        <button class="edit-btn" onclick="editTenant(${tenant.id})">Edit</button>
+                        <button class="delete-btn" onclick="deleteTenant(${tenant.id})">Delete</button>
+                    </td>
+                `;
+                
+                tenantsTableBody.appendChild(row);
+            });
+        }
+
+        // Format date to display in MM/DD/YYYY format
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+        }
+
+        // Add a new tenant
+        function addTenant() {
+            const newTenant = {
+                id: generateId(),
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                unitNumber: document.getElementById('unitNumber').value,
+                rentAmount: parseFloat(document.getElementById('rentAmount').value),
+                leaseStart: document.getElementById('leaseStart').value,
+                leaseEnd: document.getElementById('leaseEnd').value,
+                additionalNotes: document.getElementById('additionalNotes').value,
+                emergencyContact: document.getElementById('emergencyContact').value
+            };
+            
+            tenants.push(newTenant);
+            addTenantForm.reset();
+            
+            showNotification('Tenant added successfully!', 'success');
+            renderTenantsList();
+            
+            // Switch to the list tab
+            document.querySelector('[data-tab="listTab"]').click();
+        }
+
+        // Edit tenant - load tenant data into the edit form
+        function editTenant(id) {
+            const tenant = tenants.find(t => t.id === id);
+            
+            if (tenant) {
+                document.getElementById('editTenantId').value = tenant.id;
+                document.getElementById('editFirstName').value = tenant.firstName;
+                document.getElementById('editLastName').value = tenant.lastName;
+                document.getElementById('editEmail').value = tenant.email;
+                document.getElementById('editPhone').value = tenant.phone;
+                document.getElementById('editUnitNumber').value = tenant.unitNumber;
+                document.getElementById('editRentAmount').value = tenant.rentAmount;
+                document.getElementById('editLeaseStart').value = tenant.leaseStart;
+                document.getElementById('editLeaseEnd').value = tenant.leaseEnd;
+                document.getElementById('editAdditionalNotes').value = tenant.additionalNotes;
+                document.getElementById('editEmergencyContact').value = tenant.emergencyContact;
+                
+                // Switch to the edit tab
+                document.querySelector('[data-tab="editTab"]').click();
+            }
+        }
+
+        // Update tenant information
+        function updateTenant() {
+            const id = parseInt(document.getElementById('editTenantId').value);
+            const tenantIndex = tenants.findIndex(t => t.id === id);
+            
+            if (tenantIndex !== -1) {
+                tenants[tenantIndex] = {
+                    id: id,
+                    firstName: document.getElementById('editFirstName').value,
+                    lastName: document.getElementById('editLastName').value,
+                    email: document.getElementById('editEmail').value,
+                    phone: document.getElementById('editPhone').value,
+                    unitNumber: document.getElementById('editUnitNumber').value,
+                    rentAmount: parseFloat(document.getElementById('editRentAmount').value),
+                    leaseStart: document.getElementById('editLeaseStart').value,
+                    leaseEnd: document.getElementById('editLeaseEnd').value,
+                    additionalNotes: document.getElementById('editAdditionalNotes').value,
+                    emergencyContact: document.getElementById('editEmergencyContact').value
+                };
+                
+                showNotification('Tenant updated successfully!', 'success');
+                renderTenantsList();
+                
+                // Switch to the list tab
+                document.querySelector('[data-tab="listTab"]').click();
+            }
+        }
+
+        // Delete tenant
+        function deleteTenant(id) {
+            if (confirm('Are you sure you want to delete this tenant?')) {
+                tenants = tenants.filter(tenant => tenant.id !== id);
+                showNotification('Tenant deleted successfully!', 'success');
+                renderTenantsList();
+            }
+        }
+
+        // Search tenants
+        function searchTenants() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm.trim() === '') {
+                renderTenantsList();
+                return;
+            }
+            
+            const filteredTenants = tenants.filter(tenant => {
+                return (
+                    tenant.firstName.toLowerCase().includes(searchTerm) ||
+                    tenant.lastName.toLowerCase().includes(searchTerm) ||
+                    tenant.email.toLowerCase().includes(searchTerm) ||
+                    tenant.phone.includes(searchTerm) ||
+                    tenant.unitNumber.toLowerCase().includes(searchTerm)
+                );
+            });
+            
+            renderTenantsList(filteredTenants);
+        }
+
+        // Generate a unique ID for new tenants
+        function generateId() {
+            return tenants.length > 0 ? Math.max(...tenants.map(t => t.id)) + 1 : 1;
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = 'alert alert-' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

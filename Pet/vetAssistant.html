@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vet Assistant Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .panel h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .pet-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pet-card:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .pet-card.urgent {
+            border-color: #e53e3e;
+            background: #fed7d7;
+        }
+
+        .pet-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .pet-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .pet-time {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .pet-details {
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #2f855a;
+        }
+
+        .btn-warning {
+            background: #d69e2e;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #b7791f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .file-upload.drag-over {
+            border-color: #667eea;
+            background: #ebf8ff;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .waiting-room {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .waiting-patient {
+            background: #f0fff4;
+            border: 2px solid #9ae6b4;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .waiting-patient:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .patient-info h4 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .patient-info p {
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .queue-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #2d3748;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a0aec0;
+        }
+
+        .close-btn:hover {
+            color: #2d3748;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #38a169;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #e53e3e;
+        }
+
+        .notification.warning {
+            background: #d69e2e;
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .upload-area {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #ebf8ff;
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 15px;
+            color: #a0aec0;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-scheduled {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .status-in-progress {
+            background: #fbb6ce;
+            color: #b83280;
+        }
+
+        .status-completed {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-urgent {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        @media (max-width: 768px) {
+            .main-content,
+            .bottom-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Vet Assistant Panel</h1>
+            <div class="user-info">
+                <div class="user-avatar">SA</div>
+                <div>
+                    <div style="font-weight: 600;">Sarah Johnson</div>
+                    <div style="font-size: 14px; color: #666;">Vet Assistant</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 8v4l3 3 1.5-1.5L14 11V8h-2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Today's Scheduled Pets
+                </h2>
+                <div class="pet-card urgent">
+                    <div class="pet-info">
+                        <div>
+                            <div class="pet-name">Buddy (Golden Retriever)</div>
+                            <div class="pet-details">Owner: Mike Chen • Emergency Visit</div>
+                        </div>
+                        <div class="pet-time">9:00 AM</div>
+                    </div>
+                    <div class="status-badge status-urgent">URGENT</div>
+                    <div class="pet-actions">
+                        <button class="btn btn-primary" onclick="openTreatmentModal('Buddy')">Update Treatment</button>
+                        <button class="btn btn-warning" onclick="notifyOwner('Buddy', 'delay')">Notify Delay</button>
+                    </div>
+                </div>
+
+                <div class="pet-card">
+                    <div class="pet-info">
+                        <div>
+                            <div class="pet-name">Whiskers (Persian Cat)</div>
+                            <div class="pet-details">Owner: Lisa Park • Routine Checkup</div>
+                        </div>
+                        <div class="pet-time">10:30 AM</div>
+                    </div>
+                    <div class="status-badge status-in-progress">IN PROGRESS</div>
+                    <div class="pet-actions">
+                        <button class="btn btn-primary" onclick="openTreatmentModal('Whiskers')">Update Treatment</button>
+                        <button class="btn btn-secondary" onclick="notifyOwner('Whiskers', 'ready')">Notify Ready</button>
+                    </div>
+                </div>
+
+                <div class="pet-card">
+                    <div class="pet-info">
+                        <div>
+                            <div class="pet-name">Rex (German Shepherd)</div>
+                            <div class="pet-details">Owner: John Smith • Vaccination</div>
+                        </div>
+                        <div class="pet-time">11:15 AM</div>
+                    </div>
+                    <div class="status-badge status-scheduled">SCHEDULED</div>
+                    <div class="pet-actions">
+                        <button class="btn btn-primary" onclick="openTreatmentModal('Rex')">Update Treatment</button>
+                        <button class="btn btn-success" onclick="markReady('Rex')">Mark Ready</button>
+                    </div>
+                </div>
+
+                <div class="pet-card">
+                    <div class="pet-info">
+                        <div>
+                            <div class="pet-name">Bella (Labrador)</div>
+                            <div class="pet-details">Owner: Emma Wilson • Dental Cleaning</div>
+                        </div>
+                        <div class="pet-time">2:00 PM</div>
+                    </div>
+                    <div class="status-badge status-completed">COMPLETED</div>
+                    <div class="pet-actions">
+                        <button class="btn btn-secondary" onclick="viewTreatment('Bella')">View Treatment</button>
+                        <button class="btn btn-primary" onclick="scheduleFollowUp('Bella')">Schedule Follow-up</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Waiting Room Management
+                </h2>
+                <div class="waiting-room">
+                    <div class="waiting-patient">
+                        <div class="patient-info">
+                            <h4>Charlie (Beagle)</h4>
+                            <p>Owner: David Lee • Arrived: 9:45 AM</p>
+                        </div>
+                        <div class="queue-actions">
+                            <button class="btn btn-primary" onclick="callNext('Charlie')">Call Next</button>
+                            <button class="btn btn-secondary" onclick="updateWaitTime('Charlie')">Update Wait</button>
+                        </div>
+                    </div>
+
+                    <div class="waiting-patient">
+                        <div class="patient-info">
+                            <h4>Luna (Siamese Cat)</h4>
+                            <p>Owner: Maria Garcia • Arrived: 10:20 AM</p>
+                        </div>
+                        <div class="queue-actions">
+                            <button class="btn btn-primary" onclick="callNext('Luna')">Call Next</button>
+                            <button class="btn btn-secondary" onclick="updateWaitTime('Luna')">Update Wait</button>
+                        </div>
+                    </div>
+
+                    <div class="waiting-patient">
+                        <div class="patient-info">
+                            <h4>Max (Border Collie)</h4>
+                            <p>Owner: Tom Anderson • Arrived: 11:00 AM</p>
+                        </div>
+                        <div class="queue-actions">
+                            <button class="btn btn-primary" onclick="callNext('Max')">Call Next</button>
+                            <button class="btn btn-secondary" onclick="updateWaitTime('Max')">Update Wait</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="panel">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                        <path d="M10 9H8"/>
+                    </svg>
+                    Document Upload
+                </h2>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFileUpload(this)">
+                    <svg class="upload-icon" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                        <path d="M10 9H8"/>
+                    </svg>
+                    <h3>Upload Lab Reports & Documents</h3>
+                    <p>Drag and drop files here or click to browse</p>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">Supported: PDF, JPG, PNG, DOC, DOCX</p>
+                </div>
+                <div id="uploadedFiles" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="panel">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    </svg>
+                    Quick Actions
+                </h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <button class="btn btn-primary" style="padding: 15px; font-size: 14px;" onclick="openTreatmentModal('new')">
+                        <div style="margin-bottom: 5px;">📝</div>
+                        New Treatment Log
+                    </button>
+                    <button class="btn btn-warning" style="padding: 15px; font-size: 14px;" onclick="emergencyAlert()">
+                        <div style="margin-bottom: 5px;">🚨</div>
+                        Emergency Alert
+                    </button>
+                    <button class="btn btn-success" style="padding: 15px; font-size: 14px;" onclick="viewSchedule()">
+                        <div style="margin-bottom: 5px;">📅</div>
+                        View Full Schedule
+                    </button>
+                    <button class="btn btn-secondary" style="padding: 15px; font-size: 14px;" onclick="generateReport()">
+                        <div style="margin-bottom: 5px;">📊</div>
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Treatment Modal -->
+    <div id="treatmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Treatment Log</h3>
+                <button class="close-btn" onclick="closeModal('treatmentModal')">&times;</button>
+            </div>
+            <form id="treatmentForm">
+                <div class="form-group">
+                    <label for="petName">Pet Name</label>
+                    <input type="text" id="petName" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="treatment">Treatment Notes</label>
+                    <textarea id="treatment" class="form-control" rows="4" placeholder="Enter treatment details..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="vitals">Vital Signs</label>
+                    <input type="text" id="vitals" class="form-control" placeholder="Temperature, pulse, weight...">
+                </div>
+                <div class="form-group">
+                    <label for="medication">Medication Given</label>
+                    <input type="text" id="medication" class="form-control" placeholder="Medication name and dosage...">
+                </div>
+                <div class="form-group">
+                    <label for="followUp">Follow-up Required</label>
+                    <select id="followUp" class="form-control">
+                        <option value="">Select follow-up type</option>
+                        <option value="none">No follow-up needed</option>
+                        <option value="week">1 week</option>
+                        <option value="month">1 month</option>
+                        <option value="emergency">Emergency if needed</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('treatmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Treatment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let currentPet = null;
+        let uploadedFiles = [];
+
+        function openTreatmentModal(petName) {
+            currentPet = petName;
+            document.getElementById('petName').value = petName;
+            document.getElementById('treatmentModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function notifyOwner(petName, type) {
+            const messages = {
+                'delay': `Notified ${petName}'s owner about delay`,
+                'ready': `Notified ${petName}'s owner that pet is ready`,
+                'timing': `Sent timing update to ${petName}'s owner`
+            };
+            showNotification(messages[type] || 'Owner notified successfully');
+        }
+
+        function markReady(petName) {
+            showNotification(`${petName} marked as ready for examination`);
+        }
+
+        function callNext(petName) {
+            showNotification(`${petName} called to examination room`);
+        }
+
+        function updateWaitTime(petName) {
+            showNotification(`Wait time updated for ${petName}`);
+        }
+
+        function emergencyAlert() {
+            showNotification('Emergency alert sent to veterinarian!', 'error');
+        }
+
+        function viewSchedule() {
+            showNotification('Opening full schedule view...');
+        }
+
+        function generateReport() {
+            showNotification('Generating daily report...');
+        }
+
+        function handleFileUpload(input) {
+            const files = Array.from(input.files);
+            const uploadedFilesDiv = document.getElementById('uploadedFiles');
+            
+            files.forEach(file => {
+                uploadedFiles.push(file);
+                const fileDiv = document.createElement('div');
+                fileDiv.style.cssText = 'background: #f0f8ff; padding: 10px; margin: 5px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;';
+                fileDiv.innerHTML = `
+                    <div>
+                        <strong>${file.name}</strong>
+                        <span style="color: #666; font-size: 12px;">(${Math.round(file.size/1024)}KB)</span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="removeFile(this, '${file.name}')">Remove</button>
+                `;
+                uploadedFilesDiv.appendChild(fileDiv);
+            });
+            
+            showNotification(`${files.length} file(s) uploaded successfully`);
+        }
+
+        function removeFile(button, fileName) {
+            button.parentElement.remove();
+            uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+            showNotification(`${fileName} removed`);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                showNotification('Logging out...', 'warning');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+        }
+
+        // Handle treatment form submission
+        document.getElementById('treatmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const treatment = document.getElementById('treatment').value;
+            const vitals = document.getElementById('vitals').value;
+            const medication = document.getElementById('medication').value;
+            const followUp = document.getElementById('followUp').value;
+            
+            if (!treatment.trim()) {
+                showNotification('Please enter treatment notes', 'error');
+                return;
+            }
+            
+            showNotification(`Treatment log updated for ${currentPet}`);
+            closeModal('treatmentModal');
+            
+            // Reset form
+            document.getElementById('treatmentForm').reset();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            document.getElementById('fileInput').files = files;
+            handleFileUpload(document.getElementById('fileInput'));
+        });
+
+        // Auto-refresh waiting room every 30 seconds
+        setInterval(() => {
+            console.log('Checking for waiting room updates...');
+        }, 30000);
+    </script>
+</body>
+</html>

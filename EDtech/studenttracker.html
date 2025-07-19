@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Tracker System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .class-selector {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .class-selector:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-section h4 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .ai-alerts {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .ai-alerts h4 {
+            color: #c53030;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-item {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #f56565;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-student {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .alert-reason {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        /* Student Grid */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .student-card.flagged {
+            border-left: 5px solid #f56565;
+        }
+
+        .student-card.excellent {
+            border-left: 5px solid #48bb78;
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .student-info h4 {
+            color: #2d3748;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .student-info p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: #f7fafc;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .attendance-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .attendance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+            transition: width 0.3s ease;
+        }
+
+        .performance-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .indicator.good {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .indicator.average {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .indicator.poor {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stats-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stats-text {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .chart-container {
+            height: 200px;
+            background: #f7fafc;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            color: #2d3748;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #718096;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .performance-log {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .log-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .log-date {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .log-score {
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 15px;
+            color: white;
+        }
+
+        .log-score.excellent {
+            background: #48bb78;
+        }
+
+        .log-score.good {
+            background: #4299e1;
+        }
+
+        .log-score.average {
+            background: #ed8936;
+        }
+
+        .log-score.poor {
+            background: #f56565;
+        }
+
+        .attendance-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .calendar-day {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .calendar-day.present {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .calendar-day.absent {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .calendar-day.late {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .calendar-day.empty {
+            background: #f7fafc;
+            color: #a0aec0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr 2fr;
+            }
+            
+            .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="header-icon">👥</div>
+                <div class="header-title">
+                    <h1>Student Tracker</h1>
+                    <p>AI-powered student performance monitoring</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="showAttendanceModal()">
+                    📝 Take Attendance
+                </button>
+                <button class="btn btn-primary" onclick="showAddStudentModal()">
+                    ➕ Add Student
+                </button>
+                <button class="btn btn-warning" onclick="exportReports()">
+                    📊 Export Reports
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <h3>🎯 Class Selection</h3>
+                <select class="class-selector" id="classSelector" onchange="filterByClass()">
+                    <option value="">All Classes</option>
+                    <option value="math-10">Mathematics - Grade 10</option>
+                    <option value="physics-11">Physics - Grade 11</option>
+                    <option value="chemistry-12">Chemistry - Grade 12</option>
+                </select>
+
+                <div class="filter-section">
+                    <h4>📈 Performance Filter</h4>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterStudents('all')">All</button>
+                        <button class="filter-btn" onclick="filterStudents('excellent')">Excellent</button>
+                        <button class="filter-btn" onclick="filterStudents('good')">Good</button>
+                        <button class="filter-btn" onclick="filterStudents('average')">Average</button>
+                        <button class="filter-btn" onclick="filterStudents('struggling')">Struggling</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h4>📅 Attendance Filter</h4>
+                    <div class="filter-buttons">
+                        <button class="filter-btn" onclick="filterAttendance('high')">High (>90%)</button>
+                        <button class="filter-btn" onclick="filterAttendance('medium')">Medium (70-90%)</button>
+                        <button class="filter-btn" onclick="filterAttendance('low')">Low (<70%)</button>
+                    </div>
+                </div>
+
+                <!-- AI Alerts -->
+                <div class="ai-alerts">
+                    <h4>🤖 AI Alerts</h4>
+                    <div class="alert-item">
+                        <div class="alert-student">Sarah Johnson</div>
+                        <div class="alert-reason">Declining grades in last 3 assessments</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="alert-student">Mike Chen</div>
+                        <div class="alert-reason">Attendance below 70% this month</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="alert-student">Emily Davis</div>
+                        <div class="alert-reason">Behavior concerns noted</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="student-grid" id="studentGrid">
+                    <!-- Student cards will be dynamically generated -->
+                </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="right-sidebar">
+                <div class="stats-panel">
+                    <h3>📊 Class Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stats-item">
+                            <div class="stats-number">87</div>
+                            <div class="stats-text">Total Students</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-number">92%</div>
+                            <div class="stats-text">Avg Attendance</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-number">78</div>
+                            <div class="stats-text">Avg Grade</div>
+                        </div>
+                        <div class="stats-item">
+                            <div class="stats-number">12</div>
+                            <div class="stats-text">Need Attention</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        📈 Performance Trends Chart
+                        <br><small>Visual analytics coming soon</small>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="btn btn-primary" onclick="generateClassReport()">📋 Generate Class Report</button>
+                        <button class="btn btn-success" onclick="sendParentUpdates()">📧 Send Parent Updates</button>
+                        <button class="btn btn-warning" onclick="scheduleParentMeeting()">🗓️ Schedule Meetings</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalStudentName">Student Details</h2>
+                <button class="close-btn" onclick="closeModal('studentModal')">&times;</button>
+            </div>
+            <div id="modalStudentContent">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="addStudentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Student</h2>
+                <button class="close-btn" onclick="closeModal('addStudentModal')">&times;</button>
+            </div>
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label>Student ID</label>
+                    <input type="text" id="studentId" required>
+                </div>
+                <div class="form-group">
+                    <label>Class</label>
+                    <select id="studentClass" required>
+                        <option value="">Select Class</option>
+                        <option value="math-10">Mathematics - Grade 10</option>
+                        <option value="physics-11">Physics - Grade 11</option>
+                        <option value="chemistry-12">Chemistry - Grade 12</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Parent Email</label>
+                    <input type="email" id="parentEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Parent Phone</label>
+                    <input type="tel" id="parentPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Initial Notes</label>
+                    <textarea id="initialNotes" placeholder="Any initial observations or notes..."></textarea>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="button" class="btn" onclick="closeModal('addStudentModal')" style="flex: 1; background: #e2e8f0; color: #4a5568;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div class="modal" id="attendanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Take Attendance</h2>
+                <button class="close-btn" onclick="closeModal('attendanceModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="attendanceDate" value="">
+            </div>
+            <div class="form-group">
+                <label>Class</label>
+                <select id="attendanceClass">
+                    <option value="">Select Class</option>
+                    <option value="math-10">Mathematics - Grade 10</option>
+                    <option value="physics-11">Physics - Grade 11</option>
+                    <option value="chemistry-12">Chemistry - Grade 12</option>
+                </select>
+            </div>
+            <div id="attendanceList" style="margin-top: 20px;">
+                <!-- Attendance list will be populated here -->
+            </div>
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button type="button" class="btn" onclick="closeModal('attendanceModal')" style="flex: 1; background: #e2e8f0; color: #4a5568;">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveAttendance()" style="flex: 1;">Save Attendance</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Sample data
+        let students = [
+            {
+                id: 1,
+                name: "Sarah Johnson",
+                class: "math-10",
+                avatar: "SJ",
+                attendance: 95,
+                avgGrade: 88,
+                behavior: "excellent",
+                participation: "high",
+                parentEmail: "parent@email.com",
+                parentPhone: "+1234567890",
+                performanceLog: [
+                    { date: "2025-06-20", type: "Quiz", score: 92, subject: "Algebra" },
+                    { date: "2025-06-15", type: "Test", score: 85, subject: "Geometry" },
+                    { date: "2025-06-10", type: "Assignment", score: 90, subject: "Trigonometry" }
+                ],
+                behaviorNotes: [
+                    { date: "2025-06-20", note: "Excellent participation in group work", type: "positive" },
+                    { date: "2025-06-15", note: "Helped struggling classmates", type: "positive" }
+                ],
+                status: "excellent"
+            },
+            {
+                id: 2,
+                name: "Mike Chen",
+                class: "physics-11",
+                avatar: "MC",
+                attendance: 68,
+                avgGrade: 72,
+                behavior: "good",
+                participation: "medium",
+                parentEmail: "chen@email.com",
+                parentPhone: "+1234567891",
+                performanceLog: [
+                    { date: "2025-06-20", type: "Lab", score: 78, subject: "Mechanics" },
+                    { date: "2025-06-15", type: "Quiz", score: 65, subject: "Thermodynamics" },
+                    { date: "2025-06-10", type: "Test", score: 74, subject: "Waves" }
+                ],
+                behaviorNotes: [
+                    { date: "2025-06-18", note: "Frequent absences affecting performance", type: "concern" },
+                    { date: "2025-06-12", note: "Good effort when present", type: "positive" }
+                ],
+                status: "struggling"
+            },
+            {
+                id: 3,
+                name: "Emily Davis",
+                class: "chemistry-12",
+                avatar: "ED",
+                attendance: 89,
+                avgGrade: 91,
+                behavior: "good",
+                participation: "high",
+                parentEmail: "davis@email.com",
+                parentPhone: "+1234567892",
+                performanceLog: [
+                    { date: "2025-06-20", type: "Test", score: 94, subject: "Organic Chemistry" },
+                    { date: "2025-06-15", type: "Lab", score: 88, subject: "Reactions" },
+                    { date: "2025-06-10", type: "Quiz", score: 92, subject: "Bonding" }
+                ],
+                behaviorNotes: [
+                    { date: "2025-06-20", note: "Excellent lab work and attention to detail", type: "positive" },
+                    { date: "2025-06-15", note: "Leadership qualities in group projects", type: "positive" }
+                ],
+                status: "excellent"
+            },
+            {
+                id: 4,
+                name: "Alex Rodriguez",
+                class: "math-10",
+                avatar: "AR",
+                attendance: 78,
+                avgGrade: 65,
+                behavior: "average",
+                participation: "low",
+                parentEmail: "

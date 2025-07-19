@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartEd - Exam Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .left-panel, .right-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "📝";
+            font-size: 1.8rem;
+        }
+
+        .upload-area {
+            border: 3px dashed #ff6b6b;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #fff5f5, #ffebee);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            background: linear-gradient(135deg, #ffebee, #fff5f5);
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            border-color: #ee5a52;
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .question-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .question-type-card {
+            background: linear-gradient(135deg, #fff5f5, #ffebee);
+            border: 2px solid #ff6b6b;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .question-type-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+        }
+
+        .question-type-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .question-type-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .question-count {
+            width: 60px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f9ca24, #f0932b);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .preview-section {
+            margin-bottom: 30px;
+        }
+
+        .preview-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .question-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .question-preview:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .question-tags {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            padding-left: 20px;
+        }
+
+        .options li {
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .export-card {
+            background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .export-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .export-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .advanced-options {
+            background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff6b6b;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+            .question-types {
+                grid-template-columns: 1fr;
+            }
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📝 SmartEd Exam Generator</div>
+            <p style="color: #666; font-size: 1.1rem;">AI-Powered Question Generation & Exam Creation Platform</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Panel - Input & Configuration -->
+            <div class="left-panel">
+                <div class="section-title">Create New Exam</div>
+
+                <!-- Upload Section -->
+                <div class="form-section">
+                    <h3>📂 Upload Syllabus or Content</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">
+                            <strong>Drag & drop files here</strong><br>
+                            or click to browse
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt" style="display: none;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                            📁 Choose Files
+                        </button>
+                    </div>
+                    <div id="uploadedFiles"></div>
+                </div>
+
+                <!-- Basic Info -->
+                <div class="form-section">
+                    <h3>📋 Exam Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Exam Title</label>
+                            <input type="text" placeholder="e.g., Physics Chapter 5 Test" id="examTitle">
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <select id="subject">
+                                <option>Select Subject</option>
+                                <option>Mathematics</option>
+                                <option>Physics</option>
+                                <option>Chemistry</option>
+                                <option>Biology</option>
+                                <option>English</option>
+                                <option>History</option>
+                                <option>Geography</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Chapter/Topic</label>
+                            <input type="text" placeholder="e.g., Electromagnetic Induction" id="topic">
+                        </div>
+                        <div class="form-group">
+                            <label>Grade Level</label>
+                            <select id="gradeLevel">
+                                <option>Select Grade</option>
+                                <option>Grade 6</option>
+                                <option>Grade 7</option>
+                                <option>Grade 8</option>
+                                <option>Grade 9</option>
+                                <option>Grade 10</option>
+                                <option>Grade 11</option>
+                                <option>Grade 12</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Configuration -->
+                <div class="form-section">
+                    <h3>🎯 Question Configuration</h3>
+                    <div class="question-types">
+                        <div class="question-type-card">
+                            <div class="question-type-icon">🔘</div>
+                            <div class="question-type-title">MCQs</div>
+                            <input type="number" class="question-count" value="20" min="0" max="100" id="mcqCount">
+                        </div>
+                        <div class="question-type-card">
+                            <div class="question-type-icon">📝</div>
+                            <div class="question-type-title">Short Answer</div>
+                            <input type="number" class="question-count" value="5" min="0" max="50" id="shortCount">
+                        </div>
+                        <div class="question-type-card">
+                            <div class="question-type-icon">📄</div>
+                            <div class="question-type-title">Long Answer</div>
+                            <input type="number" class="question-count" value="3" min="0" max="20" id="longCount">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Difficulty & Tagging -->
+                <div class="form-section">
+                    <h3>🏷️ Tagging & Difficulty</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Overall Difficulty</label>
+                            <select id="difficulty">
+                                <option>Mixed (Recommended)</option>
+                                <option>Easy (30% Easy, 50% Medium, 20% Hard)</option>
+                                <option>Medium (20% Easy, 60% Medium, 20% Hard)</option>
+                                <option>Hard (10% Easy, 30% Medium, 60% Hard)</option>
+                                <option>Custom Distribution</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Time Limit (minutes)</label>
+                            <input type="number" placeholder="90" value="90" id="timeLimit">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Custom Tags (comma-separated)</label>
+                        <input type="text" placeholder="e.g., conceptual, numerical, application" id="customTags">
+                    </div>
+                </div>
+
+                <!-- Advanced Options -->
+                <div class="advanced-options">
+                    <h3 style="margin-bottom: 15px;">⚙️ Advanced Options</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="autoAnswerKey" checked>
+                            <label for="autoAnswerKey">Generate Answer Key</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="multipleVersions" checked>
+                            <label for="multipleVersions">Create Multiple Versions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeImages">
+                            <label for="includeImages">Include Diagrams/Images</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="showMarking">
+                            <label for="showMarking">Show Marking Scheme</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Number of Versions</label>
+                            <input type="number" value="3" min="1" max="10" id="versionCount">
+                        </div>
+                        <div class="form-group">
+                            <label>Randomization Level</label>
+                            <select id="randomization">
+                                <option>High (Question + Option Order)</option>
+                                <option>Medium (Question Order Only)</option>
+                                <option>Low (Option Order Only)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button class="btn btn-large" id="generateBtn" onclick="generateExam()">
+                    🚀 Generate Exam
+                </button>
+            </div>
+
+            <!-- Right Panel - Preview & Export -->
+            <div class="right-panel">
+                <div class="section-title">Preview & Export</div>
+
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalQuestions">0</div>
+                        <div class="stat-label">Total Questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalMarks">0</div>
+                        <div class="stat-label">Total Marks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="estimatedTime">0</div>
+                        <div class="stat-label">Est. Time (min)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="difficultyMix">-</div>
+                        <div class="stat-label">Difficulty</div>
+                    </div>
+                </div>
+
+                <!-- Generation Progress -->
+                <div id="generationProgress" style="display: none;">
+                    <h3>🔄 Generating Questions...</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="progressText">Analyzing syllabus content...</p>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="preview-section">
+                    <h3>👀 Question Preview</h3>
+                    <div class="preview-box" id="previewBox">
+                        <p style="text-align: center; color: #666; padding: 40px;">
+                            📝 Generated questions will appear here<br>
+                            <small>Upload content and click "Generate Exam" to start</small>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Export Options -->
+                <div class="form-section">
+                    <h3>📤 Export Options</h3>
+                    <div class="export-options">
+                        <div class="export-card" onclick="exportExam('pdf')">
+                            <div class="export-icon">📄</div>
+                            <div><strong>Export as PDF</strong></div>
+                            <small>Ready to print</small>
+                        </div>
+                        <div class="export-card" onclick="exportExam('word')">
+                            <div class="export-icon">📝</div>
+                            <div><strong>Export as Word</strong></div>
+                            <small>Editable format</small>
+                        </div>
+                        <div class="export-card" onclick="exportExam('answer-key')">
+                            <div class="export-icon">🔑</div>
+                            <div><strong>Answer Key</strong></div>
+                            <small>Separate file</small>
+                        </div>
+                        <div class="export-card" onclick="exportExam('multiple')">
+                            <div class="export-icon">📋</div>
+                            <div><strong>All Versions</strong></div>
+                            <small>ZIP package</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="saveTemplate()">
+                        💾 Save as Template
+                    </button>
+                    <button class="btn btn-warning" onclick="previewExam()">
+                        👁️ Full Preview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let generatedQuestions = [];
+        let isGenerating = false;
+
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadedFiles = document.getElementById('uploadedFiles');
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            handleFiles(files);
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            handleFiles(files);
+        });
+
+        // Handle uploaded files
+        function handleFiles(files) {
+            uploadedFiles.innerHTML = '';
+            files.forEach(file => {
+                const fileElement = document.createElement('div');
+                fileElement.style.cssText = `
+                    background: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                    border-radius: 8px;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                `;
+                fileElement.innerHTML = `
+                    <span>📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    <button class="btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="this.parentElement.remove()">❌</button>
+                `;
+                uploadedFiles.appendChild(fileElement);
+            });
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const mcq = parseInt(document.getElementById('mcqCount').value) || 0;
+            const short = parseInt(document.getElementById('shortCount').value) || 0;
+            const long = parseInt(document.getElementById('longCount').value) || 0;
+            
+            const total = mcq + short + long;
+            const marks = (mcq * 1) + (short * 3) + (long * 10);
+            const time = Math.ceil(total * 1.5 + long * 5);
+            
+            document.getElementById('totalQuestions').textContent = total;
+            document.getElementById('totalMarks').textContent = marks;
+            document.getElementById('estimatedTime').textContent = time;
+            document.getElementById('difficultyMix').textContent = document.getElementById('difficulty').value.split(' ')[0];
+        }
+
+        // Update stats when values change
+        document.getElementById('mcqCount').addEventListener('input', updateStats);
+        document.getElementById('shortCount').addEventListener('input', updateStats);
+        document.getElementById('longCount').addEventListener('input', updateStats);
+        document.getElementById('difficulty').addEventListener('change', updateStats);
+
+        // Generate exam function
+        function generateExam() {
+            if (isGenerating) return;
+            
+            // Validation
+            const examTitle = document.getElementById('examTitle').value.trim();
+            const subject = document.getElementById('subject').value;
+            const topic = document.getElementById('topic').value.trim();
+            
+            if (!examTitle || subject === 'Select Subject' || !topic) {
+                showNotification('❌ Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
+            if (totalQuestions === 0) {
+                showNotification('❌ Please specify at least one question type', 'error');
+                return;
+            }
+            
+            isGenerating = true;
+            const generateBtn = document.getElementById('generateBtn');
+            const originalText = generateBtn.innerHTML;
+            
+            generateBtn.innerHTML = '<div class="loading-spinner"></div> Generating...';
+            generateBtn.disabled = true;
+            
+            // Show progress
+            const progressSection = document.getElementById('generationProgress');
+            progressSection.style.display = 'block';
+            
+            simulateGeneration();
+        }
+
+        // Simulate question generation with progress
+        function simulateGeneration() {
+            const steps = [
+                'Analyzing uploaded content...',
+                'Extracting key concepts...',
+                'Generating MCQ questions...',
+                'Creating short answer questions...',
+                'Formulating long answer questions...',
+                'Applying difficulty tags...',
+                'Creating multiple versions...',
+                'Generating answer keys...',
+                'Finalizing exam paper...'
+            ];
+            
+            let currentStep = 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            const interval = setInterval(() => {
+                const progress = ((currentStep + 1) / steps.length) * 100;
+                progressFill.style.width = progress + '%';
+                progressText.textContent = steps[currentStep];
+                
+                currentStep++;
+                
+                if (currentStep >= steps.length) {
+                    clearInterval(interval);
+                    completeGeneration();
+                }
+            }, 800);
+        }
+
+        // Complete generation process
+        function completeGeneration() {
+            setTimeout(() => {
+                // Hide progress
+                document.getElementById('generationProgress').style.display = 'none';
+                
+                // Generate sample questions
+                generateSampleQuestions();
+                
+                // Reset button
+                const generateBtn = document.getElementById('generateBtn');
+                generateBtn.innerHTML = '✅ Exam Generated Successfully!';
+                generateBtn.style.background = 'linear-gradient(45deg, #4ecdc4, #44a08d)';
+                
+                setTimeout(() => {
+                    generateBtn.innerHTML = '🚀 Generate Exam';
+                    generateBtn.style.background = '';
+                    generateBtn.disabled = false;
+                    isGenerating = false;
+                }, 3000);
+                
+                showNotification('✅ Exam generated successfully!', 'success');
+            }, 1000);
+        }
+
+        // Generate sample questions for preview
+        function generateSampleQuestions() {
+            const previewBox = document.getElementById('previewBox');

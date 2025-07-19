@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropManage - Payments</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #93c5fd;
+            --secondary: #475569;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            color: var(--dark);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 1rem;
+        }
+        
+        .menu-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .menu-item-icon {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main {
+            flex: 1;
+            margin-left: 250px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .topbar {
+            background-color: white;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--gray-100);
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            margin-left: 0.5rem;
+        }
+        
+        .topbar-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-badge {
+            position: relative;
+            margin-right: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .notification-badge span {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.625rem;
+            font-weight: 600;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+        
+        .user-info p {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+        
+        /* Content Container */
+        .content {
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        .page-title {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        /* Filters */
+        .filters {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-item label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Payment Table */
+        .payments-table {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: var(--gray-100);
+            font-weight: 600;
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+        
+        td {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.875rem;
+        }
+        
+        tr:hover {
+            background-color: var(--gray-100);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-paid {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-failed {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+            margin-right: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .action-btn:hover {
+            text-decoration: underline;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--gray-100);
+        }
+        
+        .pagination-info {
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+        
+        .pagination-controls {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .pagination-btn {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.25rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .pagination-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-400);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray-200);
+            color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray-300);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>PropManage</h1>
+            <p>Property Management System</p>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-section-title">Main</div>
+                <a href="dashboard.html" class="menu-item">
+                    <span class="menu-item-icon">📊</span>
+                    Dashboard
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">Properties & People</div>
+                <a href="properties.html" class="menu-item">
+                    <span class="menu-item-icon">🏢</span>
+                    Properties
+                </a>
+                <a href="tenants.html" class="menu-item">
+                    <span class="menu-item-icon">👥</span>
+                    Tenants
+                </a>
+                <a href="owners.html" class="menu-item">
+                    <span class="menu-item-icon">👨‍💼</span>
+                    Owners
+                </a>
+                <a href="leases.html" class="menu-item">
+                    <span class="menu-item-icon">📝</span>
+                    Leases
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">Finance</div>
+                <a href="payments.html" class="menu-item active">
+                    <span class="menu-item-icon">💰</span>
+                    Payments
+                </a>
+                <a href="invoices.html" class="menu-item">
+                    <span class="menu-item-icon">🧾</span>
+                    Invoices
+                </a>
+                <a href="financial-reports.html" class="menu-item">
+                    <span class="menu-item-icon">📈</span>
+                    Financial Reports
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">Operations</div>
+                <a href="screening.html" class="menu-item">
+                    <span class="menu-item-icon">🔍</span>
+                    Tenant Screening
+                </a>
+                <a href="forms.html" class="menu-item">
+                    <span class="menu-item-icon">📋</span>
+                    Forms
+                </a>
+                <a href="tenant-submissions.html" class="menu-item">
+                    <span class="menu-item-icon">📤</span>
+                    Tenant Submissions
+                </a>
+                <a href="owner-submissions.html" class="menu-item">
+                    <span class="menu-item-icon">📥</span>
+                    Owner Submissions
+                </a>
+                <a href="documents.html" class="menu-item">
+                    <span class="menu-item-icon">📄</span>
+                    Documents
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">System</div>
+                <a href="notifications.html" class="menu-item">
+                    <span class="menu-item-icon">🔔</span>
+                    Notifications
+                </a>
+                <a href="settings.html" class="menu-item">
+                    <span class="menu-item-icon">⚙️</span>
+                    Settings
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search...">
+            </div>
+            
+            <div class="topbar-right">
+                <div class="notification-badge">
+                    <span>5</span>
+                    🔔
+                </div>
+                
+                <div class="user-profile">
+                    <div class="user-avatar">PM</div>
+                    <div class="user-info">
+                        <h4>John Smith</h4>
+                        <p>Property Manager</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Container -->
+        <div class="content">
+            <div class="page-title">
+                <h1>Payments</h1>
+                <button class="btn btn-primary" onclick="document.getElementById('newPaymentModal').style.display='flex'">
+                    Record New Payment
+                </button>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="property">Property</label>
+                        <select class="form-control" id="property">
+                            <option value="">All Properties</option>
+                            <option>Sunset Apartments</option>
+                            <option>Green Valley Complex</option>
+                            <option>Riverfront Condos</option>
+                            <option>Oakwood Residences</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="tenant">Tenant</label>
+                        <select class="form-control" id="tenant">
+                            <option value="">All Tenants</option>
+                            <option>John Doe</option>
+                            <option>Sarah Johnson</option>
+                            <option>Mark Williams</option>
+                            <option>Emily Brown</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="status">Payment Status</label>
+                        <select class="form-control" id="status">
+                            <option value="">All Statuses</option>
+                            <option>Paid</option>
+                            <option>Pending</option>
+                            <option>Failed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="date">Date Range</label>
+                        <input type="date" class="form-control" id="date">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payments Table -->
+            <div class="payments-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Payment ID</th>
+                            <th>Date</th>
+                            <th>Tenant</th>
+                            <th>Property</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PAY-1042</td>
+                            <td>May 19, 2025</td>
+                            <td>John Doe</td>
+                            <td>Sunset Apt #301</td>
+                            <td>$1,200.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Receipt</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1041</td>
+                            <td>May 18, 2025</td>
+                            <td>Sarah Johnson</td>
+                            <td>Green Valley #12B</td>
+                            <td>$950.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Receipt</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1040</td>
+                            <td>May 17, 2025</td>
+                            <td>Mark Williams</td>
+                            <td>Riverfront #15</td>
+                            <td>$1,350.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Process</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1039</td>
+                            <td>May 16, 2025</td>
+                            <td>Emily Brown</td>
+                            <td>Oakwood #7A</td>
+                            <td>$1,150.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Receipt</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1038</td>
+                            <td>May 15, 2025</td>
+                            <td>James Wilson</td>
+                            <td>Sunset Apt #204</td>
+                            <td>$1,200.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-failed">Failed</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Retry</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1037</td>
+                            <td>May 14, 2025</td>
+                            <td>Michelle Davis</td>
+                            <td>Green Valley #8C</td>
+                            <td>$950.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Receipt</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1036</td>
+                            <td>May 13, 2025</td>
+                            <td>Robert Taylor</td>
+                            <td>Riverfront #22</td>
+                            <td>$1,350.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Receipt</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PAY-1035</td>
+                            <td>May 12, 2025</td>
+                            <td>Lisa Martinez</td>
+                            <td>Oakwood #12B</td>
+                            <td>$1,150.00</td>
+                            <td>Rent</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                            <td>
+                                <button class="action-btn">View</button>
+                                <button class="action-btn">Receipt</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing 1 to 8 of 42 entries
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn">←</button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn">4</button>
+                        <button class="pagination-btn">5</button>
+                        <button class="pagination-btn">→</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Payment Modal -->
+    <div class="modal-overlay" id="newPaymentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Record New Payment</div>
+                <button class="modal-close" onclick="document.getElementById('newPaymentModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modal-tenant">Tenant</label>
+                    <select class="form-control" id="modal-tenant">
+                        <option value="">Select Tenant</option>
+                        <option>John Doe</option>
+                        <option>Sarah Johnson</option>
+                        <option>Mark Williams</option>
+                        <option>Emily Brown</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-property">Property</label>
+                    <select class="form-control" id="modal-property">
+                        <option value="">Select Property</option>
+                        <option>Sunset Apt #301</option>
+                        <option>Green Valley #12B</option>
+                        <option>Riverfront #15</option>
+                        <option>Oakwood #7A</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-amount">Amount</label>
+                    <input type="number" class="form-control" id="modal-amount" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="modal-type">Payment Type</label>
+                    <select class="form-control" id="modal-type">
+                        <option>Rent</option>
+                        <option>Deposit</option>
+                        <option>Late Fee</option>
+                        <option>Maintenance</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-method">Payment Method</label>
+                    <select class="form-control" id="modal-method">
+                        <option>Credit Card</option>
+                        <option>Bank Transfer</option>
+                        <option>Cash</option>
+                        <option>Check</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-date">Payment Date</label>
+                    <input type="date" class="form-control" id="modal-date">
+                </div>
+                <div class="form-group">
+                    <label for="modal-notes">Notes</label>
+                    <textarea class="form-control" id="modal-notes" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="document.getElementById('newPaymentModal').style.display='none'">Cancel</button>
+                <button class="btn btn-primary">Save Payment</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

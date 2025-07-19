@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shannon Account - Complete Business Accounting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 20px 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item .icon {
+            font-size: 18px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h2 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chart-container {
+            height: 300px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-paid { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-overdue { background: #f8d7da; color: #721c24; }
+
+        .alert {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .low-stock {
+            border-left: 4px solid #dc3545;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .integration-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .integration-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <h1>Shannon Account</h1>
+            </div>
+            
+            <div class="nav-item active" onclick="showSection('dashboard')">
+                <span class="icon">🧾</span>
+                Dashboard
+            </div>
+            <div class="nav-item" onclick="showSection('invoicing')">
+                <span class="icon">💵</span>
+                Invoicing & Billing
+            </div>
+            <div class="nav-item" onclick="showSection('expenses')">
+                <span class="icon">🧾</span>
+                Expense Tracking
+            </div>
+            <div class="nav-item" onclick="showSection('bank')">
+                <span class="icon">🏦</span>
+                Bank Reconciliation
+            </div>
+            <div class="nav-item" onclick="showSection('accounts')">
+                <span class="icon">🧾</span>
+                Chart of Accounts
+            </div>
+            <div class="nav-item" onclick="showSection('reports')">
+                <span class="icon">📊</span>
+                Financial Reports
+            </div>
+            <div class="nav-item" onclick="showSection('receivable')">
+                <span class="icon">📥</span>
+                Accounts Receivable
+            </div>
+            <div class="nav-item" onclick="showSection('payable')">
+                <span class="icon">📤</span>
+                Accounts Payable
+            </div>
+            <div class="nav-item" onclick="showSection('inventory')">
+                <span class="icon">📦</span>
+                Inventory Management
+            </div>
+            <div class="nav-item" onclick="showSection('payroll')">
+                <span class="icon">🧾</span>
+                Payroll Module
+            </div>
+            <div class="nav-item" onclick="showSection('tax')">
+                <span class="icon">🌐</span>
+                Tax Management
+            </div>
+            <div class="nav-item" onclick="showSection('portal')">
+                <span class="icon">📲</span>
+                Client/Vendor Portal
+            </div>
+            <div class="nav-item" onclick="showSection('settings')">
+                <span class="icon">⚙️</span>
+                Settings & Integrations
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <div class="header">
+                    <h2>Financial Dashboard</h2>
+                    <p>Monitor your business financial health at a glance</p>
+                </div>
+
+                <div class="alert">
+                    <strong>Alert:</strong> You have 3 overdue invoices totaling $12,450 and 2 upcoming payments due this week.
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">$245,680</div>
+                        <div class="kpi-label">Total Revenue</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$189,320</div>
+                        <div class="kpi-label">Total Expenses</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$56,360</div>
+                        <div class="kpi-label">Net Profit</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$78,920</div>
+                        <div class="kpi-label">Cash Balance</div>
+                    </div>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Cash Flow Trend</h3>
+                        <div class="chart-container">
+                            📈 Cash Flow Chart (Integration with Chart.js)
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Accounts Receivable</h3>
+                        <div class="chart-container">
+                            📊 AR Aging Chart
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Accounts Payable</h3>
+                        <div class="chart-container">
+                            📉 AP Summary Chart
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoicing Section -->
+            <div id="invoicing" class="content-section">
+                <div class="header">
+                    <h2>Invoicing & Billing</h2>
+                    <p>Create, send, and track your invoices</p>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Recent Invoices</h3>
+                        <button class="btn" onclick="openModal('invoiceModal')">+ Create Invoice</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Client</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INV-2025-001</td>
+                                    <td>Acme Corp</td>
+                                    <td>$5,250.00</td>
+                                    <td>Jun 15, 2025</td>
+                                    <td><span class="status-badge status-paid">Paid</span></td>
+                                    <td><button class="btn">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td>INV-2025-002</td>
+                                    <td>Tech Solutions</td>
+                                    <td>$8,750.00</td>
+                                    <td>Jun 20, 2025</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td><button class="btn">Send Reminder</button></td>
+                                </tr>
+                                <tr>
+                                    <td>INV-2025-003</td>
+                                    <td>Global Industries</td>
+                                    <td>$3,200.00</td>
+                                    <td>Jun 05, 2025</td>
+                                    <td><span class="status-badge status-overdue">Overdue</span></td>
+                                    <td><button class="btn">Follow Up</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expense Tracking Section -->
+            <div id="expenses" class="content-section">
+                <div class="header">
+                    <h2>Expense Tracking</h2>
+                    <p>Record and categorize your business expenses</p>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Quick Add Expense</h3>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" placeholder="Enter amount">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select>
+                                <option>Office Supplies</option>
+                                <option>Travel</option>
+                                <option>Marketing</option>
+                                <option>Utilities</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" placeholder="Expense description">
+                        </div>
+                        <button class="btn">Add Expense</button>
+                        <button class="btn">📷 Scan Receipt</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Expense Summary</h3>
+                        <div class="kpi-grid">
+                            <div class="kpi-card">
+                                <div class="kpi-value">$15,680</div>
+                                <div class="kpi-label">This Month</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-value">$189,320</div>
+                                <div class="kpi-label">Year to Date</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Expenses</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jun 08, 2025</td>
+                                    <td>Office Supplies - Stationery</td>
+                                    <td>Office Supplies</td>
+                                    <td>$156.50</td>
+                                    <td><span class="status-badge status-paid">Approved</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Jun 07, 2025</td>
+                                    <td>Client Lunch Meeting</td>
+                                    <td>Business Meals</td>
+                                    <td>$89.25</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Reconciliation Section -->
+            <div id="bank" class="content-section">
+                <div class="header">
+                    <h2>Bank Reconciliation</h2>
+                    <p>Match your bank transactions with recorded entries</p>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Bank Accounts</h3>
+                        <div style="margin-bottom: 15px;">
+                            <strong>Chase Business Checking</strong><br>
+                            Balance: $78,920.45<br>
+                            Last Sync: 2 hours ago
+                        </div>
+                        <button class="btn">🔄 Sync Now</button>
+                        <button class="btn">📊 Reconcile</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Reconciliation Status</h3>
+                        <div>
+                            <div>Unmatched Transactions: 12</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                            <div>85% Reconciled</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Unmatched Transactions</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jun 08, 2025</td>
+                                    <td>STRIPE PAYMENT - ACME CORP</td>
+                                    <td>+$5,250.00</td>
+                                    <td>Deposit</td>
+                                    <td><button class="btn">Match</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jun 07, 2025</td>
+                                    <td>ACH TRANSFER - UTILITIES</td>
+                                    <td>-$387.50</td>
+                                    <td>Expense</td>
+                                    <td><button class="btn">Match</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart of Accounts Section -->
+            <div id="accounts" class="content-section">
+                <div class="header">
+                    <h2>Chart of Accounts</h2>
+                    <p>Organize your financial entries by account type</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showAccountType('assets')">Assets</div>
+                    <div class="tab" onclick="showAccountType('liabilities')">Liabilities</div>
+                    <div class="tab" onclick="showAccountType('income')">Income</div>
+                    <div class="tab" onclick="showAccountType('expenses')">Expenses</div>
+                    <div class="tab" onclick="showAccountType('equity')">Equity</div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Account List</h3>
+                        <button class="btn">+ Add Account</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Account Code</th>
+                                    <th>Account Name</th>
+                                    <th>Type</th>
+                                    <th>Balance</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1001</td>
+                                    <td>Cash - Checking</td>
+                                    <td>Current Asset</td>
+                                    <td>$78,920.45</td>
+                                    <td><button class="btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td>1200</td>
+                                    <td>Accounts Receivable</td>
+                                    <td>Current Asset</td>
+                                    <td>$45,680.00</td>
+                                    <td><button class="btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td>4000</td>
+                                    <td>Sales Revenue</td>
+                                    <td>Income</td>
+                                    <td>$245,680.00</td>
+                                    <td><button class="btn">Edit</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Reports Section -->
+            <div id="reports" class="content-section">
+                <div class="header">
+                    <h2>Financial Reports</h2>
+                    <p>Generate and download key business reports</p>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>📊 Profit & Loss</h3>
+                        <p>View your revenue and expenses breakdown</p>
+                        <button class="btn">Generate Report</button>
+                        <button class="btn">📥 Download PDF</button>
+                    </div>
+                    <div class="card">
+                        <h3>⚖️ Balance Sheet</h3>
+                        <p>Assets, liabilities, and equity summary</p>
+                        <button class="btn">Generate Report</button>
+                        <button class="btn">📥 Download PDF</button>
+                    </div>
+                    <div class="card">
+                        <h3>💰 Cash Flow</h3>
+                        <p>Track cash inflows and outflows</p>
+                        <button class="btn">Generate Report</button>
+                        <button class="btn">📥 Download PDF</button>
+                    </div>
+                    <div class="card">
+                        <h3>📝 Trial Balance</h3>
+                        <p>Verify your accounting records</p>
+                        <button class="btn">Generate Report</button>
+                        <button class="btn">📥 Download PDF</button>
+                    </div>
+                    <div class="card">
+                        <h3>📚 General Ledger</h3>
+                        <p>Detailed transaction history</p>
+                        <button class="btn">Generate Report</button>
+                        <button class="btn">📥 Download PDF</button>
+                    </div>
+                    <div class="card">
+                        <h3>🏛️ Tax Summary</h3>
+                        <p>Tax-ready financial summary</p>
+                        <button class="btn">Generate Report</button>
+                        <button class="btn">📥 Download PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Receivable Section -->
+            <div id="receivable" class="content-section">
+                <div class="header">
+                    <h2>Accounts Receivable</h2>
+                    <p>Track customer payments and outstanding dues</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">$45,680</div>
+                        <div class="kpi-label">Total Outstanding</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$12,450</div>
+                        <div class="kpi-label">Overdue Amount</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">32 days</div>
+                        <div class="kpi-label">Average Collection Period</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Customer Aging Report</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Current</th>
+                                    <th>1-30 Days</th>
+                                    <th>31-60 Days</th>
+                                    <th>60+ Days</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Acme Corp</td>
+                                    <td>$8,750.00</td>
+                                    <td>$0.00</td>
+                                    <td>$0.00</td>
+                                    <td>$0.00</td>
+                                    <td>$8,750.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Tech Solutions</td>
+                                    <td>$5,200.00</td>
+                                    <td>$3,250.00</td>
+                                    <td>$0.00</td>
+                                    <td>$0.00</td>
+                                    <td>$8,450.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Global Industries</td>
+                                    <td>$2,180.00</td>
+                                    <td>$1,500.00</td>
+                                    <td>$2,750.00</td>
+                                    <td>$8,200.00</td>
+                                    <td>$14,630.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Payable Section -->
+            <div id="payable" class="content-section">
+                <div class="header">
+                    <h2>Accounts Payable</h2>
+                    <p>Track what your business owes to vendors</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">$28,950</div>
+                        <div class="kpi-label">Total Payable</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$15,680</div>
+                        <div class="kpi-label">Due This Week</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$3,270</div>
+                        <div class="kpi-label">Overdue</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Vendor Bills</h3>
+                        <button class="btn">💰 Bulk Payment</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Vendor</th>
+                                    <th>Bill #</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Office Depot</td>
+                                    <td>BILL-2025-156</td>
+                                    <td>$1,250.00</td>
+                                    <td>Jun 12, 2025</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td><button class="btn">Pay Now</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Electric Company</td>
+                                    <td>BILL-2025-157</td>
+                                    <td>$487.50</td>
+                                    <td>Jun 15, 2025</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td><button class="btn">Schedule</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Internet Provider</td>
+                                    <td>BILL-2025-158</td>
+                                    <td>$189.99</td>
+                                    <td>Jun 05, 2025</td>
+                                    <td><span class="status-badge status-overdue">Overdue</span></td>
+                                    <td><button class="btn">Pay Now</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Management Section -->
+            <div id="inventory" class="content-section">
+                <div class="header">
+                    <h2>Inventory Management</h2>
+                    <p>Track stock levels and manage inventory valuation</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">$125,680</div>
+                        <div class="kpi-label">Total Inventory Value</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">1,847</div>
+                        <div class="kpi-label">Total Items</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">23</div>
+                        <div class="kpi-label">Low Stock Items</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">5.2x</div>
+                        <div class="kpi-label">Inventory Turnover</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Inventory Items</h3>
+                        <button class="btn">+ Add Item</button>
+                    </div>
+
+                    <div class="inventory-item">
+                        <div>
+                            <strong>Product A - SKU001</strong><br>
+                            <small>Category: Electronics</small>
+                        </div>
+                        <div>
+                            <div>Stock: 145 units</div>
+                            <div>Value: $7,250.00</div>
+                        </div>
+                    </div>
+
+                    <div class="inventory-item low-stock">
+                        <div>
+                            <strong>Product B - SKU002</strong><br>
+                            <small>Category: Office Supplies</small>
+                        </div>
+                        <div>
+                            <div>Stock: 8 units (Low Stock!)</div>
+                            <div>Value: $240.00</div>
+                        </div>
+                    </div>
+
+                    <div class="inventory-item">
+                        <div>
+                            <strong>Product C - SKU003</strong><br>
+                            <small>Category: Accessories</small>
+                        </div>
+                        <div>
+                            <div>Stock: 67 units</div>
+                            <div>Value: $2,010.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payroll Module Section -->
+            <div id="payroll" class="content-section">
+                <div class="header">
+                    <h2>Payroll Management</h2>
+                    <p>Manage employee salaries, taxes, and benefits</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">$45,680</div>
+                        <div class="kpi-label">Monthly Payroll</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">12</div>
+                        <div class="kpi-label">Active Employees</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$8,920</div>
+                        <div class="kpi-label">Tax Withholdings</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$3,450</div>
+                        <div class="kpi-label">Benefits Cost</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Employee Payroll</h3>
+                        <button class="btn">💰 Run Payroll</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Position</th>
+                                    <th>Gross Pay</th>
+                                    <th>Deductions</th>
+                                    <th>Net Pay</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Smith</td>
+                                    <td>Manager</td>
+                                    <td>$5,500.00</td>
+                                    <td>$1,485.00</td>
+                                    <td>$4,015.00</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Sarah Johnson</td>
+                                    <td>Developer</td>
+                                    <td>$4,800.00</td>
+                                    <td>$1,296.00</td>
+                                    <td>$3,504.00</td>
+                                    <td><span class="status-badge status-paid">Processed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Mike Wilson</td>
+                                    <td>Sales Rep</td>
+                                    <td>$3,200.00</td>
+                                    <td>$864.00</td>
+                                    <td>$2,336.00</td>
+                                    <td><span class="status-badge status-paid">Processed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tax Management Section -->
+            <div id="tax" class="content-section">
+                <div class="header">
+                    <h2>Tax Management</h2>
+                    <p>Manage tax calculations and compliance</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">$15,680</div>
+                        <div class="kpi-label">GST/VAT Collected</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$8,920</div>
+                        <div class="kpi-label">GST/VAT Paid</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">$6,760</div>
+                        <div class="kpi-label">Net Tax Liability</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">Jun 15</div>
+                        <div class="kpi-label">Next Filing Date</div>
+                    </div>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Tax Returns</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Period</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>May 2025</td>
+                                        <td>GST Return</td>
+                                        <td>$6,760.00</td>
+                                        <td><span class="status-badge status-pending">Due</span></td>
+                                        <td><button class="btn">File Return</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Apr 2025</td>
+                                        <td>GST Return</td>
+                                        <td>$5,450.00</td>
+                                        <td><span class="status-badge status-paid">Filed</span></td>
+                                        <td><button class="btn">View</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Tax Settings</h3>
+                        <div class="form-group">
+                            <label>Tax Jurisdiction</label>
+                            <select>
+                                <option>United States</option>
+                                <option>Canada</option>
+                                <option>United Kingdom</option>
+                                <option>Australia</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Default Tax Rate (%)</label>
+                            <input type="number" value="10" step="0.01">
+                        </div>
+                        <button class="btn">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client/Vendor Portal Section -->
+            <div id="portal" class="content-section">
+                <div class="header">
+                    <h2>Client/Vendor Portal</h2>
+                    <p>Secure access for clients and vendors</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showPortalType('clients')">Client Portal</div>
+                    <div class="tab" onclick="showPortalType('vendors')">Vendor Portal</div>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Active Portal Users</h3>
+                        <div class="kpi-grid">
+                            <div class="kpi-card">
+                                <div class="kpi-value">28</div>
+                                <div class="kpi-label">Client Users</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-value">15</div>
+                                <div class="kpi-label">Vendor Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Recent Activity</h3>
+                        <div>
+                            <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                                <strong>Acme Corp</strong> downloaded Invoice INV-2025-001
+                                <br><small>2 hours ago</small>
+                            </div>
+                            <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                                <strong>Tech Solutions</strong> made a payment of $8,750
+                                <br><small>4 hours ago</small>
+                            </div>
+                            <div style="padding: 10px;">
+                                <strong>Office Depot</strong> uploaded delivery receipt
+                                <br><small>1 day ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Portal Access Management</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Contact Person</th>
+                                    <th>Email</th>
+                                    <th>Last Login</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Acme Corp</td>
+                                    <td>John Doe</td>
+                                    <td>john@acme.com</td>
+                                    <td>2 hours ago</td>
+                                    <td><span class="status-badge status-paid">Active</span></td>
+                                    <td><button class="btn">Manage</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Tech Solutions</td>
+                                    <td>Jane Smith</td>
+                                    <td>jane@tech.com</td>
+                                    <td>1 day ago</td>
+                                    <td><span class="status-badge status-paid">Active</span></td>
+                                    <td><button class="btn">Manage</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings & Integrations Section -->
+            <div id="settings" class="content-section">
+                <div class="header">
+                    <h2>Settings & Integrations</h2>
+                    <p>Configure your system and connect with third-party services</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showSettingsTab('general')">General</div>
+                    <div class="tab" onclick="showSettingsTab('integrations')">Integrations</div>
+                    <div class="tab" onclick="showSettingsTab('users')">Users & Permissions</div>
+                    <div class="tab" onclick="showSettingsTab('branding')">Branding</div>
+                </div>
+
+                <div id="general-settings" class="card">
+                    <h3>General Settings</h3>
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" value="Your Company Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Base Currency</label>
+                        <select>
+                            <option>USD - US Dollar</option>
+                            <option>EUR - Euro</option>
+                            <option>GBP - British Pound</option>
+                            <option>CAD - Canadian Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fiscal Year Start</label>
+                        <select>
+                            <option>January</option>
+                            <option>April</option>
+                            <option>July</option>
+                            <option>October</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select>
+                            <option>English</option>
+                            <option>Spanish</option>
+                            <option>French</option>
+                            <option>German</option>
+                        </select>
+                    </div>
+                    <button class="btn">Save Changes</button>
+                </div>
+
+                <div id="integrations-settings" class="card" style="display: none;">
+                    <h3>Third-Party Integrations</h3>
+                    
+                    <div class="integration-card">
+                        <div class="integration-logo">💳</div>
+                        <div style="flex: 1;">
+                            <h4>Stripe</h4>
+                            <p>Accept online payments and sync transactions</p>
+                        </div>
+                        <button class="btn">Connect</button>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="integration-logo">💰</div>
+                        <div style="flex: 1;">
+                            <h4>PayPal</h4>
+                            <p>Process PayPal payments and sync data</p>
+                        </div>
+                        <button class="btn">Connect</button>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="integration-logo">🛒</div>
+                        <div style="flex: 1;">
+                            <h4>Shopify</h4>
+                            <p>Sync sales data from your online store</p>
+                        </div>
+                        <button class="btn">Connect</button>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="integration-logo">🏦</div>
+                        <div style="flex: 1;">
+                            <h4>Plaid Banking</h4>
+                            <p>Connect bank accounts for automatic sync</p>
+                        </div>
+                        <button class="btn">Connect</button>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="integration-logo">📊</div>
+                        <div style="flex: 1;">
+                            <h4>QuickBooks</h4>
+                            <p>Import/export data to QuickBooks</p>
+                        </div>
+                        <button class="btn">Connect</button>
+                    </div>
+                </div>
+
+                <div id="users-settings" class="card" style="display: none;">
+                    <h3>User Management</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <p>Manage user access and permissions</p>
+                        <button class="btn">+ Add User</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Last Login</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Admin User</td>
+                                    <td>admin@company.com</td>
+                                    <td>Administrator</td>
+                                    <td>2 hours ago</td>
+                                    <td><span class="status-badge status-paid">Active</span></td>
+                                    <td><button class="btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td>John Accountant</td>
+                                    <td>john@company.com</td>
+                                    <td>Accountant</td>
+                                    <td>1 day ago</td>
+                                    <td><span class="status-badge status-paid">Active</span></td>
+                                    <td><button class="btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Sarah Manager</td>
+                                    <td>sarah@company.com</td>
+                                    <td>Manager</td>
+                                    <td>3 days ago</td>
+                                    <td><span class="status-badge status-pending">Inactive</span></td>
+                                    <td><button class="btn">Edit</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="branding-settings" class="card" style="display: none;">
+                    <h3>Branding & Templates</h3>
+                    <div class="form-group">
+                        <label>Company Logo</label>
+                        <input type="file" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <input type="color" value="#667eea">
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Color</label>
+                        <input type="color" value="#764ba2">
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Template</label>
+                        <select>
+                            <option>Modern Template</option>
+                            <option>Classic Template</option>
+                            <option>Minimal Template</option>
+                            <option>Professional Template</option>
+                        </select>
+                    </div>
+                    <button class="btn">Save Branding</button>
+                    <button class="btn">Preview Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('invoiceModal')">&times;</span>
+            <h2>Create New Invoice</h2>
+            
+            <div class="form-group">
+                <label>Client</label>
+                <select>
+                    <option>Select Client</option>
+                    <option>Acme Corp</option>
+                    <option>Tech Solutions</option>
+                    <option>Global Industries</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Invoice Date</label>
+                <input type="date" value="2025-06-09">
+            </div>
+            
+            <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" value="2025-06-24">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea placeholder="Enter invoice description"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" placeholder="0.00" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Tax Rate (%)</label>
+                <input type="number" value="10" step="0.01">
+            </div>
+            
+            <button class="btn">Create Invoice</button>
+            <button class="btn" onclick="closeModal('invoiceModal')">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Tab functionality for Chart of Accounts
+        function showAccountType(type) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Here you would filter the accounts table based on type
+            console.log('Showing accounts of type:', type);
+        }
+
+        // Tab functionality for Portal
+        function showPortalType(type) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            console.log('Showing portal type:', type);
+        }
+
+        // Tab functionality for Settings
+        function showSettingsTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all settings sections
+            document.getElementById('general-settings').style.display = 'none';
+            document.getElementById('integrations-settings').style.display = 'none';
+            document.getElementById('users-settings').style.display = 'none';
+            document.getElementById('branding-settings').style.display = 'none';
+            
+            // Show selected settings section
+            document.getElementById(tab + '-settings').style.display = 'block';
+        }
+
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Sample interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some interactive elements
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.textContent.includes('Pay Now')) {
+                        alert('Payment processing initiated...');
+                    } else if (this.textContent.includes('Send Reminder')) {
+                        alert('Payment reminder sent to client!');
+                    } else if (this.textContent.includes('Sync Now')) {
+                        alert('Bank synchronization started...');
+                    } else if (this.textContent.includes('Generate Report')) {
+                        alert('Report is being generated...');
+                    }
+                });
+            });
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Simulate real-time updates
+            setInterval(() => {
+                const alerts = document.querySelector('.alert');
+                if (alerts) {
+                    const randomAlert = Math.random() > 0.5 ? 
+                        'New payment received from Acme Corp: $5,250!' : 
+                        'Reminder: Tax filing due in 5 days.';
+                    
+                    // Occasionally update the alert message
+                    if (Math.random() > 0.95) {
+                        alerts.innerHTML = `<strong>Update:</strong> ${randomAlert}`;
+                    }
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

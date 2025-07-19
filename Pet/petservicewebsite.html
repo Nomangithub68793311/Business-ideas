@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare Connect - Find Pet Services Near You</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            min-width: 250px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .filter-tag:hover, .filter-tag.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Service Categories */
+        .service-categories {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #f8f9ff, #e8eaff);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Featured Services */
+        .featured-services {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%), linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+
+        .service-content {
+            padding: 1.5rem;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .service-provider {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .service-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .service-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .service-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .book-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .favorite-btn {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .favorite-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4caf50;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Top Rated Providers */
+        .top-providers {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .providers-carousel {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .provider-card {
+            min-width: 250px;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .provider-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .provider-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .provider-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .provider-specialty {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .provider-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Map Section */
+        .map-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .map-container {
+            height: 400px;
+            background: linear-gradient(135deg, #e8f5e8, #f0f8ff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="30" r="3" fill="%23667eea"/><circle cx="60" cy="20" r="3" fill="%23764ba2"/><circle cx="80" cy="60" r="3" fill="%23667eea"/><circle cx="40" cy="70" r="3" fill="%23764ba2"/><circle cx="70" cy="40" r="3" fill="%23667eea"/></svg>') no-repeat center;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 0 1rem;
+            margin-top: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .providers-carousel {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .provider-card {
+                min-width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero, .search-section, .service-categories, .featured-services, .top-providers, .map-section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .promo-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <i class="fas fa-paw"></i> PetCare Connect
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#providers">Providers</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="#" class="btn btn-secondary" onclick="openModal('loginModal')">Login</a>
+                <a href="#" class="btn btn-primary" onclick="openModal('signupModal')">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+                <h3><i class="fas fa-star"></i> New Year Special: 20% Off First Booking! <i class="fas fa-star"></i></h3>
+                <p>Book your pet's first service today and save big!</p>
+            </div>
+
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Find the Perfect Pet Care Service</h1>
+                <p>Connect with trusted, verified pet care providers in your area</p>
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="🔍 Search services (e.g., 'dog grooming', 'pet sitting')">
+                        <input type="text" class="search-input" placeholder="📍 Location (Brooklyn, NY)">
+                        <button class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="search-filters">
+                        <div class="filter-tag active">🐕 Dogs</div>
+                        <div class="filter-tag">🐱 Cats</div>
+                        <div class="filter-tag">🐰 Rabbits</div>
+                        <div class="filter-tag">🐦 Birds</div>
+                        <div class="filter-tag">🐢 Exotic Pets</div>
+                        <div class="filter-tag">💰 Under $50</div>
+                        <div class="filter-tag">⭐ 5 Stars</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Categories -->
+            <section class="service-categories">
+                <h2 class="section-title">Popular Pet Services</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-icon">✂️</div>
+                        <div class="category-title">Pet Grooming</div>
+                        <div class="category-count">128 providers</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🚶</div>
+                        <div class="category-title">Dog Walking</div>
+                        <div class="category-count">95 providers</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🏠</div>
+                        <div class="category-title">Pet Boarding</div>
+                        <div class="category-count">72 providers</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🍽️</div>
+                        <div class="category-title">Pet Feeding</div>
+                        <div class="category-count">84 providers</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🩺</div>
+                        <div class="category-title">Vet Support</div>
+                        <div class="category-count">43 providers</div>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">🦎</div>
+                        <div class="category-title">Exotic Pet Care</div>
+                        <div class="category-count">26 providers</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Services -->
+            <section class="featured-services">
+                <h2 class="section-title">Featured Services</h2>
+                <div class="service-grid">
+                    <div class="service-card">
+                        <div class="verified-badge">✅ Verified</div>
+                        <div class="service-image">
+                            <i class="fas fa-cut"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3 class="service-title">Professional Dog Grooming</h3>
+                            <p class="service-provider">By Sarah's Pet Salon</p>
+                            <p class="service-description">Complete grooming service including bath, nail trim, ear cleaning, and styling. Perfect for all dog breeds.</p>
+                            <div class="service-details">
+                                <span class="service-price">$45-85</span>
+                                <div class="service-rating">
+                                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                                    <span>(127 reviews)</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="action-btn book-btn" onclick="openModal('bookingModal')">Book Now</button>
+                                <button class="action-btn favorite-btn">❤️ Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="verified-badge">✅ Verified</div>
+                        <div class="service-image">
+                            <i class="fas fa-walking"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3 class="service-title">Daily Dog Walking</h3>
+                            <p class="service-provider">By Mike's Pet Adventures</p>
+                            <p class="service-description">Reliable daily walks for your furry friend. Flexible scheduling, GPS tracking, and photo updates included.</p>
+                            <div class="service-details">
+                                <span class="service-price">$25-40</span>
+                                <div class="service-rating">
+                                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                                    <span>(89 reviews)</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="action-btn book-btn" onclick="openModal('bookingModal')">Book Now</button>
+                                <button class="action-btn favorite-btn">❤️ Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="verified-badge">✅ Verified</div>
+                        <div class="service-image">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3 class="service-title">Premium Pet Boarding</h3>
+                            <p class="service-provider">By Happy Tails Resort</p>
+                            <p class="service-description">Luxury boarding with spacious rooms, play areas, and 24/7 care. Perfect for vacations and business trips.</p>
+                            <div class="service-details">
+                                <span class="service-price">$60-90/day</span>
+                                <div class="service-rating">
+                                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                                    <span>(156 reviews)</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="action-btn book-btn" onclick="openModal('bookingModal')">Book Now</button>
+                                <button class="action-btn favorite-btn">❤️ Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top Rated Providers -->
+            <section class="top-providers">
+                <h2 class="section-title">Top Rated Providers</h2>
+                <div class="providers-carousel">
+                    <div class="provider-card">
+                        <div class="provider-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h4 class="provider-name">Dr. Emily Foster</h4>
+                        <p class="provider-specialty">Exotic Pet Specialist</p>
+                        <div class="provider-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span>5.0 (43)</span>
+                        </div>
+                        <p>10 years experience • Veterinary • Exotic Care</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Map Section -->
+            <section class="map-section">
+                <h2 class="section-title">Find Services Near You</h2>
+                <div class="map-container">
+                    <div>
+                        <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;"></i>
+                        <p>Interactive map showing nearby pet service providers</p>
+                        <p style="font-size: 0.9rem; color: #999;">Click on pins to view provider details and book services</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>For Pet Parents</h3>
+                    <ul>
+                        <li><a href="#">Find Services</a></li>
+                        <li><a href="#">Book Appointment</a></li>
+                        <li><a href="#">My Dashboard</a></li>
+                        <li><a href="#">Pet Profiles</a></li>
+                        <li><a href="#">Reviews & Ratings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>For Providers</h3>
+                    <ul>
+                        <li><a href="#">Become a Provider</a></li>
+                        <li><a href="#">Provider Dashboard</a></li>
+                        <li><a href="#">Verification Process</a></li>
+                        <li><a href="#">Pricing & Fees</a></li>
+                        <li><a href="#">Provider Resources</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Pet Care Resources</h3>
+                    <ul>
+                        <li><a href="#">Pet Care Tips</a></li>
+                        <li><a href="#">Grooming Guide</a></li>
+                        <li><a href="#">Training Advice</a></li>
+                        <li><a href="#">Health & Wellness</a></li>
+                        <li><a href="#">Seasonal Care</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Safety Guidelines</a></li>
+                        <li><a href="#">Report Issue</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PetCare Connect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login to Your Account</h2>
+            <form>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </div>
+                <div style="text-align: center;">
+                    <p>Don't have an account? <a href="#" onclick="closeModal('loginModal'); openModal('signupModal');" style="color: #667eea;">Sign up here</a></p>
+                    <p><a href="#" style="color: #667eea;">Forgot your password?</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Create Your Account</h2>
+            <form>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="userType">I am a:</label>
+                    <select id="userType" required>
+                        <option value="">Select...</option>
+                        <option value="pet-parent">Pet Parent</option>
+                        <option value="service-provider">Service Provider</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                </div>
+                <div style="text-align: center;">
+                    <p>Already have an account? <a href="#" onclick="closeModal('signupModal'); openModal('loginModal');" style="color: #667eea;">Login here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            <h2>Book Service</h2>
+            <form>
+                <div class="form-group">
+                    <label for="petSelect">Select Your Pet</label>
+                    <select id="petSelect" required>
+                        <option value="">Choose a pet...</option>
+                        <option value="buddy">Buddy (Golden Retriever)</option>
+                        <option value="whiskers">Whiskers (Tabby Cat)</option>
+                        <option value="add-new">+ Add New Pet</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="serviceDate">Preferred Date</label>
+                    <input type="date" id="serviceDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="serviceTime">Preferred Time</label>
+                    <select id="serviceTime" required>
+                        <option value="">Select time...</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="specialInstructions">Special Instructions</label>
+                    <textarea id="specialInstructions" rows="3" placeholder="Any special requests or information about your pet..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Select payment method...</option>
+                        <option value="card">Credit/Debit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bkash">bKash</option>
+                        <option value="nagad">Nagad</option>
+                    </select>
+                </div>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Booking Summary</h4>
+                    <p><strong>Service:</strong> Professional Dog Grooming</p>
+                    <p><strong>Provider:</strong> Sarah's Pet Salon</p>
+                    <p><strong>Duration:</strong> 2 hours</p>
+                    <p><strong>Price:</strong> $65.00</p>
+                    <p><strong>Service Fee:</strong> $5.00</p>
+                    <hr>
+                    <p><strong>Total:</strong> $70.00</p>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Booking & Pay</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target === modals[i]) {
+                    modals[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Filter tag functionality
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // Category card click functionality
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('.category-title').textContent;
+                alert(`Browsing ${title} services...`);
+            });
+        });
+
+        // Service card interactions
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.style.background === 'rgb(255, 107, 107)') {
+                    this.style.background = '#f0f0f0';
+                    this.style.color = '#333';
+                    this.innerHTML = '❤️ Save';
+                } else {
+                    this.style.background = '#ff6b6b';
+                    this.style.color = 'white';
+                    this.innerHTML = '❤️ Saved';
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formType = this.closest('.modal').id;
+                
+                if (formType === 'loginModal') {
+                    alert('Login successful! Welcome back!');
+                    closeModal('loginModal');
+                } else if (formType === 'signupModal') {
+                    alert('Account created successfully! Please check your email for verification.');
+                    closeModal('signupModal');
+                } else if (formType === 'bookingModal') {
+                    alert('Booking confirmed! You will receive a confirmation email shortly.');
+                    closeModal('bookingModal');
+                }
+            });
+        });
+
+        // Dynamic content updates
+        function updateAvailableSlots() {
+            const dateInput = document.getElementById('serviceDate');
+            const timeSelect = document.getElementById('serviceTime');
+            
+            if (dateInput && timeSelect) {
+                dateInput.addEventListener('change', function() {
+                    // Simulate dynamic time slot updates
+                    const selectedDate = new Date(this.value);
+                    const today = new Date();
+                    
+                    if (selectedDate.getDay() === 0 || selectedDate.getDay() === 6) {
+                        // Weekend slots
+                        timeSelect.innerHTML = `
+                            <option value="">Select time...</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                        `;
+                    } else {
+                        // Weekday slots
+                        timeSelect.innerHTML = `
+                            <option value="">Select time...</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                        `;
+                    }
+                });
+            }
+        }
+
+        // Initialize dynamic features
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAvailableSlots();
+            
+            // Set minimum date to today
+            const dateInput = document.getElementById('serviceDate');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.min = today;
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-bar button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-input').value;
+            const location = document.querySelectorAll('.search-input')[1].value;
+            
+            if (searchTerm && location) {
+                alert(`Searching for "${searchTerm}" in ${location}...`);
+            } else {
+                alert('Please enter both search term and location.');
+            }
+        });
+
+        // Provider card click functionality
+        document.querySelectorAll('.provider-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const providerName = this.querySelector('.provider-name').textContent;
+                alert(`Viewing profile for ${providerName}...`);
+            });
+        });
+
+        // Responsive navigation toggle
+        function toggleMobileNav() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-active');
+        }
+
+        // Add mobile menu button if screen is small
+        if (window.innerWidth <= 768) {
+            const mobileMenuBtn = document.createElement('button');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            mobileMenuBtn.className = 'mobile-menu-btn';
+            mobileMenuBtn.onclick = toggleMobileNav;
+            document.querySelector('.header-content').appendChild(mobileMenuBtn);
+        }
+    </script>
+</body>
+</html>-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h4 class="provider-name">Sarah Johnson</h4>
+                        <p class="provider-specialty">Professional Groomer</p>
+                        <div class="provider-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span>4.9 (127)</span>
+                        </div>
+                        <p>5 years experience • Certified • Insured</p>
+                    </div>
+
+                    <div class="provider-card">
+                        <div class="provider-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h4 class="provider-name">Mike Chen</h4>
+                        <p class="provider-specialty">Dog Walker & Trainer</p>
+                        <div class="provider-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span>4.8 (89)</span>
+                        </div>
+                        <p>3 years experience • GPS Tracking • Updates</p>
+                    </div>
+
+                    <div class="provider-card">
+                        <div class="provider-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h4 class="provider-name">Lisa Rodriguez</h4>
+                        <p class="provider-specialty">Pet Boarding Specialist</p>
+                        <div class="provider-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span>4.9 (156)</span>
+                        </div>
+                        <p>7 years experience • 24/7 Care • Licensed</p>
+                    </div>
+
+                    <div class="provider-card">
+                        <div class="provider

@@ -87,3 +87,22 @@ what is the market growth?time and dev cost for it and marketing plan?digital an
 
 AI Construction Cost Estimator.think this and tell what problem it will solve?how intense the problem is ?do customer really pay if i solve it?who are customer?what is other tools compare to it?
 what is the market growth?time and dev cost for it and marketing plan?digital and manual
+
+
+blog post software with ai automation .think this and tell what problem it will solve?how intense the problem is ?do customer really pay if i solve it?who are customer?what is other tools compare to it?
+what is the market growth?time and dev cost for it and marketing plan?digital and manual
+
+Project & Resource Management Platform with AI Scheduling.Automatically allocates resources based on skill, availability, and deadlines.think this and tell what problem it will solve?how intense the problem is ?do customer really pay if i solve it?who are customer?what is other tools compare to it?
+what is the market growth?time and dev cost for it and marketing plan?digital and manual
+
+
+it is okay that you gave me 30 ideas in different industry about software and ai products.now think about ai and tech and give 10 best ideas in business ideas in b2b and b2c in different verticals that i can solve and which will not be obsolete in terms of tech and ai in 3-5 years and it has to have these qualities---what problem it will solve?how intense the problem is ?do customer really pay if i solve it?who are customer?what is other tools compare to it?
+what is the market growth?time and dev cost for it and marketing plan?digital and manual
+
+
+Drone Footage Analyzer for Property Inspection
+Uses image AI to spot defects, measure areas, etc.  plz think about these .i want to make a
+ software which will function these.tell me all the functional 
+details and feature all features small medium and big for web application 
+and admin panel for it and all the technical details for it and the time line for it .i want to develop it 
+with laravel framework my sql data base abd open ai apis 

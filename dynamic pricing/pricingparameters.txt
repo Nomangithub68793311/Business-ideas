@@ -1,0 +1,1469 @@
+🧠 I. Product-Based Parameters
+These are directly tied to the product’s own data.
+
+Product ID / SKU
+
+Product category
+
+Product brand
+
+Cost price
+
+Base price (user-set)
+
+Price floor / price ceiling
+
+MSRP (Manufacturer’s Suggested Retail Price)
+
+Product rating
+
+Product reviews count
+
+Product weight / dimensions
+
+Perishability (expiry date)
+
+Bundle status (part of a bundle or not)
+
+Margin goal per product
+
+Tags (e.g., seasonal, trending, bestseller)
+
+Product age (new arrival vs old stock)
+
+Stock keeping unit status (active/inactive)
+
+📦 II. Inventory-Based Parameters
+Used to price dynamically based on stock levels.
+
+Current stock quantity
+
+Safety stock threshold
+
+Reorder point
+
+Days in inventory (inventory aging)
+
+Inventory turnover rate
+
+Inventory velocity (rate of sales/day)
+
+Incoming stock / pre-orders
+
+Overstocked / understocked flag
+
+Shelf-life (in case of perishables)
+
+📈 III. Demand-Based Parameters
+Based on user interaction, demand, and trends.
+
+Product page views
+
+Add-to-cart rate
+
+Cart abandonment rate
+
+Purchase conversion rate
+
+Wishlist count
+
+Time spent on product page
+
+Click-through rate (CTR) from ads
+
+Repeat purchases / reorders
+
+Waiting list count (for out-of-stock items)
+
+Historical demand trend (by season/month/week)
+
+Time on site before purchase
+
+🛒 IV. Sales & Revenue Metrics
+Useful for aligning pricing with profitability.
+
+Gross margin per unit
+
+Net margin after fees/taxes
+
+Return/refund rate
+
+Total revenue (daily, weekly, monthly)
+
+Revenue per visitor (RPV)
+
+Customer acquisition cost (CAC)
+
+Average order value (AOV)
+
+Units sold in time period (velocity)
+
+Lifetime value of product (LTV)
+
+🧍 V. Customer-Based Parameters
+Used to personalize or segment pricing.
+
+New vs returning customer
+
+Customer location (country, city, postal code)
+
+IP address / device type
+
+Logged in vs guest
+
+Purchase history
+
+Loyalty tier (silver/gold/PLAT)
+
+Customer LTV (lifetime value)
+
+Cart value
+
+Purchase frequency
+
+Referral source (organic, paid, affiliate)
+
+UTM tags from campaign
+
+🕐 VI. Time-Based Parameters
+Useful for flash sales, seasonal pricing, or demand peaks.
+
+Time of day (morning/evening)
+
+Day of week
+
+Weekend vs weekday
+
+Month or season
+
+Special date (Black Friday, New Year, Eid, Diwali, etc.)
+
+Product launch window
+
+Promotional period (start/end)
+
+Lead time before stock replenishment
+
+🏷️ VII. Competitor-Based Parameters
+Used to keep pricing competitive.
+
+Competitor price (min/avg/max)
+
+Price gap vs lowest competitor
+
+Stock level of competitor (if accessible)
+
+Delivery speed of competitor
+
+Promotions/discounts by competitor
+
+Seller rating or trust score
+
+Price rank on comparison site (1st/2nd/3rd)
+
+of competitors selling same SKU
+Frequency of competitor price changes
+
+🌍 VIII. Location-Based Parameters
+Used for geo-pricing or regional strategies.
+
+Country
+
+State / Region
+
+City
+
+Zip code
+
+Shipping zone
+
+IP geolocation
+
+Tax/VAT region
+
+Local currency
+
+Language preference
+
+Local demand/popularity index
+
+🔗 IX. Channel-Based Parameters
+Differentiate pricing across platforms and sales channels.
+
+Channel: Website, mobile app, marketplace (Amazon, Flipkart)
+
+Traffic source: Organic, Google Ads, Social
+
+Affiliate source
+
+Device type: Desktop, Mobile, Tablet
+
+First-party vs Third-party sales
+
+In-app vs web checkout
+
+International vs local shopper
+
+🤖 X. AI & Predictive Parameters
+Feed data to AI models or future forecasts.
+
+Projected demand (forecast)
+
+Seasonality index (monthly/weekly trend)
+
+Weather data (for seasonal items)
+
+Event proximity (festivals, sports events)
+
+News trends (NLP signals)
+
+Social sentiment (positive/negative)
+
+Price elasticity index
+
+Price sensitivity by segment
+
+Likelihood of purchase at price X (AI-predicted)
+
+📣 XI. Promotion & Offer-Based Parameters
+Influence pricing based on campaigns or urgency.
+
+Active coupon/promo code
+
+Flash sale countdown timer
+
+Buy 1 Get 1 offer status
+
+Bundle offer trigger
+
+Free shipping threshold
+
+Loyalty points redemption
+
+First-order discount active
+
+Urgency triggers (only 2 left!)
+
+Discount stacking rules
+
+🔐 XII. Risk & Fraud-Based Parameters
+Optional, for secure or risk-adjusted pricing.
+
+Suspicious IP / flagged location
+
+Proxy/VPN detection
+
+High-risk payment methods
+
+Price abuse detection (frequent repricing)
+
+User flagged for refund abuse
+
+Rule throttling (max price changes/day)
+
+🔄 XIII. Operational & Cost-Based Parameters
+Connect with backend data for deeper logic.
+
+Shipping cost per product
+
+Handling cost
+
+Tax rate (local/international)
+
+Payment processing fees
+
+Return handling cost
+
+Customer service overhead
+
+ERP/warehouse integration status
+
+
+
+
+
+
+
+
+...........................        Travel & Airlines     ...........................
+
+🧩 1. Customer-Related Parameters
+Parameter	Description	Example
+Customer Type	New, Returning, Corporate, Frequent Flyer	"Returning customer"
+Loyalty Tier	Airline membership level	"Gold", "Platinum"
+Booking Channel	Website, App, Agency, OTA	"OTA (Expedia)"
+Location (IP or Billing)	Customer’s geo-location	"New York, USA"
+Language/Locale	Preferred language/region	"en-US"
+Device Type	Mobile, Desktop, Tablet	"iPhone 15 Pro"
+Browser Type	Safari, Chrome, Edge, etc.	"Chrome"
+Search History	Past search destinations or dates	"NY to LA, searched 5 times"
+Abandonment Behavior	Left at checkout? Returned later?	"Abandoned 2x"
+Previous Spend	Lifetime value	"$2,500 spent in last 12 months"
+
+✈️ 2. Flight-Specific Parameters
+Parameter	Description	Example
+Departure Date	Date of travel	"2025-07-01"
+Booking Date	Date of booking	"2025-06-13"
+Time Until Departure	Days left before departure	"18 days"
+Departure Day of Week	Day of the week	"Monday"
+Departure Time	Time of day	"08:00 AM"
+Return Date	(If round trip)	"2025-07-10"
+Flight Duration	Total travel time	"5h 30m"
+Number of Layovers	Nonstop, 1 stop, etc.	"Nonstop"
+Origin & Destination	From / To	"NYC → LAX"
+Airport Type	International / Regional	"LAX = International"
+Flight Load Factor	% of seats sold	"85%"
+Aircraft Type	Type of aircraft	"Boeing 737 Max"
+Cabin Class	Economy, Premium, Business, First	"Premium Economy"
+
+⏳ 3. Time & Demand-Based Parameters
+Parameter	Description	Example
+Season	Summer, Winter, Holidays, etc.	"Summer"
+Local Events	Concerts, holidays, sports, etc.	"Coachella, Super Bowl"
+Search Demand	# of searches on this route	"High demand"
+Fare Class Availability	Remaining seats in class	"Only 4 left in Economy Saver"
+Days to Departure	Dynamic urgency pricing	"< 7 days"
+Booking Window	Advance or last-minute?	"Booked 21 days ahead"
+
+💵 4. Pricing & Financial Parameters
+Parameter	Description	Example
+Base Fare	Standard ticket price	"$250"
+Taxes & Fees	Airport + fuel + service charges	"$60"
+Price Floor & Ceiling	Min/max price for route/class	Floor: $200, Ceiling: $600
+Cost Per Seat	Operational cost	"$180"
+Profit Margin Goal	Target % profit	"20%"
+Price Elasticity	Customer response to price	"High elasticity"
+Real-Time Currency Rates	FX impact for international sales	USD ↔ EUR volatility
+Bundled Services Value	Seat selection, luggage, food	Bundle worth $35
+
+📉 5. Competitor & Market Parameters
+Parameter	Description	Example
+Competitor Price	Real-time fares from other airlines	Delta: $320, United: $300
+Competitor Promotions	Discounts, offers, bundle deals	"20% off on return flights"
+Route Saturation	# of airlines serving same route	"5 airlines serve NYC-LAX"
+Historical Route Pricing	Past price trends	"Usually drops 10 days before"
+
+🚦 6. Operational Parameters
+Parameter	Description	Example
+Seat Occupancy Rate	Real-time seat fill	"90% full"
+Baggage Load	Overload may increase costs	"Maxed out for this flight"
+Fuel Cost	Affects route profitability	"Fuel cost spike"
+Weather Conditions	Delays, reschedules	"Storms predicted at LAX"
+Staff Availability	Crew, pilots	"Backup crew required"
+Regulatory Changes	COVID tests, visa bans	"Mandatory tests → lower demand"
+
+📈 7. AI/Behavioral Data (For Later AI Use)
+Parameter	Description	Example
+Conversion Rate per Price Point	Real-time	"5% at $300, 3% at $330"
+Session Behavior	Time spent, scrolls, abandon rate	"Scroll depth 80%"
+Time-on-Site	How long they browse	"6 minutes average"
+Heatmap Clicks	Which price options get clicked	"Economy > Premium"
+Cross-sell/Upsell Success	Luggage, meals, upgrades	"30% convert to premium meal"
+
+🔌 8. Integration Parameters
+Parameter	Description
+Booking Platform Used	Sabre, Amadeus, Travelport, custom
+Payment Gateway	Stripe, Razorpay, Amex, Visa
+CRM or Loyalty System	Salesforce, HubSpot, Oracle
+API Call Latency	Used for real-time adjustment decisions
+Availability of Ancillary Services	Hotels, cars, insurance bundling
+
+🧠 Bonus: Parameter Use Case Ideas
+Use Case	Parameters Used
+Last-minute urgency pricing	Days to departure + Load factor + Competitor price
+Surge for festival travel	Local events + Route demand + Price elasticity
+Regional promotions	Customer location + Loyalty status + Booking channel
+Low demand fare drop	Historical trends + Seat occupancy + Cost floor
+
+
+
+
+.....................................         Ride-sharing & Transportation           ..........................
+🧍 1. User & Rider Behavior Parameters
+Parameter	Description	Example
+Rider Type	New, returning, VIP, business	Returning rider
+Trip History	Frequency, destinations, ride time	12 rides/month
+Rider Location	Geo-coordinates, region, neighborhood	Gulshan-2, Dhaka
+Device Type	Mobile, desktop, OS version	iPhone 14, Android
+Payment Method	Card, cash, corporate wallet	Visa Credit
+App Engagement	Time on app, last open, scrolls	3x open in 1 hr
+Cancellation Rate	Past rider cancellations	15% cancellation
+Loyalty Tier	Gold, Silver, Bronze	Gold Member
+Promo Code Usage	Tendency to use discounts	Used code 7/10 rides
+Time Since Last Ride	Recency	Last ride 8 days ago
+
+🚕 2. Trip Parameters
+Parameter	Description	Example
+Pickup & Drop Location	City, neighborhood, exact GPS	Banani → Mirpur
+Distance	Total KM or Miles	9.2 km
+ETA / Duration	Estimated ride time	25 minutes
+Route Complexity	Turns, traffic zones, tolls	3 tolls
+Ride Type	Car, Bike, SUV, Auto, Premium	Bike
+Shared vs Private	Ride-pooling or private	Private
+Scheduled vs Immediate	Future ride or now	Immediate
+Luggage Handling	Passenger luggage?	Yes, 2 bags
+Multi-stop Ride	Number of stops in trip	3 stops
+Wait Time	Pickup delay/idle time	6 mins waiting
+
+⏰ 3. Time-Based Parameters
+Parameter	Description	Example
+Time of Day	Morning, rush, late night	6 PM rush hour
+Day of Week	Weekday or weekend	Friday
+Public Holiday	Holidays, religious festivals	Eid Day
+School/Office Hour	Active commuting time	8 AM – 10 AM
+Time to Pickup	Rider's wait duration	9 minutes
+Lead Time	Time booked in advance	Immediate booking
+
+📈 4. Demand & Supply Parameters
+Parameter	Description	Example
+Local Rider Demand	Riders searching nearby	High demand in Dhanmondi
+Available Drivers	Driver count near pickup	Only 2 nearby
+Driver Acceptance Rate	% drivers accepting rides	55%
+Ride Request Volume	# of active ride requests	350 in last hour
+Abandoned Rides	Riders canceling	27% cancel rate
+Heat Zones	Pre-defined surge areas	Airport area hot
+Drop-off Clustering	One drop zone overloaded	Badda 90% drop density
+Event Density	Concerts, matches, rallies	Cricket final in Stadium
+Traffic Congestion	From Google/Map APIs	Severe traffic at Rampura
+Local Weather	Rain, heat, snow, wind	Heavy rain warning
+
+💵 5. Pricing-Specific Parameters
+Parameter	Description	Example
+Base Fare	Starting price of ride	$2.50
+Per KM Rate	Distance-based pricing	$0.50/km
+Per Minute Rate	Time-based pricing	$0.10/min
+Surge Multiplier	Surge price factor	1.5x
+Minimum Fare	Floor price	$3.00
+Max Fare Limit	Cap to avoid price abuse	$25.00
+Promo/Discount Applied	% or fixed	20% off code
+Fare Components	Breakdowns (base, distance, tolls)	Base + KM + Toll
+
+🧠 6. Driver-Side Parameters
+Parameter	Description	Example
+Driver Tier	New, Verified, Elite	Elite
+Driver Location	Live location	Near Farmgate
+Acceptance Rate	How often they accept rides	82%
+Cancellation Rate	How often they cancel	10%
+Vehicle Type	Car, Bike, CNG, SUV	Bike
+Fuel Cost (Local)	Affects ride profit	Tk 130/litre
+Availability	Online/Offline status	Online
+Previous Ratings	Rider feedback	4.8 stars
+Daily Ride Limit	If capped	Max 20/day
+Payout Threshold	How much till incentive	$150 this week
+
+🌐 7. External/AI-Centered Parameters (for AI use)
+Parameter	Description	Example
+Social Trends	Major events/news	National election
+Weather API Feed	Real-time weather shifts	Thunderstorm in Dhaka
+Fuel Price Index	Local petrol/diesel rates	Up by 10%
+Public Transportation Delay	Metro/bus outage	Bus strike
+Rider Price Sensitivity	ML score: low/high sensitivity	Low
+Propensity to Convert	Likelihood to book at a price	82% likelihood at 120 BDT
+AB Test Groups	Dynamic test pricing	Group B sees 1.3x surge
+Real-time Feedback Loop	Adjusts based on current rider behavior	Elastic price drop triggered
+
+🔗 8. Platform & Integration Parameters
+Parameter	Description	Example
+Ride Platform	App/Web/WhatsApp Booking	App
+CRM / User Data	From HubSpot, Segment, etc.	Past rides, preferences
+Map APIs	Google, Mapbox, HERE, etc.	Route ETAs
+Payment System	Stripe, bKash, Nagad, Visa	Nagad enabled
+Webhooks & Triggers	For notifications, alerts	Surge Alert for 1.8x
+
+⚠️ 9. Risk & Fraud Detection Parameters
+Parameter	Description	Example
+VPN / Proxy Detection	Masked user location	VPN in use
+Repeated Ride Abandonment	Suspicious patterns	5 cancels/day
+Device Change	Sudden device change	Logged in on new phone
+Payment Failures	Fraud or expired cards	2 declines this week
+Suspicious Route Pattern	Loops, mismatches	5 reroutes detected
+
+🧠 Use Case Example (AI or Rule-based):
+Surge Scenario:
+If:
+
+Rainy weather
+
+Demand spike in Banani
+
+Few drivers online
+
+Ride booked between 5–7 PM
+
+Loyalty status = “Gold”
+
+Then:
+Apply 1.6x surge cap, but offer free cancellation for loyalty users.
+
+
+
+
+
+
+
+
+
+.....................................        Hotel & Hospitality           ..........................
+
+
+🏨 1. Property & Room Parameters
+Parameter	Description	Examples
+Room Type	Deluxe, Standard, Suite, Dorm	Deluxe Suite
+Bed Type	King, Queen, Twin, Bunk	King
+View	Sea, Mountain, Garden, Street	Ocean View
+Amenities	AC, Bathtub, Wi-Fi, Balcony	Wi-Fi + Balcony
+Occupancy Capacity	Max guests allowed	3 persons
+Room Size	Square footage	450 sq ft
+Smoking Allowed	Yes/No	No
+Pet Friendly	Yes/No	Yes
+Number of Rooms Available	Inventory status	3 out of 20 rooms left
+Room Renovation Status	New/Old/Recently Renovated	Renovated in 2024
+
+📅 2. Booking Parameters
+Parameter	Description	Examples
+Check-in/Check-out Dates	Booking duration	3 nights (Aug 2–5)
+Lead Time	Days between booking and stay	45 days ahead
+Stay Length	Number of nights	5 nights
+Booking Channel	Website, OTA, Walk-in	Booking.com
+Booking Time	Time of day when booking	11:00 PM
+Device Used	Mobile/Desktop	Mobile
+Advance Booking Discount	Applied if booked early	-15% for 60+ days ahead
+Same-Day Booking	Last-minute bookings	Booked today at 2 PM
+Group Booking Size	Number of rooms or guests	5 rooms, 12 guests
+Corporate Booking	Business travel?	Yes
+
+🧍 3. Guest Profile Parameters
+Parameter	Description	Examples
+Guest Type	Business, Family, Couple, Solo	Business
+Loyalty Status	Bronze, Silver, Gold, VIP	Gold
+Country/Region	From where they're booking	Germany
+Repeat Visitor	Has stayed before	3 previous stays
+Preferences	Room, floor, food, extras	High-floor, vegetarian
+Language	Localized pricing/offers	Spanish
+Special Occasion	Birthday, honeymoon, etc.	Honeymoon
+High-Value Guest	Based on spend, reviews	Yes
+Age Group	Youth, Adult, Senior	35–50 yrs
+Booking Behavior	Discount sensitive, last-minute	Last-minute booker
+
+🌍 4. Location & Local Demand
+Parameter	Description	Examples
+Property Location	City, neighborhood, tourist area	Cox’s Bazar beachfront
+Local Demand	Overall city/hotel demand	95% city occupancy
+Nearby Events	Concerts, expos, conferences	Tech Expo nearby
+Distance to Attractions	KM to tourist spot or airport	1.2 km to museum
+Competitor Proximity	Nearby hotel density	10 hotels within 2 km
+Airport/Transit Access	How easy to reach	5 mins to metro
+
+⏰ 5. Time-Based Parameters
+Parameter	Description	Examples
+Season	Peak, shoulder, low season	Peak (Dec–Jan)
+Day of Week	Weekday vs Weekend	Saturday
+Public Holiday	Long weekends, festivals	Eid al-Adha
+Event Date Proximity	Near to a major event?	Yes (wedding fair)
+Check-In Time	Morning, evening	3 PM check-in
+Booking Window	Far in advance or close	2 days before stay
+
+💰 6. Pricing Strategy Parameters
+Parameter	Description	Examples
+Base Price	Default rate before modifiers	$120/night
+Price Floor/Ceiling	Min/max allowed	Floor $80, Cap $300
+Revenue Goals	Daily/weekly revenue targets	$4,000/day
+Occupancy Rate	Hotel-wide or room-type specific	70% today
+Booking Pace	Current vs expected bookings	30% behind trend
+Dynamic Bundling	Add-ons: breakfast, spa	+$10 breakfast bundle
+Upsell Opportunities	Room upgrades, early check-in	+$20 early check-in
+Cancellation Policy	Strict, moderate, flexible	50% refund within 3 days
+Refund Rules	When & how refunds apply	Non-refundable for flash deals
+Commission Rates	Different by OTA channel	18% via Agoda
+
+🧠 7. External Market Intelligence
+Parameter	Description	Examples
+Competitor Price	Prices of similar hotels	$145 avg nearby
+Competitor Availability	Fully booked or not	Hilton = Sold Out
+Market Average	Avg. room price by area/class	$110 for 3-star in Dhaka
+Exchange Rate	For international guests	USD-BDT rate fluctuation
+Weather Forecast	Influences bookings	Rain next 3 days
+Fuel/Transport Cost	Higher = local stays increase	Diesel up 10%
+Online Trends	Search spikes in Google, OTA	Cox’s Bazar trending 40%
+
+📊 8. Analytics & AI Parameters
+Parameter	Description	Examples
+Price Elasticity	Will guest convert at +10%?	Elastic for business guests
+Conversion Rate	From views to bookings	5.4% on mobile
+Page Views	Listing interest	2,300 views last 7 days
+Cart Abandonment	Intent without booking	340 abandoned
+Forecasted Demand	ML projection of occupancy	91% in upcoming Eid
+Promotion Performance	Impact of past offers	Flash sale = +17% conversion
+Rate Parity	Price consistency across channels	OTA price mismatch detected
+
+🔗 9. Integrations & Source Data
+Parameter	Description	Examples
+OTA Feeds	Expedia, Agoda, Booking	Real-time sync
+Channel Manager	Siteminder, Cloudbeds, etc.	API-integrated
+PMS Integration	Property management system	Hotelogix
+Payment Processor	Stripe, bKash, Razorpay	Stripe enabled
+CRM	HubSpot, Zoho, Freshsales	Zoho CRM link
+Google Analytics	Behavioral insights	Web traffic surges
+API Feeds	Events, weather, social	Facebook Events API
+
+🔐 10. Security & Fraud Parameters
+Parameter	Description	Examples
+Booking IP	Geo-location detection	Proxy/VPN used
+Duplicate Accounts	Multiple bookings from same user	Flagged
+Abusive Behavior	Blacklist or watchlist	Yes
+Payment Failure Pattern	Fraud detection	3 failed attempts
+Suspicious Booking Pattern	Spike in one user segment	10 bookings in 30 mins
+
+
+
+
+
+
+.....................................       Event Ticketing           ..........................
+
+
+🎟️ 1. Event-Specific Parameters
+Parameter	Description	Examples
+Event Type	Concert, Sports, Theatre, etc.	Concert
+Performer/Headliner	Artist or team name	Ed Sheeran
+Event Popularity	Measured by views, searches, social metrics	Viral concert
+Venue Name & Capacity	Arena/stadium and total seats	Stadium with 30,000 seats
+Location	City or region	New York City
+Event Date & Time	Day, month, hour	Sat, Nov 4 at 8 PM
+Duration	Length of event	3 hours
+Recurrence	One-time or recurring	Weekly standup show
+Organizer Tier	Big brand or indie promoter	Live Nation
+
+💺 2. Seat & Ticket Parameters
+Parameter	Description	Examples
+Seat Category	VIP, Front Row, Balcony	VIP Gold
+Zone/Section	Area of the venue	Section A3
+Row & Seat Number	Specific identifiers	Row 5, Seat 18
+View Quality	Obstructed or premium	Obstructed view discount
+Ticket Type	General admission, reserved, season pass	General
+Bundle Deals	2+1, group/family offers	Family pack (4 tickets)
+Add-ons	Parking, food, meet & greet	$20 for parking
+Physical vs. e-Ticket	Fulfillment type	QR e-ticket
+Dynamic Seat Mapping	Interactive pricing by map zone	A/B tested layout
+Ticket Inventory	Number of seats left	Only 13 VIP tickets left
+
+📅 3. Time-Based Parameters
+Parameter	Description	Examples
+Booking Date	Date of ticket purchase	Oct 12
+Days to Event (Lead Time)	How early ticket is bought	45 days in advance
+Booking Time	Time of day	11:45 PM
+Peak vs. Off-Peak Hours	Higher demand booking times	Noon–3 PM peak
+Weekday vs. Weekend Event	Friday night events priced higher	Saturday concert
+Flash Sales Window	Limited-time discounts	24-hour presale
+Last-Minute Booking	Price surge closer to event	+20% in final week
+
+🔥 4. Demand & Behavior Parameters
+Parameter	Description	Examples
+Ticket Demand Trend	Daily/weekly interest level	+40% demand spike
+Page Views	Visitors to ticket page	18,000/day
+Add to Cart Rate	How often users add tickets to cart	12%
+Abandoned Carts	Unpurchased after adding to cart	1,300 carts abandoned
+Wishlist/Favorite Count	Saved ticket interest	850 users marked favorite
+Search Volume	Organic searches for event	5,000 Google searches/day
+Waitlist Signups	Overflow demand	2,000 waitlisted
+
+💰 5. Pricing Strategy Parameters
+Parameter	Description	Examples
+Base Ticket Price	Default listed price	$120
+Price Floor & Ceiling	Min/max range allowed	Min $80, Max $400
+Seating Tier Markup	Premium zones extra	+$50 for balcony
+Surge Rules	When demand exceeds supply	+15% when <20% seats left
+Time-Based Increments	Price goes up every week	+$10/week
+Conversion Optimization	Lower prices for low-conversion events	Drop 10% to boost sales
+Tiered Pricing	Discounts for bulk or tiered access	10% off for 4+ tickets
+Price Anchoring	Displaying crossed-out old prices	Was $150, Now $110
+
+🧑‍🤝‍🧑 6. User Profile & Behavior Parameters
+Parameter	Description	Examples
+User Type	Student, Senior, VIP Member	Student
+Loyalty Level	Bronze, Silver, Gold	Gold member
+Repeat Attendee	Past ticket buyer	Attended 3 past shows
+Referral Source	Came via influencer/social	Instagram ad
+Geo-location	User’s city or region	Booked from California
+Device Used	Mobile, Desktop, Tablet	Mobile ticket purchase
+Customer Lifetime Value	Past spend and behavior	$1,000 total spent
+Booking Group Size	Number of tickets bought	Group of 6
+
+📊 7. Market & Competitor Parameters
+Parameter	Description	Examples
+Nearby Event Overlap	Same-date competition	Coldplay show nearby
+Competing Ticket Prices	Price of similar events	Avg. $150 in area
+Google Trends Data	Search activity for event	Trend peaking 3 weeks out
+Social Media Buzz	Twitter mentions, TikTok shares	25k mentions this week
+Influencer/Promo Impact	Boost in sales after promo	+18% after influencer post
+Local Holiday	Holiday = more demand	Eid weekend
+Weather Forecast	Rain, snow, heat wave impacts	Sunny day → high walk-ins
+
+🧠 8. AI & Predictive Parameters
+Parameter	Description	Examples
+Demand Forecast	Based on trends & patterns	Projected sell-out in 12 days
+No-show Probability	AI estimate for attendance	3% expected no-show
+Price Elasticity	How sensitive buyers are to price	7% drop = 20% more sales
+Segment-Level Conversion	Conversion by audience group	Seniors = 8.5%, Students = 4.1%
+Optimal Pricing Window	Best time to sell out	30–10 days before event
+Viral Potential	AI detection of virality	Likely to go viral on TikTok
+
+🔔 9. Notification & Rules Engine Parameters
+Parameter	Description	Examples
+Ticket Scarcity Alert	Show warning when few left	“Only 12 seats left!”
+Price Drop Alert	Let users know of deals	“Your watched ticket is now $99”
+Early Bird Ending Timer	Countdown banners	“Only 4 hours left for early bird pricing”
+Auto Pause/Resume	Based on demand or overbooking	Stop sales after 95% sold
+Rule Conflict Resolution	When multiple pricing rules overlap	Priority-based fallback
+
+🔗 10. Integrations & Channels
+Parameter	Description	Examples
+Ticketing Platform	Eventbrite, Ticketmaster, etc.	Ticketmaster Pro
+Payment Gateways	Stripe, Razorpay, PayPal	Stripe API
+Marketing Channels	Facebook, WhatsApp, email	Instagram Stories link
+Affiliate/Referral Sources	Promo codes, affiliate IDs	Code: INFLUENCER50
+CRM Integration	Customer behavior tracking	Zoho, HubSpot
+API Feeds	Pull from events calendar, weather, traffic, etc.	Weather API sync
+Real-time Inventory API	Sync seats across apps	Zapier integration
+
+
+
+.........................  Real Estate ....................
+
+🏠 1. Property Attributes
+Parameter	Description	Examples
+Property Type	Residential, Commercial, Land	Residential
+Listing Type	Rent, Sale, Lease, Auction	Rent
+Unit Type	Studio, 1BHK, 3BHK, Office Space	2BHK
+Size	Area in sqft/sqm	1,200 sqft
+Number of Bedrooms	For residential properties	3 beds
+Number of Bathrooms	Full and half baths	2 bathrooms
+Furnishing Status	Furnished, Semi, Unfurnished	Fully furnished
+Floor Number	Which level the property is on	5th floor
+Total Floors	Total floors in building	10
+Year Built	Age of the property	Built in 2017
+Construction Type	Brick, Concrete, Modular	RCC
+Renovation Status	Newly built or recently renovated	Renovated 2023
+Amenities	Gym, Pool, Lift, Parking	Pool + Lift
+Facing Direction	North, South-East	East-facing
+Energy Efficiency	Green-certified or not	LEED Gold
+Pet Policy	Allowed/Not allowed	Pets allowed
+
+🌍 2. Location Parameters
+Parameter	Description	Examples
+City/Region	Macro location	Dhaka, New York City
+Neighborhood/Suburb	Micro location	Gulshan 2
+Proximity to Transit	Metro, bus, highway	300m to subway
+Walk Score	Walkability index	85/100
+Crime Rate	Local safety level	Low crime zone
+School Proximity	Top-rated schools nearby	0.5 km to top school
+Distance to CBD	How far from business district	7 km from Motijheel
+Future Development	New roads, malls planned nearby	Metro expansion 2025
+Zoning Code	Residential, Commercial, Mixed	R3
+
+📈 3. Market & Competitor Parameters
+Parameter	Description	Examples
+Market Price Trend	Local price movement	+8% YoY growth
+Comparable Listings	Similar listings nearby	$1,300/mo avg
+Time on Market	Days other properties stayed unsold	Avg 37 days
+Vacancy Rate	% of unsold or unrented homes	10%
+Competing New Builds	New constructions in area	3 new towers launched
+Mortgage Interest Rate	Bank lending rate	8.5%
+Rent-to-Price Ratio	Used in rental ROI models	0.68% monthly
+Inventory Level	Number of listings in area	420 active listings
+
+🧑 4. Buyer/Tenant Profile Parameters
+Parameter	Description	Examples
+Buyer Type	Investor, Family, Student	Family
+Age Group	25–34, 35–44, 55+	35–44
+Income Bracket	Monthly/yearly income	$80,000/year
+Employment Type	Full-time, remote, student	Remote IT worker
+Search Behavior	Price filter, saved listings	Filtering under $200k
+Past Interaction	Viewed, called, saved, inquired	3 saves, 1 inquiry
+Budget Flexibility	Based on behavior & income	±10% flexibility
+Preferred Features	Wants balcony + covered parking	Yes
+Risk Profile	For investors: high or low risk	Low risk
+
+⏰ 5. Time-Based Parameters
+Parameter	Description	Examples
+Listing Age	Days since posted	14 days
+Best Day/Time to List	Based on performance history	Tuesdays at 10 AM
+Seasonality	Festive or academic cycles	Eid sales or school admission season
+Public Holidays	Long weekends = more views	Pohela Boishakh
+Lease Cycle	Peak renting times	June–August peak
+Move-In Date Flexibility	For rentals	Fixed vs. negotiable
+Closing Window	Days available to close	45-day target close
+
+💰 6. Pricing Strategy Parameters
+Parameter	Description	Examples
+Base Price	Starting price	$250,000 or $950/month
+Price Floor & Ceiling	Allowed min/max values	$900–$1,200
+ROI Goal	Expected rental yield	6% gross ROI
+Owner’s Flexibility	How negotiable	Fixed, 5% room
+Dynamic Discount Rules	Longer stays = lower rent	5% off 12-month lease
+Multi-Unit Pricing	For landlords with many flats	Auto price sync
+Incentive Offers	Free rent for 1st month, etc.	"Pay 11, stay 12"
+Commission Rates	Adjust pricing to include it	2% agent commission
+Dynamic Auction Pricing	Auto-price rise with bids	Airbnb style bidding
+
+🧠 7. AI & Forecasting Parameters
+Parameter	Description	Examples
+Demand Forecast	Supply vs. demand projection	High demand for 2BHK in Banani
+Price Elasticity	Will price change affect decision?	Low elasticity in peak season
+Lead Scoring	AI ranking of interested buyers	89/100 likely to convert
+Conversion Prediction	Likelihood to sell/rent at price	71% at $1,150/mo
+Optimal Pricing Window	Best time to adjust price	15–30 days post-listing
+Behavior Clustering	Audience segmentation	Investor vs. end user
+Churn Risk	Tenant leaving early	High if rent raised 15%
+
+📊 8. Behavioral & Web Data Parameters
+Parameter	Description	Examples
+View Count	How many times listing seen	2,300 views
+Save-to-View Ratio	Indicator of listing appeal	22%
+Inquiry Rate	Messages per 1,000 views	4.8%
+Bounce Rate	Page exited quickly	72%
+A/B Test Variant	Test price effect	Version A: $900, B: $950
+Call/WhatsApp Clicks	Contact interest	183 clicks
+Time on Page	Engagement time	2 mins 45 sec avg
+
+🏗️ 9. Rental & Maintenance Parameters
+Parameter	Description	Examples
+Monthly Maintenance Cost	Added to base rent?	$80/month
+Utilities Included	Yes/No	Yes
+Parking Fee	Separate from rent?	+$50/month
+Move-in Charges	Deposit, key fee, etc.	2-month deposit
+Lease Terms	6-month, 12-month, flexible	12-month min
+Pet Fee	Extra monthly for pets	$30/month
+Shared Amenities	Cost split for gym/pool	$20 shared utility
+
+🔌 10. Data Source & Integration Parameters
+Parameter	Description	Examples
+CRM Integration	Track leads	Zoho, HubSpot
+MLS/API Feed	Pull property data	MLS IDX, RentMojo API
+ERP/Owner Platform	Sync availability/prices	SAP, custom ERP
+Payment Gateway	Track rent payments	Stripe, bKash
+Google Trends	Market interest	“Flat in Dhanmondi” spike
+Real Estate Portals	Listing on 3rd party	Bikroy, Lamudi, Zillow
+Social Campaign Response	Facebook lead gen CTR	6.7% CTR
+
+
+..........................  Grocery & Retail..........................
+
+🛒 1. Product-Specific Parameters
+Parameter	Description	Examples
+Product Category	Fruits, Meat, Dairy, Snacks, Beverages	Dairy
+Product Type	Perishable, Non-perishable, Frozen	Perishable
+Brand	Name of manufacturer	Nestlé, Unilever
+SKU	Stock Keeping Unit identifier	MILK500ML001
+Product Size	Weight or volume	1kg, 500ml
+Pack Size	Single, 6-pack, 12-pack	6-pack
+Expiry Date	Time-sensitive shelf life	Expires in 5 days
+Organic/Natural Tag	Premium product flag	Organic bananas
+Vegan/Gluten-Free/Other Tags	Dietary tags	Vegan, Sugar-free
+Bundle Group	Eligible for combo pricing	Rice + Lentils
+Private Label vs. National Brand	Store brand vs. big brand	Store brand rice
+
+📦 2. Inventory & Stock Parameters
+Parameter	Description	Examples
+Stock Level	Current quantity	80 units in stock
+Minimum Stock Threshold	Trigger for price increase	<20 units
+Overstock Threshold	Trigger for discounting	>150 units
+Restocking Frequency	Weekly, monthly	Weekly restock
+Shelf Life Remaining	For perishable items	3 days left
+Expiry Date Proximity	How close to expiry	Within 48 hours
+Seasonal Inventory Flag	Is the item seasonal?	Mangoes in summer
+Supplier Constraints	Delivery issues or delays	Tomato shortage
+Reorder Point	Minimum inventory for reordering	50 units
+FIFO/LIFO Priority	Pricing to move old stock	FIFO pricing logic
+
+💸 3. Pricing Strategy Parameters
+Parameter	Description	Examples
+Base Price	Regular price	$3.99
+Cost Price	Procurement cost	$2.30
+Margin Target	Profit expectation	30% margin
+Price Floor/Ceiling	Min and max allowed price	$2.99–$4.49
+Promotional Price	Temporary discount	$3.49 this week
+Loss Leader Pricing	Discount to attract customers	$0.99 for milk
+Bundle Pricing	Discounted group price	Buy Rice + Lentils = 10% off
+BOGO Offer Eligibility	Buy-one-get-one logic	Buy 1 oil, get 1 sugar
+Volume Discounts	Tiered pricing for bulk	10% off on 5+ units
+Cashback Pricing	Post-purchase incentive	5% cashback on ghee
+Geo-based Pricing	Based on city or outlet	$3.59 in Dhaka, $3.99 in Sylhet
+
+🏪 4. Store-Level Parameters
+Parameter	Description	Examples
+Store Type	Supermarket, Online-only, Franchise	Online only
+Store Location	City, district, region	Chattogram
+Store Performance	Footfall, revenue metrics	Low-performing store
+Shelf Space Allocation	Large/small display space	3 ft shelf
+Local Demand	Popularity in local region	High demand for mustard oil
+Pricing Zone	Tiered by area	Tier 2 zone
+
+🧠 5. Customer Behavior Parameters
+Parameter	Description	Examples
+Customer Segmentation	VIP, Regular, First-time	VIP
+Cart Abandonment Rate	High = discount trigger	72% for frozen pizza
+Purchase History	Recurring buyer?	Buys eggs every Monday
+Coupon Usage	Responds to coupons?	Yes, 15% coupon usage rate
+Price Sensitivity	Willingness to pay	High for detergent
+Brand Loyalty	Always buys same brand	Only buys Coca-Cola
+Basket Size	Avg order value	$25/cart
+Product Views	Interest shown	320 views for chicken thighs
+Wishlist/Add-to-Cart	Signals interest	Added 3x this week
+Subscription History	If applicable	Weekly veg box
+LTV (Lifetime Value)	Pricing for best customers	$2,300 LTV
+Customer Region	Geo-personalized pricing	Barishal users prefer rice offers
+
+📆 6. Time & Seasonality Parameters
+Parameter	Description	Examples
+Day of the Week	Monday–Sunday pricing	Monday fruit deals
+Time of Day	Lunch hour, evening rush	5–8PM = peak grocery orders
+Seasonality	Holiday or crop cycle	Ramadan or Eid
+Festive Sales	Offers tied to holidays	Eid offers on dry fruits
+Shelf Life Seasonality	Perishable item cycles	Tomato price up in March
+Flash Sale Triggers	Short-term auto discounts	3-hour price drop
+Peak Shopping Days	Fridays, weekends	Weekend rush pricing
+Monthly Salary Cycle	High sales near payday	25th–1st pricing boost
+
+🔄 7. Competitor & Market Intelligence
+Parameter	Description	Examples
+Competitor Price Match	Scrape or match	Match Daraz price for sugar
+Local Store Offers	Nearby shop discounts	20% off at Meena Bazar
+E-commerce Competitors	Pickaboo, Chaldal, Daraz	$4.99 vs. $5.29
+Global Trends	Tomato price spike in India = spike in BD	
+Wholesale Market Rates	Karwan Bazar daily rates	Onion = 18 BDT/kg
+Price Volatility	Price changing daily?	Yes
+External Event Signals	Fuel price up = transport cost spike	Adjust cooking oil price
+
+📊 8. Performance-Based Parameters
+Parameter	Description	Examples
+Sell-Through Rate	Sales ÷ stock	82% in 7 days
+Stock Turnover Rate	Speed of movement	5x/month
+Promo Uplift %	Sales increase after discount	+42% on chocolate
+Discount Elasticity	Demand growth with % discount	5% off → 18% more sales
+Unit Economics	Profit per SKU after cost	$0.50 net margin
+Refund Rate	High = reduce sales volume	7% for eggs
+Return Reason	Not fresh, expired, bad packaging	Reduce pricing as penalty
+
+⚙️ 9. System & Integration Parameters
+Parameter	Description	Examples
+POS System Integration	In-store pricing sync	Square POS
+ERP System Sync	Inventory sync	Odoo, Oracle NetSuite
+eCommerce Platform	Shopify, WooCommerce, Magento	Shopify store
+Barcode Scanning Logic	SKU → dynamic price match	5001 = $3.99
+API Access	Competitor prices, external DBs	Scraping/Integration APIs
+Price Override Permissions	Manager vs. store staff	Store Manager access only
+
+🧠 10. AI & Automation Parameters (Future)
+Parameter	Description	Examples
+Demand Forecasting	Based on season, views, orders	Expect 500kg onions this week
+Weather-Based Pricing	Ice cream up in heatwaves	Dhaka = +12% in summer
+NLP for Reviews	Auto extract sentiment	“Too expensive” = lower price
+Predictive Shelf Depletion	Inventory runout date	3 days till eggs out of stock
+Price Experimentation Engine	A/B test price elasticity	Version A = $1.99, B = $2.19
+Personalized Promo Engine	Dynamic coupon code logic	First order? 15% off auto-applied
+Reinforcement Learning	Learn optimal price from reward signal	Maximize margin + conversion
+
+
+
+
+
+
+........................... Freelancing/Services marketplace .................................
+
+
+🧠 1. Service-Specific Parameters
+Parameter	Description	Examples
+Service Category	Design, Development, Writing, etc.	Logo Design
+Service Subcategory	More specific field	WordPress bug fixing
+Skill Level	Beginner, Intermediate, Expert	Expert
+Delivery Speed	24h, 3 days, 1 week	3-day delivery
+Revisions Offered	Number of edits included	2 revisions
+Service Complexity	Simple, medium, complex	Medium complexity
+Project Size	One-off task, milestone, long-term	One-off
+Niche/Industry Focus	Medical, Legal, SaaS, etc.	SaaS-focused content
+Add-ons / Extras	Rush delivery, SEO audit, etc.	Extra $10 for express
+
+👤 2. Freelancer Profile Parameters
+Parameter	Description	Examples
+Freelancer Rating	Average star rating	4.9/5
+Number of Reviews	Total client feedbacks	142 reviews
+Completion Rate	Task completion history	97% completed
+On-time Delivery Rate	% delivered before deadline	93%
+Response Time	Avg reply time	Within 2 hours
+Years of Experience	How long working in this field	6 years
+Certifications	Relevant qualifications	Google Ads Certified
+Location	Geographic pricing logic	Bangladesh, USA, etc.
+Language Fluency	Pricing may vary for native speakers	Native English
+Availability Status	Part-time, Full-time, Busy	Available full-time
+
+📈 3. Market Demand & Trends
+Parameter	Description	Examples
+Demand Level for Skill	Overall interest in skill	High demand for AI writing
+Search Volume	Monthly client searches	3,200 searches for "logo redesign"
+Seasonal Demand	Trends by time of year	Resume writing in Jan–Mar
+Trending Keywords	Skills trending now	“Webflow,” “Notion,” “Prompt Engineer”
+Emerging Skills	High-value new services	AI automation setup
+
+🧑‍💼 4. Client Behavior & Segment
+Parameter	Description	Examples
+Client Budget Range	Low, medium, high	$50–$100
+Repeat Buyer Rate	Loyal customer?	Yes (3 previous hires)
+Cart Abandonment	Browsed but didn’t buy	Abandoned 2 projects
+Geolocation	Country of client	UK vs. India
+Time Zone	May impact urgency premium	UTC+6 client = rush job
+Project Urgency	24-hour deadline = price up	+25% express fee
+Bulk Project Potential	10 logos = discount pricing	Offer 15% off
+Client Ratings Given	Tough vs. lenient rater	Rates mostly 4 stars or less
+LTV of Client	Adjust price for VIP clients	$2,300+ client
+Industry of Client	Real estate vs. eCom vs. SaaS	Real estate promo video
+Business Stage	Startup, scale-up, enterprise	Early-stage = budget sensitive
+
+🏆 5. Competitive Landscape
+Parameter	Description	Examples
+Number of Active Freelancers	Supply for specific service	12,500 logo designers
+Average Price of Competitors	Market benchmark	Avg = $45/logo
+Price Undercut Strategy	Slightly lower price	-5% of market avg
+Premium Positioning Strategy	Higher price for quality	+25% vs avg with badge
+Competitor Ratings	Compete with 4.7+ freelancers	Match or exceed
+Featured/Favorited Competitors	Market leaders to undercut	Top 10% badge holders
+
+🧾 6. Pricing Strategy Parameters
+Parameter	Description	Examples
+Base Rate	Default rate per gig/hour	$100
+Dynamic Markup	Varies based on urgency/demand	+10% on weekends
+Price Floor & Ceiling	Min & max bounds	$30 to $300
+Tiered Packages	Basic / Standard / Premium	Basic = $49, Premium = $149
+Hourly vs. Fixed	Project-based pricing	Fixed = $250/article
+Subscription Pricing	Monthly retainer	$799/month SEO package
+Coupon / Promo Offers	Auto discounts for first-timers	15% off new clients
+Loyalty Discounts	Based on client repeat rate	10% off on 3rd order
+Revenue Sharing %	Platform commission	10–30%
+Geo-based Adjustment	Currency, region-based pricing	USD vs. INR vs. BDT
+
+📊 7. Performance & Outcome Parameters
+Parameter	Description	Examples
+Project Success Rate	% of completed + 5-star	92% success
+Rejection Rate	High = auto price drop	12%
+Earnings History	Influences auto-pricing tiers	$12k earned this year
+Conversion Rate	Views vs. hires	3.8%
+Bounce Rate	From profile/gig page	High = optimize pricing
+Gig Click-Through Rate	Engagement metric	4.1% CTR
+Time to Hire	Fast hire = urgent pricing logic	<12 hours to decision
+Feedback Sentiment	NLP analysis on reviews	“expensive” or “worth it”
+
+🕒 8. Time-Based Parameters
+Parameter	Description	Examples
+Day of the Week	Weekend premium or weekday dip	Higher on Fridays
+Time of Day	More searches during evening	Higher pricing after 6 PM
+Seasonality	Year-end content rush	Oct–Dec = content surge
+Flash Offer Windows	Temporary price drops	“Today only: 15% off”
+Promotion Countdown	Boosted urgency pricing	6 hours left to grab offer
+Campaign Events	Black Friday, New Year offers	$50 bundle discount
+
+🤖 9. AI & Future Pricing Intelligence
+Parameter	Description	Examples
+AI Skill Scarcity Score	Based on global demand	Prompt engineer = scarce
+Predictive Demand	Based on trend forecast	50% rise in AI gigs
+Sentiment Score from Reviews	AI tags like “worth the price”	Raise price slowly
+Cross-Sell / Upsell Potential	Offer video + script combo	AI decides bundles
+Buyer Intent Score	From past activity	High-intent = reduce discount
+Price Elasticity Estimation	Test willingness to pay	Experiment $79 vs. $89
+Personalized Pricing Models	Based on buyer type	Startup = low tier, Agency = high tier
+
+🧩 Integration Parameters (Platform-Level)
+Parameter	Description	Examples
+Platform API	Upwork, Fiverr, or custom integration	Auto-sync gigs
+Payment Gateway Hook	Stripe, Payoneer, etc.	Split fee logic
+CRM/Chat Integration	WhatsApp, Email, Messenger	Auto-close deal offers
+Webhook & Zapier Hooks	Trigger events (discount, alert)	“High demand alert” email
+Notifications & Alert System	Low-price alert, VIP customer alert	Alert → dynamic rule change
+
+
+
+
+.......................    SaaS & Subscription services                   ..................
+
+🧑‍💻 1. User Behavior & Engagement
+Parameter	Description	Examples
+Active Users	Number of active seats/users	5 users this month
+Login Frequency	Daily/weekly/monthly login behavior	5x/week
+Feature Usage	Which features are heavily used	High usage of automation
+Time Spent in App	Duration of sessions	Avg. 1 hr/day
+Session Count	Number of logins in 30 days	20 sessions
+Abandonment Rate	Features started but not finished	Onboarding dropped
+Free Trial Usage	How much value was extracted	95% features used
+Setup Completion %	How far user went in setup	70% done
+Plan Upgrade Intent	Based on usage exceeding plan limits	80% of data cap used
+Engagement Score	Composite engagement metric	Score = 8.7/10
+
+💵 2. Subscription & Plan Details
+Parameter	Description	Examples
+Plan Type	Free, Starter, Pro, Enterprise	Starter
+Billing Frequency	Monthly, Quarterly, Yearly	Monthly
+Subscription Duration	How long they’ve been a user	14 months
+Seats/User Count	Number of team members	25 users
+Add-ons Activated	Extra modules enabled	Analytics Add-on
+Renewal History	Renewed on time or not	Auto-renewed 3x
+Cancellation History	Previous churn behavior	Churned 2x before
+Trial to Paid Conversion Rate	% of trials converted	6.8%
+Discount Applied	Whether using coupon code	20% off
+Upgrade History	Previous upsells	Upgraded from Basic
+Downgrade Triggers	Usage drop, support issues	Low usage = price drop
+
+🎯 3. Usage-Based Pricing Parameters
+Parameter	Description	Examples
+API Calls Used	Number of API hits	100,000/month
+Storage Consumption	Data stored in GB/TB	12 GB
+Emails Sent / Automations Run	Based on limits	5,000 emails/mo
+Projects Created	For project-based SaaS	48 projects
+Data Processing Units	e.g., AI tokens used	2M tokens used
+Reports/Exports Made	For analytics SaaS	25 reports/month
+Monthly Active Workflows	Automation SaaS	75 workflows
+Team Members Added	Per user SaaS pricing	+2 new team members
+
+📊 4. Business & Customer Profile
+Parameter	Description	Examples
+Business Size	SMB, Mid-Market, Enterprise	Mid-market
+Industry	SaaS, Healthcare, eCom, etc.	eCommerce
+Country/Region	Pricing localized per region	EU, US, Asia
+Company Revenue	Used for quote-based pricing	$2M ARR
+Number of Employees	Company size metric	85 employees
+Job Role	Decision-maker vs. user	CMO vs. intern
+Customer Segment	Startup, Growth, Enterprise	Growth
+Tech Stack Used	For integrations & upsells	HubSpot, Notion
+Fundraising Stage	Pre-seed, Series A, etc.	Series B
+
+⚖️ 5. Market Dynamics
+Parameter	Description	Examples
+Competitor Pricing	Track SaaS competitors	Intercom vs. Drift
+Currency Exchange Rate	Region-based price adjustment	USD → INR
+Economic Trends	Recession, inflation periods	Temporary price drops
+Demand Seasonality	e.g., Q4 boost for B2B SaaS	Q4 = high adoption
+Feature Requests Trends	What users want more	Bulk AI features asked
+Trial Conversions Over Time	Seasonal spikes	March = higher signups
+Industry Trend Data	AI/ML growth = higher price	NLP SaaS demand up
+
+🤖 6. AI & Predictive Signals
+Parameter	Description	Examples
+Churn Prediction Score	AI-estimated churn risk	72% likely to churn
+LTV Prediction	Estimate of customer value	$9,870 projected
+Elasticity Score	How sensitive is user to price change	High elasticity = small changes only
+Upgrade Likelihood	Based on usage pattern	85% chance
+Feature Stickiness	Correlation of feature usage to retention	High = retain AI dashboard
+Conversion Intent	Behavior pattern shows buying intent	88%
+Price Sensitivity Index	Behavior, discounts, and history	Medium price tolerance
+
+📦 7. Promotions, Coupons, Campaigns
+Parameter	Description	Examples
+Promo Type	Limited-time, bundle, etc.	50% for 3 months
+Promo Redemption History	Coupon used before?	Yes (Jan-Feb)
+Referral Count	Discounts from referrals	3 invites = $15 off
+Email Campaign Response	Open/click behavior	44% open rate
+Abandoned Checkout	Discounts triggered?	Yes (auto 10%)
+Behavior-Based Offers	Offers shown only if active	Power users get early-bird offers
+Bundle Discounts	Cross-product bundling	CRM + Marketing Suite = 20% off
+
+📈 8. Performance Metrics
+Parameter	Description	Examples
+MRR / ARR	Monthly/Annual recurring revenue	$8,500 MRR
+CAC	Customer Acquisition Cost	$129
+ARPU	Avg. Revenue per User	$23/user/month
+Revenue Expansion	Upsell + cross-sell total	+12% YoY
+Net Revenue Retention	Growth within customer base	117%
+Plan ROI	ROI of specific plan type	Pro Plan = $1.4k/mo revenue
+Cost of Provisioning	Infra + support cost per user	$7/user
+
+📡 9. Integrations & Tech Stack
+Parameter	Description	Examples
+Connected Tools	Slack, Zapier, Stripe, etc.	+3 integrations
+Data Pipeline Load	Usage of external APIs	12 API partners
+External Source Attribution	Facebook Ads, SEO, etc.	Source = LinkedIn
+CRM Sync Status	Salesforce, HubSpot	100% sync
+Billing Platform	Stripe, Chargebee, Paddle	Stripe active
+Feature Limit Unlocks	Based on integrated tools	HubSpot unlocks CRM booster
+
+🧠 Bonus: AI Features You Can Add Later
+Feature	Value
+AI-powered pricing recommendation engine	Suggests optimized plan price per user
+NLP-based competitor monitoring	Track pricing from competitor websites
+Predictive usage modeling	Forecast usage for overage billing
+Dynamic plan personalization	Create per-user or per-company plans
+Reinforcement Learning	Test and adapt pricing experiments in real time
+
+
+
+
+
+
+
+........................     Logistics & Delivery                 ...................
+
+🚚 1. Shipment & Package Parameters
+Parameter	Description	Examples
+Package Weight	Heavier = higher cost	12 kg
+Package Volume/Dimensions	L × W × H or cubic weight	60cm × 40cm × 30cm
+Package Type	Document, perishable, fragile	Perishable goods
+Quantity of Packages	Number in a single order	5 parcels
+Declared Value	Affects insurance & premium	$5,000
+Packaging Type	Envelope, box, crate, etc.	Box
+Handling Requirement	Fragile, refrigerated, hazardous	Requires cold chain
+Delivery Confirmation Type	Signature, photo, OTP	OTP required
+
+🌍 2. Geography & Route Parameters
+Parameter	Description	Examples
+Pickup Location	Origin point	Dhaka warehouse
+Delivery Location	Destination address	Chittagong
+Distance (km/mi)	Between pickup and delivery	240 km
+Delivery Zones	Zone-to-zone mapping	Zone A → Zone C
+Urban vs Rural	Adjust based on density	Rural delivery premium
+Route Traffic Conditions	Real-time or predicted	Heavy traffic → delay
+Terrain Type	Affects fuel/effort	Mountainous → higher cost
+Country/Region	Cross-border adds customs	Bangladesh → India
+Regulatory Restrictions	Delivery legality or taxes	Restricted zones
+Border Crossing Fee	Applies in cross-country	$8 customs clearance
+Congestion Surcharge	Urban peak hour zones	Dhaka 3–6 PM
+
+⏱️ 3. Time & Urgency Parameters
+Parameter	Description	Examples
+Delivery Speed	Standard, express, same-day	Express delivery
+Delivery Window	Specific time slot	2–4 PM
+Pickup Time	Time request placed	Scheduled: 11 AM
+Drop-off Time	Requested or fixed	Before 6 PM
+Order Time	When placed	8:45 PM
+Lead Time	Booking vs. delivery gap	Same-day request
+SLA Requirement	Strict service level terms	Must be <4 hours
+Working Hours Surcharge	After hours, weekends	+15% on Sundays
+Real-Time Delay Forecast	Predictive routing delays	+45 mins due to rain
+
+🧾 4. Service Level & Extras
+Parameter	Description	Examples
+Delivery Type	Doorstep, hub-to-hub, locker	Locker drop-off
+Type of Vehicle	Bike, van, truck, drone, etc.	3-ton truck
+Driver Load Type	Shared or dedicated delivery	Shared route
+White-glove Service	Special handling/unpacking	Yes, white-glove
+Cash on Delivery (COD)	Increases risk, handling fee	+2% of value
+Insurance	Basic or extended	Premium plan
+Reverse Logistics	Return shipping enabled	Yes (return pickup)
+Installation Required	For appliances/furniture	Yes (charge extra)
+Real-Time Tracking	Provided or not	Real-time tracking active
+SMS/Email Notifications	Sent to customer	Yes, 3-stage alerts
+Label Printing	API-generated or manual	Auto print
+
+👥 5. Customer Behavior & Profile
+Parameter	Description	Examples
+Customer Type	Business, personal, reseller	eCommerce seller
+Order Volume	Monthly parcel volume	2,000 parcels/month
+First-Time vs Repeat	Discounts for loyalty	Repeat customer
+Subscription Status	Premium plan user?	Yes (monthly plan)
+Payment Method	Prepaid, COD, credit	COD
+Churn Risk Score	AI-detected risk	73% chance of churn
+Customer Rating	Avg. feedback score	4.2 stars
+Contract Type	One-time vs. enterprise	Annual logistics partner
+RFM Score	Recency-Frequency-Monetary	R=10, F=8, M=7
+Average Cart Value	For marketplaces	$87 per shipment
+
+🧠 6. Demand & Capacity
+Parameter	Description	Examples
+Real-Time Demand	Surge pricing if high	120 active orders now
+Capacity Utilization	Warehouse or vehicle load	Van = 95% full
+Supply Availability	Nearby delivery partners	Only 2 bikes available
+Local Order Density	Batching opportunity?	12 orders nearby
+Peak Seasonality	Eid, Christmas, Black Friday	Holiday rush premium
+Weather Impact	Rain, storm, heat, etc.	Storm = surcharge
+Fuel Cost	Regional fuel price	BDT 138/litre
+Inflation Rate	Macro-adjustments	7% YoY rise
+Labor Availability	Courier availability	Staff shortage = price up
+Partner Network Coverage	Area coverage strength	Weak in rural zones
+
+💸 7. Cost, Profit & Finance Parameters
+Parameter	Description	Examples
+Base Operational Cost	Fuel + wage + wear/tear	$4.75 per km
+Profit Margin	Adjust dynamically	18% target margin
+Tax & VAT	Applied per region	15% VAT
+Delivery Fee Cap	Max/min allowed	Cap = $10
+Currency Exchange Rate	Cross-border pricing	BDT to INR = 0.76
+Driver Bonus Rate	Incentive triggers	+$3/delivery after 20 orders
+Refund/Dispute Rate	Affects margin risk	2% of shipments disputed
+Partner Commission	For 3PL or marketplace	10% of rate shared
+Failed Delivery Fee	Retry or return fees	$1.5 reschedule fee
+
+🧩 8. AI, Analytics, and Forecasting Parameters
+Parameter	Description	Examples
+Demand Forecast Accuracy	Predictive model score	87% accurate
+Delivery Time Forecast	AI-estimated ETA	3h 12m
+Churn Risk	From past behavior	0.76 probability
+Route Optimization Score	% improvement via AI	24% saved km
+Price Sensitivity Score	Adjust based on behavior	Medium tolerance
+Discount Elasticity	Predictive discount response	5% drop → 13% more orders
+SLA Violation Likelihood	Predict SLA breach	92% on current route
+Return Rate Forecast	From product category	Fashion = 28% chance
+Real-Time Vehicle Telemetry	Fuel, brake, idle data	Overload warning
+Dynamic Bundle Suggestion	Multi-order cost reduction	Yes, optimized route created
+
+🔐 9. Compliance, Safety & Documentation
+Parameter	Description	Examples
+Customs Documentation	For international	Invoice, Form C
+Product Classification	HS code, category	3004 (Pharma)
+Dangerous Goods Flag	Lithium batteries, chemicals	Yes (hazard class 9)
+Driver License Type	Vehicle-specific license	Heavy-duty license
+Parcel Tamper Seal	Required or not	Yes (QR seal)
+Insurance Certificate	Issued or not	PDF stored
+Export Restrictions	Sanctioned countries	Cannot deliver to X
+Environmental Fee	Carbon offset surcharge	$0.40 per km
+Local Regulatory Fee	City tax, congestion fee	$1 urban surcharge
+
+
+
+
+...............................Healthcare & Clinics ....................
+
+
+🧑‍⚕️ 1. Patient Demographics & Profile
+Parameter	Description	Examples
+Patient Age	Pricing by age group (e.g. children, senior citizens)	65 years old
+Gender	Gender-based pricing in some packages (e.g. gynecology)	Female
+Location / Region	Urban, rural, tier-1/2/3 cities	Tier 2 town
+Socioeconomic Status	Income-based discount eligibility	Low-income group
+Insurance Status	Insured vs. out-of-pocket	Insured via XYZ
+Employer Affiliation	Corporate tie-ups for pricing	Employee of Acme Corp
+Patient History	Returning vs. first-time patient	New registration
+Membership Plan	Enrolled in clinic/hospital plan	Basic Wellness Plan
+
+🧪 2. Treatment Type & Service Category
+Parameter	Description	Examples
+Type of Service	Consultation, diagnostics, surgery, etc.	MRI Scan
+Specialization	Orthopedic, Neurology, Dental, etc.	Cardiology
+Inpatient or Outpatient	Determines length and intensity	Inpatient surgery
+Procedure Complexity	Simple, moderate, complex	Complex surgery
+Service Duration	Length of treatment or session	60-minute therapy
+Consultation Type	In-person, video, phone, home visit	Teleconsultation
+Preventive vs. Emergency	Preventive care often discounted	Emergency ER visit
+One-time or Recurring	Chronic care vs. single visit	Monthly diabetes check
+
+🏥 3. Facility & Infrastructure Variables
+Parameter	Description	Examples
+Facility Type	General clinic, hospital, super-specialty	Super-specialty
+Room Type	General ward, semi-private, private	Deluxe private
+Equipment Used	MRI, CT scan, X-ray, laser	3D CT Scanner
+Doctor Experience Level	Junior doctor vs. senior consultant	25-year senior
+Surgeon or Specialist	Influences fee	Cardiothoracic Surgeon
+Facility Location Cost	Tier-1 city = high pricing	Dhanmondi branch
+Accreditation Level	JCI/NABH/ISO certifications	JCI certified
+Facility Availability	Off-peak vs. peak times	Sunday afternoon slot
+
+⏱️ 4. Time-Based Factors
+Parameter	Description	Examples
+Appointment Time	After-hours, weekend slots	Saturday, 9 PM
+Day of the Week	Weekday vs weekend pricing	Sunday premium
+Season	Flu season, dengue season, etc.	Winter = flu care
+Booking Lead Time	Advance vs. last-minute	Same-day booking
+Wait Time	Shorter wait = higher pricing	Priority patient
+Doctor Schedule Load	Dynamic based on availability	Fully booked = higher rate
+Emergency/Urgency Level	Emergency = premium fee	Heart attack case
+
+🧾 5. Package & Plan Configuration
+Parameter	Description	Examples
+Health Check Package	Bronze, Silver, Gold, etc.	Executive Gold Plan
+Add-on Services	Extra tests, second opinion	Add chest X-ray
+Discounted Bundles	Lab + consultation + follow-up	₹1999 combo
+Telemedicine Bundle	Monthly or annual virtual care	3 consults/month
+Corporate Plans	Enterprise pricing	200 employees enrolled
+Family Plan Members	Number of dependents	4 members covered
+OPD Subscription	Ongoing outpatient care	₹499/month
+Service Tier	Basic, premium, VIP care	Premium OPD
+
+📈 6. Demand, Load & Capacity
+Parameter	Description	Examples
+Real-time Appointment Demand	Surge pricing during overload	40 patients/hour
+Doctor Workload	Doctor-specific dynamic fee	Dr. Khan booked = +15%
+Equipment Utilization	MRI/CT scanner load	95% capacity used
+Bed Occupancy Rate	Inpatient pricing adjusts	98% ICU full
+Operating Room Schedule	Emergency block vs. elective	OR booked 24 hrs
+Seasonal Peak Demand	COVID, Dengue, etc.	Spike = price up
+Staff Shortage	Shortage = dynamic adjustment	Nurses on leave
+
+💳 7. Payments & Financial Variables
+Parameter	Description	Examples
+Insurance Provider	Coverage limit, payout rate	Guardian Life
+Coverage Amount	Limits, co-pays	80% covered
+Payment Mode	Cash, card, EMI, insurance	Cash
+Previous Payment History	Delays or discounts	Paid late twice
+Claim Rejection Probability	High risk = prepaid pricing	50% rejected last time
+Discount Coupons	Health coupons or promo codes	“DIAG10”
+NGO/Government Sponsored	Affects rate	Yes, via BRAC
+Out-of-Pocket Limit	Willingness to pay	Max ₹3,000
+
+🧠 8. Behavioral & Predictive Signals
+Parameter	Description	Examples
+No-show Risk Score	Impacts prepayment requirement	0.87 (likely to skip)
+Churn Likelihood	AI detects churn risk	72%
+Appointment Cancellation History	Past patterns	Cancelled 4/6 times
+Loyalty Score	Retention or loyalty program	High value
+Social Media Sentiment	AI-derived from reviews	4.7/5 Facebook rating
+Referral Source	Friend, doctor, social media	Referral = 10% off
+Compliance Score	Chronic patient follow-up score	Low = flag risk
+
+⚕️ 9. Medical History & Risk Factors
+Parameter	Description	Examples
+Chronic Conditions	Diabetes, BP, cancer, etc.	Diabetic for 6 years
+Risk Stratification	Low, moderate, high	High-risk cardiac
+Medication Sensitivity	Requires extra attention	Multiple allergies
+Diagnostic Severity	Impact cost of testing	Early vs. late-stage
+Comorbidities	Increases treatment cost	Asthma + Diabetes
+Genetic History	Hereditary disease marker	Yes, family of 4
+Recurrence Risk	Cancer or chronic relapse	75% likely recurrence
+
+🧩 10. AI & External Variables
+Parameter	Description	Examples
+Competitor Clinic Pricing	Dynamic match or beat	Nearby MRI = ₹2,000
+Government Rate Cap	Max allowed by law	₹500 OPD max
+Community Health Trends	Spike in local illness	Dengue outbreak →
+Market Elasticity	How sensitive patients are to price	High price = low bookings
+Regulatory Announcements	Price ceiling or insurance rules	Budget 2025 update
+AI Recommendation	Personalized package	Recommend “Wellness+”
+Elasticity Testing (A/B)	Automated pricing experiments	₹500 vs ₹700 test
+
+⚙️ 11. Operational Costs & Profit Factors
+Parameter	Description	Examples
+Doctor Compensation	Per patient payout	₹250/consult
+Equipment Maintenance	CT/MRI upkeep cost	₹1.2 lakh/month
+Consumables Used	Gloves, syringes, vials, etc.	₹300 per procedure
+Utilities	Electricity, water for equipment	150 kWh per scan
+Staffing Cost	Overtime, nurse fees	2X night shift fee
+Inventory Cost	Medicine, test kits	10% price hike in kits
+IT System Load	EMR, appointment system scaling	Auto-scale = ₹0.12/min
+
+🎁 Optional: Extra Features You Can Add
+Add-On Feature	Use
+AI-driven Smart Bundles	Suggest combinations of lab + consult + pharmacy
+Surge Management System	Dynamic pricing on overload
+Fraud Detection for Insurance Claims	Protect payout margins
+Smart Routing for Home Visits	Cost-efficient travel optimization
+WhatsApp Bot Integration	Bookings affect dynamic slots
+Real-time Slot Visibility	Let patients pick pricing + time combo
+
+
+........................................................industries i can use the dynamic pricing for....................
+
+
+Travel & Airlines
+
+Ride-sharing & Transportation
+
+Hotel & Hospitality
+
+Event Ticketing
+
+Real Estate
+
+Grocery & Retail
+
+Freelancing/Services marketplace
+
+SaaS & Subscription services
+
+Logistics & Delivery
+
+Healthcare & Clinics
+

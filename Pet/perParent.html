@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Pet Parent Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .notification-badge {
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Pet Cards */
+        .pet-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .pet-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .pet-info h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .pet-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .pet-status {
+            margin-left: auto;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-healthy {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-checkup {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .btn-emergency {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-emergency:hover {
+            background: #ff3742;
+            transform: translateY(-2px);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Appointment List */
+        .appointment-list {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s ease;
+        }
+
+        .appointment-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .appointment-info {
+            flex: 1;
+        }
+
+        .appointment-date {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .appointment-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .appointment-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Medical Records */
+        .medical-record {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .record-date {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .record-type {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .message.vet .message-content {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        /* Reminders */
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .reminder-icon {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+        }
+
+        .reminder-content {
+            flex: 1;
+        }
+
+        .reminder-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+
+        .reminder-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            background: rgba(255, 71, 87, 0.1);
+            border: 2px solid #ff4757;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .emergency-icon {
+            font-size: 3rem;
+            color: #ff4757;
+            margin-bottom: 1rem;
+        }
+
+        .emergency-contacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .emergency-contact {
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pet-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .appointment-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <span>🐾</span>
+                <span>PetCare</span>
+            </div>
+            <div class="user-info">
+                <div class="notification-badge">3</div>
+                <div class="user-avatar">JD</div>
+                <div>
+                    <div style="font-weight: 600;">John Doe</div>
+                    <div style="font-size: 0.8rem; color: #666;">Pet Parent</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('dashboard')">
+                <span>🏠</span> Dashboard
+            </button>
+            <button class="nav-tab" onclick="showTab('pets')">
+                <span>🐕</span> My Pets
+            </button>
+            <button class="nav-tab" onclick="showTab('appointments')">
+                <span>📅</span> Appointments
+            </button>
+            <button class="nav-tab" onclick="showTab('medical')">
+                <span>📋</span> Medical Records
+            </button>
+            <button class="nav-tab" onclick="showTab('reminders')">
+                <span>⏰</span> Reminders
+            </button>
+            <button class="nav-tab" onclick="showTab('chat')">
+                <span>💬</span> Vet Chat
+            </button>
+            <button class="nav-tab" onclick="showTab('emergency')">
+                <span>🚨</span> Emergency
+            </button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="main-content active">
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon">🐾</span>
+                            Quick Stats
+                        </h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #667eea;">3</div>
+                            <div style="color: #666; font-size: 0.9rem;">Total Pets</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #ff6b6b;">2</div>
+                            <div style="color: #666; font-size: 0.9rem;">Upcoming Visits</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #feca57;">1</div>
+                            <div style="color: #666; font-size: 0.9rem;">Pending Reminders</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #48dbfb;">5</div>
+                            <div style="color: #666; font-size: 0.9rem;">Records</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon">📅</span>
+                            Next Appointment
+                        </h3>
+                    </div>
+                    <div class="appointment-info">
+                        <div class="appointment-date">Tomorrow, 2:00 PM</div>
+                        <div class="appointment-details">
+                            <strong>Max</strong> - Annual Checkup<br>
+                            Dr. Smith at VetCare Clinic
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-primary">View Details</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon">💊</span>
+                            Today's Reminders
+                        </h3>
+                    </div>
+                    <div class="reminder-item">
+                        <div class="reminder-icon">💊</div>
+                        <div class="reminder-content">
+                            <div class="reminder-title">Bella's Medication</div>
+                            <div class="reminder-time">Due in 2 hours</div>
+                        </div>
+                        <button class="btn btn-secondary">Mark Done</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon">📊</span>
+                            Health Overview
+                        </h3>
+                    </div>
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: #d4edda; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <span style="color: #155724; font-size: 1.5rem;">✓</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: #666;">All Healthy</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: #fff3cd; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <span style="color: #856404; font-size: 1.5rem;">!</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: #666;">1 Checkup Due</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pets Tab -->
+        <div id="pets" class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: white; font-size: 2rem;">My Pets</h2>
+                <button class="btn btn-primary" onclick="showAddPetForm()">
+                    <span>➕</span> Add New Pet
+                </button>
+            </div>
+
+            <div class="pet-card">
+                <div class="pet-avatar">🐕</div>
+                <div class="pet-info">
+                    <h3>Max</h3>
+                    <div class="pet-details">
+                        Golden Retriever • 3 years old • Male<br>
+                        Last visit: March 15, 2025
+                    </div>
+                </div>
+                <div class="pet-status status-healthy">Healthy</div>
+                <button class="btn btn-secondary">View Profile</button>
+            </div>
+
+            <div class="pet-card">
+                <div class="pet-avatar">🐱</div>
+                <div class="pet-info">
+                    <h3>Bella</h3>
+                    <div class="pet-details">
+                        Persian Cat • 2 years old • Female<br>
+                        Last visit: February 28, 2025
+                    </div>
+                </div>
+                <div class="pet-status status-checkup">Checkup Due</div>
+                <button class="btn btn-secondary">View Profile</button>
+            </div>
+
+            <div class="pet-card">
+                <div class="pet-avatar">🐰</div>
+                <div class="pet-info">
+                    <h3>Snowy</h3>
+                    <div class="pet-details">
+                        Holland Lop Rabbit • 1 year old • Female<br>
+                        Last visit: March 10, 2025
+                    </div>
+                </div>
+                <div class="pet-status status-healthy">Healthy</div>
+                <button class="btn btn-secondary">View Profile</button>
+            </div>
+
+            <!-- Add Pet Form (Hidden by default) -->
+            <div id="addPetForm" style="display: none; background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Add New Pet</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Pet Name</label>
+                        <input type="text" class="form-input" placeholder="Enter pet name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Species</label>
+                        <select class="form-select">
+                            <option>Select species</option>
+                            <option>Dog</option>
+                            <option>Cat</option>
+                            <option>Rabbit</option>
+                            <option>Bird</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Breed</label>
+                        <input type="text" class="form-input" placeholder="Enter breed">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Age</label>
+                        <input type="number" class="form-input" placeholder="Age in years">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select">
+                            <option>Select gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Weight</label>
+                        <input type="number" class="form-input" placeholder="Weight in kg">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="hideAddPetForm()">Cancel</button>
+                    <button class="btn btn-primary">Add Pet</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Tab -->
+        <div id="appointments" class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: white; font-size: 2rem;">Appointments</h2>
+                <button class="btn btn-primary">
+                    <span>📅</span> Book New Appointment
+                </button>
+            </div>
+
+            <div class="appointment-list">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Upcoming Appointments</h3>
+                
+                <div class="appointment-item">
+                    <div class="appointment-info">
+                        <div class="appointment-date">Tomorrow, July 6, 2025 - 2:00 PM</div>
+                        <div class="appointment-details">
+                            <strong>Max</strong> - Annual Checkup with Dr. Smith<br>
+                            VetCare Clinic, 123 Main St
+                        </div>
+                    </div>
+                    <div class="appointment-actions">
+                        <button class="btn btn-secondary">Reschedule</button>
+                        <button class="btn btn-primary">View Details</button>
+                    </div>
+                </div>
+
+                <div class="appointment-item">
+                    <div class="appointment-info">
+                        <div class="appointment-date">July 10, 2025 - 10:30 AM</div>
+                        <div class="appointment-details">
+                            <strong>Bella</strong> - Vaccination with Dr. Johnson<br>
+                            Pet Health Center, 456 Oak Ave
+                        </div>
+                    </div>
+                    <div class="appointment-actions">
+                        <button class="btn btn-secondary">Reschedule</button>
+                        <button class="btn btn-primary">View Details</button>
+                    </div>
+                </div>
+
+                <h3 style="margin: 2rem 0 1rem; color: #2c3e50;">Past Appointments</h3>
+                
+                <div class="appointment-item">
+                    <div class="appointment-info">
+                        <div class="appointment-date">March 15, 2025</div>
+                        <div class="appointment-details">
+                            <strong>Max</strong> - Routine checkup with Dr. Smith<br>
+                            Status: Completed
+                        </div>
+                    </div>
+                    <div class="appointment-actions">
+                        <button class="btn btn-secondary">View Report</button>
+                        <button class="btn btn-primary">Book Follow-up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical Records Tab -->
+        <div id="medical" class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: white; font-size: 2rem;">Medical Records</h2>
+                <button class="btn btn-primary">
+                    <span>📤</span> Upload Document
+                </button>
+            </div>
+
+            <div class="medical-record">
+                <div class="record-header">
+                    <div class="record-date">March 15, 2025</div>
+                    <div class="record-type">Checkup</div>
+                </div>
+                <div>
+                    <strong>Pet:</strong> Max<br>
+                    <strong>Vet:</strong> Dr. Smith<br>
+                    <strong>Diagnosis:</strong> Healthy, no issues found<br>
+                    <strong>Treatment:</strong> Routine vaccination administered<br>
+                    <strong>Notes:</strong> Weight: 28kg, Good appetite, Active
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-secondary">Download Report</button>
+                    <button class="btn btn-secondary">View Prescription</button>
+                </div>
+            </div>
+
+            <div class="medical-record">
+                <div class="record-header">
+                    <div class="record-date">February 28, 2025</div>
+                    <div class="record-type">Vaccination</div>
+                </div>
+                <div>
+                    <strong>Pet:</strong> Bella<br>
+                    <strong>Vet:</strong> Dr. Johnson<br>
+                    <strong>Vaccination:</strong> FVRCP Booster<br>
+                    <strong>Next Due:</strong> February 28, 2026<br>
+                    <strong>Certificate:</strong> Available for download
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-secondary">Download Certificate</button>
+                    <button class="btn btn-secondary">Set Reminder</button>
+                </div>
+            </div>
+
+            <div class="medical-record">
+                <div class="record-header">
+                    <div class="record-date">January 20, 2025</div>
+                    <div class="record-type">Treatment</div>
+                </div>
+                <div>
+                    <strong>Pet:</strong> Snowy<br>
+                    <strong>Vet:</strong> Dr. Williams<br>
+                    <strong>Issue:</strong> Ear infection<br>
+                    <strong>Treatment:</strong> Antibiotic ear drops prescribed<br>
+                    <strong>Follow-up:</strong> Completed successfully
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-secondary">Download Report</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reminders Tab -->
+        <div id="reminders" class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: white; font-size: 2rem;">Reminders</h2>
+                <button class="btn btn-primary">
+                    <span>⏰</span> Add Reminder
+                </button>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Today's Reminders</h3>
+                
+                <div class="reminder-item pulse">
+                    <div class="reminder-icon">💊</div>
+                    <div class="reminder-content">
+                        <div class="reminder-title">Bella's Heart Medication</div>
+                        <div class="reminder-time">Due in 2 hours (4:00 PM)</div>
+                    </div>
+                    <button class="btn btn-primary">Mark Done</button>
+                </div>
+
+                <div class="reminder-item">
+                    <div class="reminder-icon">🍽️</div>
+                    <div class="reminder-content">
+                        <div class="reminder-title">Max's Special Diet</div>
+                        <div class="reminder-time">Dinner time (6:00 PM)</div>
+                    </div>
+                    <button class="btn btn-primary">Mark Done</button>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Upcoming Reminders</h3>
+                
+                <div class="reminder-item">
+                    <div class="reminder-icon">💉</div>
+                    <div class="reminder-content">
+                        <div class="reminder-title">Bella's Vaccination Due</div>
+                        <div class="reminder-time">July 10, 2025</div>
+                    </div>
+                    <button class="btn btn-secondary">Reschedule</button>
+                </div>
+
+                <div class="reminder-item">
+                    <div class="reminder-icon">🔍</div>
+                    <div class="reminder-content">
+                        <div class="reminder-title">Max's Annual Checkup</div>
+                        <div class="reminder-time">Tomorrow, 2:00 PM</div>
+                    </div>
+                    <button class="btn btn-secondary">View Details</button>
+                </div>
+
+                <div class="reminder-item">
+                    <div class="reminder-icon">🦷</div>
+                    <div class="reminder-content">
+                        <div class="reminder-title">Snowy's Dental Cleaning</div>
+                        <div class="reminder-time">July 15, 2025</div>
+                    </div>
+                    <button class="btn btn-secondary">Book Appointment</button>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Medication Schedule</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div style="background: rgba(102, 126, 234, 0.1); padding: 1.5rem; border-radius: 15px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">Bella - Heart Medication</h4>
+                        <div style="color: #666; margin-bottom: 0.5rem;">📅 Daily at 4:00 PM</div>
+                        <div style="color: #666; margin-bottom: 0.5rem;">💊 1 tablet</div>
+                        <div style="color: #666;">🔄 Started: March 1, 2025</div>
+                    </div>
+                    
+                    <div style="background: rgba(255, 107, 107, 0.1); padding: 1.5rem; border-radius: 15px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">Max - Joint Supplement</h4>
+                        <div style="color: #666; margin-bottom: 0.5rem;">📅 Twice daily (8 AM, 8 PM)</div>
+                        <div style="color: #666; margin-bottom: 0.5rem;">💊 1 capsule</div>
+                        <div style="color: #666;">🔄 Started: February 15, 2025</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Tab -->
+        <div id="chat" class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: white; font-size: 2rem;">Vet Chat</h2>
+                <button class="btn btn-primary">
+                    <span>🎥</span> Start Video Call
+                </button>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #48dbfb, #0abde3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        DS
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Dr. Smith</div>
+                        <div style="font-size: 0.8rem; color: #666;">🟢 Online</div>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <button class="btn btn-secondary">📞 Call</button>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message vet">
+                        <div class="message-content">
+                            Hello! I'm Dr. Smith. How can I help you with your pets today?
+                        </div>
+                    </div>
+                    
+                    <div class="message user">
+                        <div class="message-content">
+                            Hi Dr. Smith! I'm concerned about Max's appetite. He's been eating less than usual for the past few days.
+                        </div>
+                    </div>
+                    
+                    <div class="message vet">
+                        <div class="message-content">
+                            I understand your concern. Can you tell me more about Max's behavior? Has he been drinking water normally? Any changes in activity level?
+                        </div>
+                    </div>
+                    
+                    <div class="message user">
+                        <div class="message-content">
+                            He's drinking water normally and still playing, but not as energetic as usual. Should I be worried?
+                        </div>
+                    </div>
+                    
+                    <div class="message vet">
+                        <div class="message-content">
+                            It's good that he's still drinking and playing. Since his appetite has decreased, I'd recommend monitoring him closely. If it continues for more than 2-3 days, we should schedule a checkup. Are there any other symptoms?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" placeholder="Type your message..." id="chatInput">
+                    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Available Vets</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 15px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #48dbfb, #0abde3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            DS
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">Dr. Smith</div>
+                            <div style="font-size: 0.8rem; color: #666;">🟢 Online</div>
+                        </div>
+                        <button class="btn btn-secondary">Chat</button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 15px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #ff6b6b, #feca57); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            DJ
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">Dr. Johnson</div>
+                            <div style="font-size: 0.8rem; color: #666;">🟡 Busy</div>
+                        </div>
+                        <button class="btn btn-secondary">Chat</button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 15px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #a55eea, #26de81); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            DW
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">Dr. Williams</div>
+                            <div style="font-size: 0.8rem; color: #666;">🔴 Offline</div>
+                        </div>
+                        <button class="btn btn-secondary" disabled>Chat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Tab -->
+        <div id="emergency" class="main-content">
+            <div class="emergency-section">
+                <div class="emergency-icon pulse">🚨</div>
+                <h2 style="color: #ff4757; margin-bottom: 1rem;">Emergency Services</h2>
+                <p style="color: #666; margin-bottom: 2rem;">For immediate veterinary emergencies, contact one of the services below or call 911.</p>
+                
+                <div class="emergency-contacts">
+                    <div class="emergency-contact">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">🏥</div>
+                        <h4 style="margin-bottom: 0.5rem;">24/7 Emergency Clinic</h4>
+                        <p style="color: #666; margin-bottom: 1rem;">Always open for emergencies</p>
+                        <button class="btn btn-emergency">📞 Call Now</button>
+                    </div>
+                    
+                    <div class="emergency-contact">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">🚑</div>
+                        <h4 style="margin-bottom: 0.5rem;">Pet Ambulance</h4>
+                        <p style="color: #666; margin-bottom: 1rem;">Emergency transport service</p>
+                        <button class="btn btn-emergency">📞 Call Now</button>
+                    </div>
+                    
+                    <div class="emergency-contact">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">☎️</div>
+                        <h4 style="margin-bottom: 0.5rem;">Poison Control</h4>
+                        <p style="color: #666; margin-bottom: 1rem;">24/7 toxicity hotline</p>
+                        <button class="btn btn-emergency">📞 Call Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">Emergency Checklist</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                    <div style="background: rgba(255, 71, 87, 0.1); padding: 1.5rem; border-radius: 15px;">
+                        <h4 style="color: #ff4757; margin-bottom: 1rem;">🚨 Immediate Action Required</h4>
+                        <ul style="color: #666; line-height: 1.8;">
+                            <li>Unconsciousness or collapse</li>
+                            <li>Difficulty breathing</li>
+                            <li>Severe bleeding</li>
+                            <li>Suspected poisoning</li>
+                            <li>Seizures</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255, 193, 7, 0.1); padding: 1.5rem; border-radius: 15px;">
+                        <h4 style="color: #ffc107; margin-bottom: 1rem;">⚠️ Urgent - Same Day</h4>
+                        <ul style="color: #666; line-height: 1.8;">
+                            <li>Vomiting (multiple times)</li>
+                            <li>Diarrhea with blood</li>
+                            <li>Not eating for 24+ hours</li>
+                            <li>Lethargy or weakness</li>
+                            <li>Signs of pain</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(40, 167, 69, 0.1); padding: 1.5rem; border-radius: 15px;">
+                        <h4 style="color: #28a745; margin-bottom: 1rem;">📅 Schedule Appointment</h4>
+                        <ul style="color: #666; line-height: 1.8;">
+                            <li>Minor cuts or scrapes</li>
+                            <li>Mild stomach upset</li>
+                            <li>Routine concerns</li>
+                            <li>Behavioral changes</li>
+                            <li>Preventive care</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">My Pets' Emergency Info</h3>
+                
+                <div class="pet-card">
+                    <div class="pet-avatar">🐕</div>
+                    <div class="pet-info">
+                        <h3>Max</h3>
+                        <div class="pet-details">
+                            <strong>Allergies:</strong> None known<br>
+                            <strong>Medications:</strong> Joint supplement<br>
+                            <strong>Emergency Contact:</strong> Dr. Smith - (555) 123-4567
+                        </div>
+                    </div>
+                    <button class="btn btn-emergency">Emergency Call</button>
+                </div>
+                
+                <div class="pet-card">
+                    <div class="pet-avatar">🐱</div>
+                    <div class="pet-info">
+                        <h3>Bella</h3>
+                        <div class="pet-details">
+                            <strong>Allergies:</strong> Fish-based foods<br>
+                            <strong>Medications:</strong> Heart medication (daily)<br>
+                            <strong>Emergency Contact:</strong> Dr. Johnson - (555) 234-5678
+                        </div>
+                    </div>
+                    <button class="btn btn-emergency">Emergency Call</button>
+                </div>
+                
+                <div class="pet-card">
+                    <div class="pet-avatar">🐰</div>
+                    <div class="pet-info">
+                        <h3>Snowy</h3>
+                        <div class="pet-details">
+                            <strong>Allergies:</strong> None known<br>
+                            <strong>Medications:</strong> None<br>
+                            <strong>Emergency Contact:</strong> Dr. Williams - (555) 345-6789
+                        </div>
+                    </div>
+                    <button class="btn btn-emergency">Emergency Call</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all content
+            const contents = document.querySelectorAll('.main-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Add pet form functions
+        function showAddPetForm() {
+            document.getElementById('addPetForm').style.display = 'block';
+        }
+
+        function hideAddPetForm() {
+            document.getElementById('addPetForm').style.display = 'none';
+        }
+
+        // Chat functionality
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            if (input.value.trim()) {
+                // Add user message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                messageDiv.innerHTML = `<div class="message-content">${input.value}</div>`;
+                messagesContainer.appendChild(messageDiv);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Simulate vet response after 2 seconds
+                setTimeout(() => {
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'message vet';
+                    responseDiv.innerHTML = `<div class="message-content">Thank you for your message. I'll review this and get back to you shortly.</div>`;
+                    messagesContainer.appendChild(responseDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 2000);
+            }
+        }
+
+        // Allow Enter key to send message
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const badge = document.querySelector('.notification-badge');
+            const currentCount = parseInt(badge.textContent);
+            if (Math.random() > 0.95) { // 5% chance every interval
+                badge.textContent = currentCount + 1;
+                badge.classList.add('pulse');
+                setTimeout(() => badge.classList.remove('pulse'), 1000);
+            }
+        }, 5000);
+
+        // Initialize with dashboard tab
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('dashboard');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFix Auto Repair - Professional Auto Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: "🔧";
+            font-size: 2rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Page Content */
+        .page {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home Page */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDYwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMmEzZjZmIi8+CjxwYXRoIGQ9Ik0wIDMwMEwxMjAwIDEwMFYwSDBWMzAwWiIgZmlsbD0iIzM0NGU3NSIvPgo8cGF0aCBkPSJNMTIwMCAzMDBMMCA1MDBWNjAwSDEyMDBWMzAwWiIgZmlsbD0iIzQ0NWU4NSIvPgo8L3N2Zz4K');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Services Page */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            padding: 1rem;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border-radius: 50%;
+            color: white;
+        }
+
+        .price-duration {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            min-height: 80vh;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            color: #2a5298;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            color: #666;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #f0f4f8;
+            color: #2a5298;
+        }
+
+        .main-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #2a5298, #1e3c72);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-progress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-complete {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        /* Testimonials */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 4rem;
+            color: #2a5298;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+        }
+
+        .testimonial-author {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #ff6b35;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1500;
+        }
+
+        .chat-widget:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        .notification.warning {
+            background: #ffc107;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">ProFix Auto Repair</div>
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
+                        <li><a href="#" onclick="showPage('about')">About</a></li>
+                        <li><a href="#" onclick="showPage('services')">Services</a></li>
+                        <li><a href="#" onclick="showPage('portfolio')">Portfolio</a></li>
+                        <li><a href="#" onclick="showPage('testimonials')">Testimonials</a></li>
+                        <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+                        <li><a href="#" onclick="showPage('blog')">Blog</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-secondary" onclick="showLoginModal()">Login</a>
+                    <a href="#" class="btn btn-primary" onclick="showPage('dashboard')">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="hero">
+            <div class="container">
+                <h1>Professional Auto Repair Services</h1>
+                <p>Expert mechanics, certified technicians, and quality parts. Your trusted automotive partner for over 15 years.</p>
+                <a href="#" class="btn btn-primary" onclick="showBookingModal()">Book Service Now</a>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="features">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Expert Mechanics</h3>
+                    <p>ASE certified technicians with 10+ years experience in all major brands and vehicle types.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Quick Service</h3>
+                    <p>Same-day repairs for most services. We respect your time and get you back on the road fast.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Quality Guarantee</h3>
+                    <p>12-month warranty on all repairs. We stand behind our work with confidence.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">💰</div>
+                    <h3>Fair Pricing</h3>
+                    <p>Transparent pricing with no hidden fees. Get detailed estimates before any work begins.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="container">
+            <h2>About ProFix Auto Repair</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🏢</div>
+                    <h3>Our Story</h3>
+                    <p>Founded in 2008 by master mechanic John Smith, ProFix Auto Repair has been serving the community for over 15 years. We've grown from a small garage to a full-service automotive center.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Our Mission</h3>
+                    <p>To provide honest, reliable, and affordable automotive services while building lasting relationships with our customers through trust and quality workmanship.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Our Team</h3>
+                    <p><strong>John Smith</strong> - Master Mechanic & Owner (ASE Master Certified)<br>
+                    <strong>Mike Johnson</strong> - Lead Technician (15 years experience)<br>
+                    <strong>Sarah Davis</strong> - Service Advisor & Customer Relations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Page -->
+    <div id="services" class="page">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🔧</div>
+                        <h3>Engine Repair</h3>
+                    </div>
+                    <p>Complete engine diagnostics, repair, and rebuilding services. From minor tune-ups to major overhauls.</p>
+                    <div class="price-duration">
+                        <span>From $150</span>
+                        <span>2-4 hours</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🛢️</div>
+                        <h3>Oil Change</h3>
+                    </div>
+                    <p>Quick and efficient oil changes with premium oil and filters. Includes multi-point inspection.</p>
+                    <div class="price-duration">
+                        <span>$45</span>
+                        <span>30 minutes</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🔍</div>
+                        <h3>Diagnostics</h3>
+                    </div>
+                    <p>Advanced computer diagnostics to identify issues quickly and accurately. State-of-the-art equipment.</p>
+                    <div class="price-duration">
+                        <span>$95</span>
+                        <span>1 hour</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🛞</div>
+                        <h3>Brake Service</h3>
+                    </div>
+                    <p>Complete brake system service including pads, rotors, fluid, and safety inspections.</p>
+                    <div class="price-duration">
+                        <span>From $200</span>
+                        <span>2-3 hours</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">🔋</div>
+                        <h3>Battery & Electrical</h3>
+                    </div>
+                    <p>Battery testing, replacement, and electrical system diagnostics and repair.</p>
+                    <div class="price-duration">
+                        <span>From $120</span>
+                        <span>1-2 hours</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon">❄️</div>
+                        <h3>A/C Service</h3>
+                    </div>
+                    <p>Air conditioning system repair, recharge, and maintenance to keep you cool.</p>
+                    <div class="price-duration">
+                        <span>From $85</span>
+                        <span>1-2 hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Page -->
+    <div id="portfolio" class="page">
+        <div class="container">
+            <h2>Our Work Portfolio</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3>Engine Rebuild - 2015 Honda Civic</h3>
+                    <p>Complete engine rebuild after timing belt failure. Customer saved $3,000 vs. dealership quote.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚙</div>
+                    <h3>Transmission Service - 2018 Ford F-150</h3>
+                    <p>Transmission flush and repair. Restored smooth shifting and extended vehicle life.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚘</div>
+                    <h3>Brake System Overhaul - 2020 Toyota Camry</h3>
+                    <p>Complete brake system replacement including pads, rotors, and brake lines for optimal safety.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚐</div>
+                    <h3>A/C Repair - 2017 Chevy Suburban</h3>
+                    <p>Diagnosed and repaired A/C compressor failure. Customer now enjoys ice-cold air conditioning.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Page -->
+    <div id="testimonials" class="page">
+        <div class="container">
+            <h2>What Our Customers Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p>Excellent service! John and his team fixed my transmission issue quickly and at a fair price. Highly recommend!</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JS</div>
+                        <div>
+                            <strong>Jessica Smith</strong>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>Been coming here for 5 years. Always honest, reliable, and they stand behind their work. My go-to shop!</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MD</div>
+                        <div>
+                            <strong>Mark Davis</strong>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>They diagnosed my car's problem in minutes when the dealership couldn't figure it out. Saved me hundreds!</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">LW</div>
+                        <div>
+                            <strong>Lisa Wilson</strong>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>Professional, courteous, and skilled. They explain everything clearly and never pressure you into unnecessary repairs.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">RT</div>
+                        <div>
+                            <strong>Robert Taylor</strong>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📞</div>
+                    <h3>Phone</h3>
+                    <p>(555) 123-4567</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <h3>Email</h3>
+                    <p>info@profixautorepair.com</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Address</h3>
+                    <p>123 Main Street<br>Your City, State 12345</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🕒</div>
+                    <h3>Hours</h3>
+                    <p>Monday - Friday: 8:00 AM - 6:00 PM<br>Saturday: 9:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                </div>
+            </div>
+            
+            <div class="service-card" style="margin-top: 2rem;">
+                <h3>Send Us a Message</h3>
+                <form onsubmit="submitContactForm(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Page -->
+    <div id="blog" class="page">
+        <div class="container">
+            <h2>Auto Tips & FAQs</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>How Often Should You Change Your Oil?</h3>
+                    <p>Most modern vehicles require oil changes every 5,000-7,500 miles, but check your owner's manual for specific recommendations. Factors like driving conditions and oil type affect frequency.</p>
+                    <small>Published: January 15, 2025</small>
+                </div>
+                <div class="service-card">
+                    <h3>Signs Your Brakes Need Attention</h3>
+                    <p>Warning signs include squealing sounds, grinding noises, vibration when braking, or a soft brake pedal. Don't ignore these symptoms - brake safety is crucial.</p>
+                    <small>Published: January 10, 2025</small>
+                </div>
+                <div class="service-card">
+                    <h3>Winter Car Care Tips</h3>
+                    <p>Prepare your vehicle for winter with proper tire pressure, antifreeze levels, battery checks, and emergency kit preparation. Prevention is key to winter reliability.</p>
+                    <small>Published: December 20, 2024</small>
+                </div>
+                <div class="service-card">
+                    <h3>When to Replace Your Car Battery</h3>
+                    <p>Most car batteries last 3-5 years. Signs of a failing battery include slow engine cranking, dim headlights, and dashboard warning lights. Test annually after 3 years.</p>
+                    <small>Published: December 15, 2024</small>
+                </div>
+                <div class="service-card">
+                    <h3>FAQ: Check Engine Light</h3>
+                    <p><strong>Q:</strong> What does the check engine light mean?<br><strong>A:</strong> It indicates an engine or emissions system problem. While you can usually drive briefly, get it diagnosed promptly to prevent damage.</p>
+                    <small>Published: December 1, 2024</small>
+                </div>
+                <div class="service-card">
+                    <h3>FAQ: Transmission Maintenance</h3>
+                    <p><strong>Q:</strong> How often should I service my transmission?<br><strong>A:</strong> Automatic transmissions typically need service every 30,000-60,000 miles. Manual transmissions may go longer but check fluid levels regularly.</p>
+                    <small>Published: November 25, 2024</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="page">
+        <div class="container">
+            <div class="dashboard">
+                <div class="sidebar">
+                    <h3>Customer Dashboard</h3>
+                    <ul>
+                        <li><a href="#" onclick="showDashboardSection('overview')" class="active">Overview</a></li>
+                        <li><a href="#" onclick="showDashboardSection('appointments')">Appointments</a></li>
+                        <li><a href="#" onclick="showDashboardSection('job-status')">Job Status</a></li>
+                        <li><a href="#" onclick="showDashboardSection('service-history')">Service History</a></li>
+                        <li><a href="#" onclick="showDashboardSection('vehicles')">My Vehicles</a></li>
+                        <li><a href="#" onclick="showDashboardSection('payments')">Payments</a></li>
+                        <li><a href="#" onclick="showDashboardSection('notifications')">Notifications</a></li>
+                        <li><a href="#" onclick="showDashboardSection('feedback')">Feedback</a></li>
+                        <li><a href="#" onclick="showDashboardSection('loyalty')">Loyalty Points</a></li>
+                        <li><a href="#" onclick="showDashboardSection('profile')">Profile Settings</a></li>
+                    </ul>
+                </div>
+                
+                <div class="main-content">
+                    <!-- Overview Section -->
+                    <div id="overview" class="dashboard-section active">
+                        <h2>Welcome back, John!</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">3</div>
+                                <div>Upcoming Appointments</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">1</div>
+                                <div>Jobs in Progress</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">850</div>
+                                <div>Loyalty Points</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">$2,340</div>
+                                <div>Total Spent This Year</div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Recent Activity</h3>
+                            <ul>
+                                <li>Oil change completed for Honda Civic - January 8, 2025</li>
+                                <li>Brake inspection scheduled for Toyota Camry - January 15, 2025</li>
+                                <li>Diagnostic test completed for Ford F-150 - January 5, 2025</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Appointments Section -->
+                    <div id="appointments" class="dashboard-section">
+                        <h2>Appointments</h2>
+                        <button class="btn btn-primary" onclick="showBookingModal()" style="margin-bottom: 1rem;">Book New Appointment</button>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Vehicle</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jan 15, 2025</td>
+                                    <td>10:00 AM</td>
+                                    <td>Honda Civic</td>
+                                    <td>Brake Inspection</td>
+                                    <td><span class="status-badge status-pending">Confirmed</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Reschedule</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 20, 2025</td>
+                                    <td>2:00 PM</td>
+                                    <td>Toyota Camry</td>
+                                    <td>Oil Change</td>
+                                    <td><span class="status-badge status-pending">Confirmed</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Reschedule</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 25, 2025</td>
+                                    <td>9:00 AM</td>
+                                    <td>Ford F-150</td>
+                                    <td>Transmission Service</td>
+                                    <td><span class="status-badge status-pending">Confirmed</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Reschedule</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Job Status Section -->
+                    <div id="job-status" class="dashboard-section">
+                        <h2>Job Status</h2>
+                        <div class="service-card">
+                            <h3>Current Jobs</h3>
+                            <div style="margin-bottom: 2rem;">
+                                <h4>Honda Civic - Brake Repair</h4>
+                                <div style="display: flex; align-items: center; gap: 1rem; margin: 1rem 0;">
+                                    <span class="status-badge status-progress">In Progress</span>
+                                    <span>Estimated completion: Today 4:00 PM</span>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                                    <p><strong>Progress:</strong> Vehicle inspected ✓ → Parts ordered ✓ → Repair in progress... → Quality check → Complete</p>
+                                    <p><strong>Technician:</strong> Mike Johnson</p>
+                                    <p><strong>Last Update:</strong> 2:30 PM - Brake pads replaced, testing brake system</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Recent Completions</h3>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Vehicle</th>
+                                        <th>Service</th>
+                                        <th>Status</th>
+                                        <th>Report</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jan 8, 2025</td>
+                                        <td>Honda Civic</td>
+                                        <td>Oil Change</td>
+                                        <td><span class="status-badge status-complete">Complete</span></td>
+                                        <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">View Report</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jan 5, 2025</td>
+                                        <td>Ford F-150</td>
+                                        <td>Diagnostic Test</td>
+                                        <td><span class="status-badge status-complete">Complete</span></td>
+                                        <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">View Report</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Service History Section -->
+                    <div id="service-history" class="dashboard-section">
+                        <h2>Service History</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Vehicle</th>
+                                    <th>Service</th>
+                                    <th>Technician</th>
+                                    <th>Cost</th>
+                                    <th>Report</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jan 8, 2025</td>
+                                    <td>Honda Civic</td>
+                                    <td>Oil Change + Multi-point Inspection</td>
+                                    <td>John Smith</td>
+                                    <td>$52.00</td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 5, 2025</td>
+                                    <td>Ford F-150</td>
+                                    <td>Engine Diagnostic</td>
+                                    <td>Mike Johnson</td>
+                                    <td>$95.00</td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Dec 20, 2024</td>
+                                    <td>Toyota Camry</td>
+                                    <td>Brake Pad Replacement</td>
+                                    <td>John Smith</td>
+                                    <td>$280.00</td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 15, 2024</td>
+                                    <td>Honda Civic</td>
+                                    <td>Transmission Fluid Change</td>
+                                    <td>Mike Johnson</td>
+                                    <td>$150.00</td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Vehicles Section -->
+                    <div id="vehicles" class="dashboard-section">
+                        <h2>My Vehicles</h2>
+                        <button class="btn btn-primary" onclick="showAddVehicleModal()" style="margin-bottom: 1rem;">Add Vehicle</button>
+                        
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <h3>2019 Honda Civic</h3>
+                                <p><strong>VIN:</strong> 1HGBH41JXMN109186</p>
+                                <p><strong>Mileage:</strong> 45,230 miles</p>
+                                <p><strong>Last Service:</strong> Oil Change - Jan 8, 2025</p>
+                                <p><strong>Next Service Due:</strong> Oil Change - Apr 8, 2025</p>
+                                <button class="btn btn-secondary" style="margin-top: 1rem;">View Details</button>
+                            </div>
+                            <div class="service-card">
+                                <h3>2020 Toyota Camry</h3>
+                                <p><strong>VIN:</strong> 4T1B11HK1KU123456</p>
+                                <p><strong>Mileage:</strong> 32,890 miles</p>
+                                <p><strong>Last Service:</strong> Brake Service - Dec 20, 2024</p>
+                                <p><strong>Next Service Due:</strong> Oil Change - Jan 20, 2025</p>
+                                <button class="btn btn-secondary" style="margin-top: 1rem;">View Details</button>
+                            </div>
+                            <div class="service-card">
+                                <h3>2017 Ford F-150</h3>
+                                <p><strong>VIN:</strong> 1FTEW1EP5HKC12345</p>
+                                <p><strong>Mileage:</strong> 78,450 miles</p>
+                                <p><strong>Last Service:</strong> Diagnostic - Jan 5, 2025</p>
+                                <p><strong>Next Service Due:</strong> Transmission Service - Jan 25, 2025</p>
+                                <button class="btn btn-secondary" style="margin-top: 1rem;">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments Section -->
+                    <div id="payments" class="dashboard-section">
+                        <h2>Payments</h2>
+                        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 2rem;">
+                            <div class="stat-card">
+                                <div class="stat-number">$0</div>
+                                <div>Outstanding Balance</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">$577</div>
+                                <div>Total Paid This Year</div>
+                            </div>
+                        </div>
+                        
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Invoice #</th>
+                                    <th>Service</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jan 8, 2025</td>
+                                    <td>INV-2025-001</td>
+                                    <td>Oil Change</td>
+                                    <td>$52.00</td>
+                                    <td><span class="status-badge status-complete">Paid</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jan 5, 2025</td>
+                                    <td>INV-2025-002</td>
+                                    <td>Diagnostic</td>
+                                    <td>$95.00</td>
+                                    <td><span class="status-badge status-complete">Paid</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Dec 20, 2024</td>
+                                    <td>INV-2024-156</td>
+                                    <td>Brake Service</td>
+                                    <td>$280.00</td>
+                                    <td><span class="status-badge status-complete">Paid</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 15, 2024</td>
+                                    <td>INV-2024-134</td>
+                                    <td>Transmission Service</td>
+                                    <td>$150.00</td>
+                                    <td><span class="status-badge status-complete">Paid</span></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">Download</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Notifications Section -->
+                    <div id="notifications" class="dashboard-section">
+                        <h2>Notifications</h2>
+                        <div class="service-card">
+                            <h3>Recent Notifications</h3>
+                            <div style="border-left: 4px solid #28a745; padding-left: 1rem; margin-bottom: 1rem;">
+                                <strong>Service Completed</strong><br>
+                                Your Honda Civic oil change is complete. Vehicle is ready for pickup.<br>
+                                <small>2 hours ago</small>
+                            </div>
+                            <div style="border-left: 4px solid #ffc107; padding-left: 1rem; margin-bottom: 1rem;">
+                                <strong>Appointment Reminder</strong><br>
+                                Your brake inspection for Toyota Camry is scheduled for tomorrow at 10:00 AM.<br>
+                                <small>1 day ago</small>
+                            </div>
+                            <div style="border-left: 4px solid #17a2b8; padding-left: 1rem; margin-bottom: 1rem;">
+                                <strong>Service Reminder</strong><br>
+                                Your Ford F-150 is due for transmission service in 2 weeks.<br>
+                                <small>3 days ago</small>
+                            </div>
+                            <div style="border-left: 4px solid #dc3545; padding-left: 1rem; margin-bottom: 1rem;">
+                                <strong>Special Offer</strong><br>
+                                Get 20% off brake service this month. Use code BRAKE20 when booking.<br>
+                                <small>1 week ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Section -->
+                    <div id="feedback" class="dashboard-section">
+                        <h2>Feedback</h2>
+                        <div class="service-card">
+                            <h3>Rate Your Recent Service</h3>
+                            <div style="margin-bottom: 2rem;">
+                                <h4>Honda Civic - Oil Change (Jan 8, 2025)</h4>
+                                <div style="margin: 1rem 0;">
+                                    <span style="font-size: 1.5rem; color: #ffc107;">⭐⭐⭐⭐⭐</span>
+                                    <button class="btn btn-primary" style="margin-left: 1rem;">Submit Rating</button>
+                                </div>
+                                <textarea placeholder="Leave a detailed review..." style="width: 100%; padding: 1rem; border: 2px solid #e9ecef; border-radius: 8px; margin-top: 1rem;" rows="4"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Your Reviews</h3>
+                            <div style="border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>Ford F-150 - Diagnostic (Jan 5, 2025)</strong>
+                                    <span style="color: #ffc107;">⭐⭐⭐⭐⭐</span>
+                                </div>
+                                <p style="margin-top: 0.5rem;">Quick and accurate diagnosis. Mike was very professional and explained everything clearly.</p>
+                            </div>
+                            <div style="border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>Toyota Camry - Brake Service (Dec 20, 2024)</strong>
+                                    <span style="color: #ffc107;">⭐⭐⭐⭐⭐</span>
+                                </div>
+                                <p style="margin-top: 0.5rem;">Excellent brake work. Car stops smoothly now. Fair pricing and quality service.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loyalty Section -->
+                    <div id="loyalty" class="dashboard-section">
+                        <h2>Loyalty Points</h2>
+                        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
+                            <div class="stat-card">
+                                <div class="stat-number">850</div>
+                                <div>Available Points</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">1,200</div>
+                                <div>Points Earned This Year</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">350</div>
+                                <div>Points Redeemed</div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Available Rewards</h3>
+                            <div class="services-grid">
+                                <div class="service-card">
+                                    <h4>$10 Off Oil Change</h4>
+                                    <p>500 points</p>
+                                    <button class="btn btn-primary">Redeem</button>
+                                </div>
+                                <div class="service-card">
+                                    <h4>$25 Off Any Service</h4>
+                                    <p>1,000 points</p>
+                                    <button class="btn btn-secondary">Need 150 more</button>
+                                </div>
+                                <div class="service-card">
+                                    <h4>Free Car Wash</h4>
+                                    <p>300 points</p>
+                                    <button class="btn btn-primary">Redeem</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Points History</h3>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Activity</th>
+                                        <th>Points</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jan 8, 2025</td>
+                                        <td>Oil Change Service</td>
+                                        <td style="color: #28a745;">+52</td>
+                                        <td>850</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jan 5, 2025</td>
+                                        <td>Diagnostic Service</td>
+                                        <td style="color: #28a745;">+95</td>
+                                        <td>798</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dec 20, 2024</td>
+                                        <td>Brake Service</td>
+                                        <td style="color: #28a745;">+280</td>
+                                        <td>703</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dec 15, 2024</td>
+                                        <td>Redeemed: $10 Off Coupon</td>
+                                        <td style="color: #dc3545;">-500</td>
+                                        <td>423</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div id="profile" class="dashboard-section">
+                        <h2>Profile Settings</h2>
+                        <div class="service-card">
+                            <h3>Personal Information</h3>
+                            <form onsubmit="updateProfile(event)">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" id="firstName" name="firstName" value="John" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" id="lastName" name="lastName" value="Doe" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="profileEmail">Email</label>
+                                        <input type="email" id="profileEmail" name="email" value="john.doe@email.com" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="tel" id="phone" name="phone" value="(555) 123-4567" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" id="address" name="address" value="123 Main St, Your City, State 12345" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </form>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Notification Preferences</h3>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Email notifications for appointment reminders
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> SMS notifications for service updates
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" checked> Email notifications for special offers
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox"> Push notifications for loyalty rewards
+                                </label>
+                            </div>
+                            <button class="btn btn-primary">Save Preferences</button>
+                        </div>
+                        
+                        <div class="service-card">
+                            <h3>Change Password</h3>
+                            <form onsubmit="changePassword(event)">
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword" name="currentPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <input type="password" id="newPassword" name="newPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Customer Login</h2>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p style="margin-top: 1rem; text-align: center;">
+                    Don't have an account? <a href="#" onclick="showRegisterModal()">Register here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h

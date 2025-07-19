@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Management Agreement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-50%, -50%) rotate(180deg); }
+        }
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+        .header p {
+            opacity: 0.95;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+        .agreement-status {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border: 2px solid #1e8449;
+            color: white;
+            padding: 20px;
+            margin: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+        .lease-content {
+            padding: 50px;
+        }
+        .lease-header-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9ff, #e8f4fd);
+            border-radius: 20px;
+            border: 3px solid #3498db;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.1);
+        }
+        .info-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.1);
+        }
+        .info-label {
+            font-weight: 600;
+            color: #34495e;
+        }
+        .info-value {
+            color: #2c3e50;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+        .section {
+            margin-bottom: 40px;
+            border-left: 5px solid #3498db;
+            padding-left: 25px;
+            background: rgba(52, 152, 219, 0.02);
+            padding: 25px;
+            border-radius: 0 15px 15px 0;
+            transition: all 0.3s ease;
+        }
+        .section:hover {
+            background: rgba(52, 152, 219, 0.05);
+            transform: translateX(5px);
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .section-icon {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .lease-text {
+            line-height: 1.9;
+            color: #444;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        .lease-text p {
+            margin-bottom: 18px;
+        }
+        .lease-text ul, .lease-text ol {
+            margin-left: 30px;
+            margin-bottom: 18px;
+        }
+        .lease-text li {
+            margin-bottom: 10px;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #f39c12;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.2);
+        }
+        .important-note {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 2px solid #e74c3c;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.2);
+        }
+        .fee-schedule {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        .fee-schedule th,
+        .fee-schedule td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .fee-schedule th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .fee-schedule tr:hover {
+            background: rgba(52, 152, 219, 0.05);
+        }
+        .fee-schedule .amount {
+            font-weight: 600;
+            color: #27ae60;
+        }
+        .checkbox-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 35px;
+            border-radius: 20px;
+            margin: 40px 0;
+            border: 2px solid #3498db;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.1);
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .checkbox-group:hover {
+            background: rgba(52, 152, 219, 0.08);
+            border-color: rgba(52, 152, 219, 0.2);
+            transform: translateX(5px);
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: #3498db;
+        }
+        .checkbox-group label {
+            font-size: 15px;
+            line-height: 1.6;
+            cursor: pointer;
+        }
+        .required {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .signature-section {
+            background: linear-gradient(135deg, #f8f9ff, #e8f4fd);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 50px 0;
+            border: 3px solid #3498db;
+            box-shadow: 0 15px 40px rgba(52, 152, 219, 0.15);
+        }
+        .signature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        .signature-box {
+            text-align: center;
+            padding: 25px;
+            background: white;
+            border: 3px dashed #bdc3c7;
+            border-radius: 15px;
+            position: relative;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .signature-box:hover {
+            border-color: #3498db;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.2);
+        }
+        .signature-pad {
+            width: 100%;
+            height: 120px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            cursor: crosshair;
+            transition: border-color 0.3s ease;
+        }
+        .signature-pad:hover {
+            border-color: #3498db;
+        }
+        .signature-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .clear-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+        .date-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        .date-input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .submit-section {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 50px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .submit-btn {
+            background: white;
+            color: #2c3e50;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            margin: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+        .submit-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 3px solid white;
+        }
+        .submit-btn.secondary:hover {
+            background: white;
+            color: #2c3e50;
+        }
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            background: #ecf0f1;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .progress-step.active {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            transform: scale(1.05);
+        }
+        .progress-step.completed {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        .management-terms {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .term-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .term-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 1024px) {
+            .lease-header-info {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .management-terms {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .lease-content {
+                padding: 30px;
+            }
+            
+            .lease-header-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding-left: 20px;
+            }
+            
+            .progress-indicator {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Property Management Agreement</h1>
+            <p>Professional Property Management Services Contract</p>
+        </div>
+        
+        <div class="agreement-status">
+            ✅ Property Evaluation Complete - Ready for Management Agreement
+        </div>
+        
+        <div class="progress-indicator">
+            <div class="progress-step completed">
+                <span>🏠</span> Property Assessment
+            </div>
+            <div class="progress-step completed">
+                <span>💰</span> Fee Structure Review
+            </div>
+            <div class="progress-step active">
+                <span>📋</span> Management Agreement
+            </div>
+            <div class="progress-step">
+                <span>🚀</span> Service Activation
+            </div>
+        </div>
+        
+        <div class="lease-content">
+            <!-- Property and Agreement Details -->
+            <div class="lease-header-info">
+                <div class="info-section">
+                    <h3>🏠 Property Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Property Address:</span>
+                        <span class="info-value">123 Maple Street, Apt 2B<br>Springfield, IL 62701</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Property Type:</span>
+                        <span class="info-value">2 Bedroom Apartment</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Square Footage:</span>
+                        <span class="info-value">950 sq ft</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Year Built:</span>
+                        <span class="info-value">2018</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h3>📅 Agreement Terms</h3>
+                    <div class="info-item">
+                        <span class="info-label">Agreement Start:</span>
+                        <span class="info-value">January 1, 2025</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Initial Term:</span>
+                        <span class="info-value">12 Months</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Management Fee:</span>
+                        <span class="info-value">8% of monthly rent</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Expected Rent:</span>
+                        <span class="info-value">$1,200/month</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h3>💼 Service Level</h3>
+                    <div class="info-item">
+                        <span class="info-label">Package:</span>
+                        <span class="info-value">Full Service</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Vacancy Marketing:</span>
+                        <span class="info-value">Included</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Maintenance:</span>
+                        <span class="info-value">24/7 Service</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Financial Reports:</span>
+                        <span class="info-value">Monthly</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Parties to Agreement -->
+            <div class="section">
+                <h2><span class="section-icon">👥</span>Parties to this Agreement</h2>
+                <div class="lease-text">
+                    <p><strong>Property Management Company:</strong><br>
+                    ABC Property Management LLC<br>
+                    456 Business Avenue<br>
+                    Springfield, IL 62701<br>
+                    Phone: (555) 123-4567<br>
+                    Email: manager@abcproperties.com<br>
+                    License #: PM-12345-IL</p>
+                    
+                    <p><strong>Property Owner:</strong><br>
+                    Michael Thompson<br>
+                    789 Oak Drive<br>
+                    Springfield, IL 62702<br>
+                    Email: michael.thompson@email.com<br>
+                    Phone: (555) 876-5432</p>
+                </div>
+            </div>
+            
+            <!-- Management Services -->
+            <div class="section">
+                <h2><span class="section-icon">🛠️</span>Management Services Provided</h2>
+                <div class="lease-text">
+                    <div class="management-terms">
+                        <div class="term-card">
+                            <h4>🏠 Property Marketing & Leasing</h4>
+                            <ul>
+                                <li>Professional photography</li>
+                                <li>Online listing management</li>
+                                <li>Tenant screening & selection</li>
+                                <li>Lease preparation & execution</li>
+                                <li>Move-in/move-out inspections</li>
+                            </ul>
+                        </div>
+                        <div class="term-card">
+                            <h4>💰 Financial Management</h4>
+                            <ul>
+                                <li>Rent collection & deposits</li>
+                                <li>Monthly financial statements</li>
+                                <li>Annual tax reporting (1099s)</li>
+                                <li>Security deposit management</li>
+                                <li>Late fee collection</li>
+                            </ul>
+                        </div>
+                        <div class="term-card">
+                            <h4>🔧 Maintenance & Repairs</h4>
+                            <ul>
+                                <li>24/7 emergency response</li>
+                                <li>Preventive maintenance program</li>
+                                <li>Vendor coordination & oversight</li>
+                                <li>Work order management</li>
+                                <li>Quality control inspections</li>
+                            </ul>
+                        </div>
+                        <div class="term-card">
+                            <h4>📞 Tenant Relations</h4>
+                            <ul>
+                                <li>24/7 tenant hotline</li>
+                                <li>Lease violation enforcement</li>
+                                <li>Renewal negotiations</li>
+                                <li>Eviction proceedings (if needed)</li>
+                                <li>Regular property inspections</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fee Structure -->
+            <div class="section">
+                <h2><span class="section-icon">💰</span>Fee Structure & Payment Terms</h2>
+                <div class="lease-text">
+                    <div class="highlight-box">
+                        <p><strong>Management Fee:</strong> 8% of monthly collected rent</p>
+                        <p><strong>Payment Schedule:</strong> Monthly, deducted from collected rent before owner remittance</p>
+                    </div>
+                    
+                    <h3>Detailed Fee Schedule:</h3>
+                    <table class="fee-schedule">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Fee</th>
+                                <th>When Charged</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Monthly Management</td>
+                                <td class="amount">8% of rent</td>
+                                <td>Monthly</td>
+                                <td>Only charged on collected rent</td>
+                            </tr>
+                            <tr>
+                                <td>Tenant Placement</td>
+                                <td class="amount">$500</td>
+                                <td>Upon lease signing</td>
+                                <td>One-time fee per placement</td>
+                            </tr>
+                            <tr>
+                                <td>Lease Renewal</td>
+                                <td class="amount">$150</td>
+                                <td>Upon renewal execution</td>
+                                <td>Administrative processing</td>
+                            </tr>
+                            <tr>
+                                <td>Maintenance Coordination</td>
+                                <td class="amount">10% markup</td>
+                                <td>Per work order</td>
+                                <td>On contracted services only</td>
+                            </tr>
+                            <tr>
+                                <td>Late Rent Collection</td>
+                                <td class="amount">25% of collected fees</td>
+                                <td>When collected</td>
+                                <td>After 5-day grace period</td>
+                            </tr>
+                            <tr>
+                                <td>Eviction Processing</td>
+                                <td class="amount">$750</td>
+                                <td>Upon filing</td>
+                                <td>Legal fees separate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="important-note">
+                        <strong>Owner Remittance:</strong> Net rental income (after management fees and approved expenses) will be deposited to owner's designated account by the 15th of each month for the previous month's activity.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Owner Responsibilities -->
+            <div class="section">
+                <h2><span class="section-icon">👤</span>Owner Responsibilities</h2>
+                <div class="lease-text">
+                    <p><strong>Financial Obligations:</strong></p>
+                    <ul>
+                        <li>Maintain adequate property insurance (liability minimum $1,000,000)</li>
+                        <li>Pay property taxes, HOA fees, and assessments</li>
+                        <li>Provide working capital fund ($500 minimum) for minor repairs</li>
+                        <li>Approve major repairs over $500 in advance</li>
+                        <li>Cover costs during vacancy periods</li>
+                    </ul>
+                    
+                    <p><strong>Property Maintenance:</strong></p>
+                    <ul>
+                        <li>Ensure property meets local habitability standards</li>
+                        <li>Address major structural issues promptly</li>
+                        <li>Maintain property insurance claims history</li>
+                        <li>Respond to emergency authorization requests within 2 hours</li>
+                    </ul>
+                    
+                    <p><strong>Legal Compliance:</strong></p>
+                    <ul>
+                        <li>Comply with fair housing laws and regulations</li>
+                        <li>Maintain current rental licenses/permits</li>
+                        <li>Provide required disclosures (lead paint, etc.)</li>
+                        <li>Authorize legal proceedings when necessary</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Management Company Responsibilities -->
+            <div class="section">
+                <h2><span class="section-icon">🏢</span>Management Company Responsibilities</h2>
+                <div class="lease-text">
+                    <p><strong>Tenant Management:</strong></p>
+                    <ul>
+                        <li>Market property effectively to minimize vacancy</li>
+                        <li>Screen tenants using consistent criteria</li>
+                        <li>Collect rent and enforce lease terms</li>
+                        <li>Handle tenant communications and complaints</li>
+                        <li>Process lease renewals and terminations</li>
+                    </ul>
+                    
+                    <p><strong>Maintenance Oversight:</strong></p>
+                    <ul>
+                        <li>Coordinate and supervise maintenance activities</li>
+                        <li>Maintain network of licensed, insured contractors</li>
+                        <li>Obtain competitive bids for major work</li>
+                        <li>Conduct regular property inspections</li>
+                        <li>Respond to maintenance emergencies 24/7</li>
+                    </ul>
+                    
+                    <p><strong>Financial Reporting:</strong></p>
+                    <ul>
+                        <li>Provide monthly income and expense statements</li>
+                        <li>Maintain separate escrow accounts for security deposits</li>
+                        <li>Issue annual tax reporting documents</li>
+                        <li>Process owner remittances timely</li>
+                        <li>Maintain detailed financial records</li>
+                    </ul>
+                    
+                    <div class="important-note">
+                        <strong>Emergency Response:</strong> For after-hours emergencies affecting habitability or safety, management company is authorized to spend up to $750 without prior approval. Owner will be notified within 24 hours.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Termination Clause -->
+            <div class="section">
+                <h2><span class="section-icon">📅</span>Agreement Termination</h2>
+                <div class="lease-text">
+                    <p><strong>Termination by Either Party:</strong></p>
+                    <ul>
+                        <li>30-day written notice after initial 12-month term</li>
+                        <li>60-day notice if property is occupied</li>
+                        <li>Immediate termination for material breach (with 10-day cure period)</li>
+                        <li>Sale of property (with 30-day transition period)</li>
+                    </ul>
+                    
+                    <p><strong>Upon Termination:</strong></p>
+                    <ul>
+                        <li>Management company will transfer all tenant files and records</li>
+                        <li>Security deposits will be transferred to owner or new agent</li>
+                        <li>Final accounting and remittance within 30 days</li>
+                        <li>Ongoing maintenance warranties transferred to owner</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <p><strong>Automatic Renewal:</strong> This agreement automatically renews for successive 12-month terms unless terminated by either party with proper notice.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Legal Terms -->
+            <div class="section">
+                <h2><span class="section-icon">⚖️</span>Legal Terms and Conditions</h2>
+                <div class="lease-text">

@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --primary-light: #757de8;
+            --primary-dark: #002984;
+            --secondary: #ff9800;
+            --secondary-light: #ffc947;
+            --secondary-dark: #c66900;
+            --text-on-primary: #ffffff;
+            --text-on-secondary: #000000;
+            --background: #f5f5f5;
+            --card: #ffffff;
+            --border: #e0e0e0;
+            --danger: #f44336;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --info: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--text-on-primary);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--text-on-primary);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        nav a:hover {
+            background-color: var(--primary-light);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .space-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        button, .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        button.secondary, .btn.secondary {
+            background-color: var(--secondary);
+            color: var(--text-on-secondary);
+        }
+
+        button.secondary:hover, .btn.secondary:hover {
+            background-color: var(--secondary-light);
+        }
+
+        button.danger {
+            background-color: var(--danger);
+        }
+
+        button.danger:hover {
+            background-color: #d32f2f;
+        }
+
+        button.success {
+            background-color: var(--success);
+        }
+
+        button.success:hover {
+            background-color: #388e3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--text-on-primary);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .badge.primary {
+            background-color: var(--primary-light);
+            color: var(--text-on-primary);
+        }
+
+        .badge.secondary {
+            background-color: var(--secondary-light);
+            color: var(--text-on-secondary);
+        }
+
+        .badge.danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .badge.success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .badge.warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .badge.info {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--border);
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        #features-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        #resources-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .feature-item, .resource-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h4, .resource-item h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .feature-tag {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .conflict-item {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .resource-availability {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .availability-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .available {
+            background-color: var(--success);
+        }
+
+        .partially-available {
+            background-color: var(--warning);
+        }
+
+        .unavailable {
+            background-color: var(--danger);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+
+        #timeline-container {
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        #timeline {
+            min-width: 1000px;
+        }
+
+        .timeline-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            height: 30px;
+        }
+
+        .timeline-label {
+            width: 150px;
+            padding-right: 1rem;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .timeline-bars {
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+        }
+
+        .timeline-bar {
+            position: absolute;
+            height: 20px;
+            background-color: var(--primary-light);
+            border-radius: 4px;
+            top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0 0.5rem;
+            cursor: pointer;
+        }
+
+        .timeline-bar:hover {
+            opacity: 0.9;
+        }
+
+        .timeline-time-markers {
+            display: flex;
+            border-top: 1px solid var(--border);
+            padding-top: 0.25rem;
+        }
+
+        .timeline-marker {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            font-size: 0.875rem;
+            max-width: 300px;
+            display: none;
+        }
+
+        .load-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .load-bar {
+            flex-grow: 1;
+            height: 8px;
+            background-color: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .load-value {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .over-allocated {
+            background-color: var(--danger);
+        }
+
+        .optimal {
+            background-color: var(--success);
+        }
+
+        .under-allocated {
+            background-color: var(--warning);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                gap: 0.5rem;
+            }
+            
+            nav a {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h2>Project Management System</h2>
+            <nav>
+                <a href="#" class="active-nav" data-page="dashboard">Dashboard</a>
+                <a href="#" data-page="features">Features</a>
+                <a href="#" data-page="resources">Resources</a>
+                <a href="#" data-page="schedule">Schedule</a>
+                <a href="#" data-page="conflicts">Conflicts</a>
+            </nav>
+        </div>
+        
+        <!-- Modals -->
+        <div class="modal-overlay" id="add-feature-modal">
+            <div class="modal">
+                <h2>Add New Feature</h2>
+                <form id="add-feature-form">
+                    <div class="flex-col">
+                        <label for="feature-name">Feature Name</label>
+                        <input type="text" id="feature-name" placeholder="Enter feature name..." required>
+                    </div>
+                    
+                    <div class="flex-col">
+                        <label for="feature-description">Description</label>
+                        <textarea id="feature-description" rows="3" placeholder="Enter feature description..." required></textarea>
+                    </div>
+                    
+                    <div class="flex space-between">
+                        <div style="width: 48%;">
+                            <label for="feature-type">Type</label>
+                            <select id="feature-type" required>
+                                <option value="core">Core Feature</option>
+                                <option value="enhancement">Enhancement</option>
+                                <option value="bug-fix">Bug Fix</option>
+                                <option value="performance">Performance</option>
+                            </select>
+                        </div>
+                        <div style="width: 48%;">
+                            <label for="feature-priority">Priority</label>
+                            <select id="feature-priority" required>
+                                <option value="p0">P0 - Critical</option>
+                                <option value="p1">P1 - High</option>
+                                <option value="p2">P2 - Medium</option>
+                                <option value="p3">P3 - Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-between">
+                        <div style="width: 48%;">
+                            <label for="feature-version">Target Version</label>
+                            <select id="feature-version" required>
+                                <option value="v1">Version 1</option>
+                                <option value="v2">Version 2</option>
+                                <option value="future">Future Version</option>
+                            </select>
+                        </div>
+                        <div style="width: 48%;">
+                            <label for="feature-estimate">Estimated Hours</label>
+                            <input type="number" id="feature-estimate" min="1" placeholder="Hours" required>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col">
+                        <label for="feature-dependencies">Dependencies</label>
+                        <select id="feature-dependencies" multiple>
+                            <option value="user-auth">User Authentication System</option>
+                            <option value="dashboard">Dashboard UI</option>
+                            <option value="export">Data Export Module</option>
+                            <option value="notifications">Notification System</option>
+                        </select>
+                        <small>Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+                    
+                    <div class="flex-col">
+                        <label for="feature-skills">Required Skills</label>
+                        <select id="feature-skills" multiple>
+                            <option value="frontend">Frontend Development</option>
+                            <option value="backend">Backend Development</option>
+                            <option value="database">Database</option>
+                            <option value="ui-ux">UI/UX Design</option>
+                            <option value="qa">QA Testing</option>
+                        </select>
+                        <small>Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+                    
+                    <div class="flex-col">
+                        <label for="feature-tags">Tags (comma separated)</label>
+                        <input type="text" id="feature-tags" placeholder="e.g. security, performance, ui">
+                    </div>
+                    
+                    <div class="flex space-between" style="margin-top: 1.5rem;">
+                        <button type="button" class="secondary" id="cancel-add-feature">Cancel</button>
+                        <button type="submit">Add Feature</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="modal-overlay" id="add-resource-modal">
+            <div class="modal">
+                <h2>Add New Resource</h2>
+                <form id="add-resource-form">
+                    <div class="flex space-between">
+                        <div style="width: 48%;">
+                            <label for="resource-name">Name</label>
+                            <input type="text" id="resource-name" placeholder="Full name" required>
+                        </div>
+                        <div style="width: 48%;">
+                            <label for="resource-role">Role</label>
+                            <input type="text" id="resource-role" placeholder="Job title" required>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col">
+                        <label for="resource-skills">Skills (comma separated)</label>
+                        <input type="text" id="resource-skills" placeholder="e.g. JavaScript, React, NodeJS" required>
+                    </div>
+                    
+                    <div class="flex space-between">
+                        <div style="width: 48%;">
+                            <label for="resource-availability">Availability (%)</label>
+                            <input type="number" id="resource-availability" min="0" max="100" value="100" required>
+                        </div>
+                        <div style="width: 48%;">
+                            <label for="resource-cost">Cost Rate ($/hour)</label>
+                            <input type="number" id="resource-cost" min="0" step="0.01" placeholder="Hourly rate">
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col">
+                        <label for="resource-team">Team</label>
+                        <select id="resource-team" required>
+                            <option value="
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page active-page">
+            <div class="flex space-between items-center mb-4">
+                <h1>Project Dashboard</h1>
+                <div>
+                    <button id="new-project-btn">New Project</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>Resource Allocation Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="resource-allocation-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Skill Coverage</h3>
+                    <div class="chart-container">
+                        <canvas id="skill-coverage-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Resource Allocation by Feature</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Resources</th>
+                            <th>Allocated Hours</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>User Authentication System</td>
+                            <td>Sarah Johnson, David Wilson</td>
+                            <td>40</td>
+                            <td>May 12, 2025</td>
+                            <td>May 24, 2025</td>
+                            <td><span class="badge primary">In Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Dashboard UI</td>
+                            <td>John Smith, Michael Chen</td>
+                            <td>60</td>
+                            <td>May 15, 2025</td>
+                            <td>June 10, 2025</td>
+                            <td><span class="badge primary">In Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Data Export Module</td>
+                            <td>Sarah Johnson</td>
+                            <td>30</td>
+                            <td>June 1, 2025</td>
+                            <td>June 15, 2025</td>
+                            <td><span class="badge secondary">Not Started</span></td>
+                        </tr>
+                        <tr>
+                            <td>Notification System</td>
+                            <td>John Smith, Sarah Johnson</td>
+                            <td>35</td>
+                            <td>June 12, 2025</td>
+                            <td>June 30, 2025</td>
+                            <td><span class="badge secondary">Not Started</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                <div class="card">
+                    <h3>Project Progress</h3>
+                    <div class="chart-container">
+                        <canvas id="progress-chart"></canvas>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 45%;"></div>
+                    </div>
+                    <p class="mb-4">Version 1 Progress: 45%</p>
+                    <div class="flex space-between">
+                        <div>
+                            <h4>Start Date</h4>
+                            <p>May 10, 2025</p>
+                        </div>
+                        <div>
+                            <h4>Estimated Completion</h4>
+                            <p>July 15, 2025</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Resource Allocation</h3>
+                    <div class="chart-container">
+                        <canvas id="resource-chart"></canvas>
+                    </div>
+                    <div class="load-indicator">
+                        <span>Backend Team:</span>
+                        <div class="load-bar">
+                            <div class="load-value optimal" style="width: 80%;"></div>
+                        </div>
+                        <span>80%</span>
+                    </div>
+                    <div class="load-indicator">
+                        <span>Frontend Team:</span>
+                        <div class="load-bar">
+                            <div class="load-value over-allocated" style="width: 110%;"></div>
+                        </div>
+                        <span>110%</span>
+                    </div>
+                    <div class="load-indicator">
+                        <span>QA Team:</span>
+                        <div class="load-bar">
+                            <div class="load-value under-allocated" style="width: 40%;"></div>
+                        </div>
+                        <span>40%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Feature Completion Status</h3>
+                <div class="chart-container">
+                    <canvas id="features-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>Schedule Summary</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Milestone</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Feature Analysis Complete</td>
+                                <td><span class="badge success">Completed</span></td>
+                                <td>May 20, 2025</td>
+                            </tr>
+                            <tr>
+                                <td>Core Features Development</td>
+                                <td><span class="badge primary">In Progress</span></td>
+                                <td>June 15, 2025</td>
+                            </tr>
+                            <tr>
+                                <td>Testing Phase</td>
+                                <td><span class="badge secondary">Not Started</span></td>
+                                <td>July 1, 2025</td>
+                            </tr>
+                            <tr>
+                                <td>Version 1 Release</td>
+                                <td><span class="badge secondary">Not Started</span></td>
+                                <td>July 15, 2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>Schedule Conflicts</h3>
+                    <div id="conflicts-summary">
+                        <div class="conflict-item">
+                            <h4>Resource Overallocation</h4>
+                            <p>Frontend developers are overallocated by 10% during June 10-20</p>
+                            <div class="action-buttons">
+                                <button class="secondary">View Details</button>
+                                <button>Resolve</button>
+                            </div>
+                        </div>
+                        <div class="conflict-item">
+                            <h4>Leave Conflict</h4>
+                            <p>John Smith is on leave during critical implementation phase (June 15-22)</p>
+                            <div class="action-buttons">
+                                <button class="secondary">View Details</button>
+                                <button>Resolve</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Schedule Page -->
+        <div id="schedule-page" class="page" style="display: none;">
+            <div class="flex space-between items-center mb-4">
+                <h1>Project Schedule</h1>
+                <div>
+                    <button id="reschedule-btn">Auto Reschedule</button>
+                    <button class="secondary">Export Schedule</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="tabs">
+                    <div class="tab active" data-tab="timeline-tab">Timeline</div>
+                    <div class="tab" data-tab="gantt-tab">Gantt Chart</div>
+                    <div class="tab" data-tab="critical-path-tab">Critical Path</div>
+                </div>
+                
+                <div class="tab-content active" id="timeline-tab">
+                    <div class="flex space-between items-center mb-4">
+                        <div>
+                            <label for="timeline-zoom">Zoom: </label>
+                            <select id="timeline-zoom">
+                                <option value="days">Days</option>
+                                <option value="weeks" selected>Weeks</option>
+                                <option value="months">Months</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button class="secondary">Show All Resources</button>
+                            <button class="secondary">Show V1 Features Only</button>
+                        </div>
+                    </div>
+                    
+                    <div id="timeline-container">
+                        <div id="timeline">
+                            <div class="timeline-time-markers">
+                                <div class="timeline-marker" style="width: 150px;"></div>
+                                <div class="timeline-marker">May 10</div>
+                                <div class="timeline-marker">May 17</div>
+                                <div class="timeline-marker">May 24</div>
+                                <div class="timeline-marker">May 31</div>
+                                <div class="timeline-marker">Jun 7</div>
+                                <div class="timeline-marker">Jun 14</div>
+                                <div class="timeline-marker">Jun 21</div>
+                                <div class="timeline-marker">Jun 28</div>
+                                <div class="timeline-marker">Jul 5</div>
+                                <div class="timeline-marker">Jul 12</div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">User Authentication</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 3%; width: 12%; background-color: var(--primary);">
+                                        Sarah J.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">Dashboard UI</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 8%; width: 25%; background-color: var(--secondary);">
+                                        John S., Michael C.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">Data Export Module</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 30%; width: 15%; background-color: var(--primary);">
+                                        Sarah J.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">Notification System</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 45%; width: 20%; background-color: var(--secondary);">
+                                        John S., Sarah J.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">Testing Phase</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 65%; width: 20%; background-color: var(--info);">
+                                        Jessica L., Team
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">Deployment Prep</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 80%; width: 10%; background-color: var(--warning);">
+                                        David W.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-row">
+                                <div class="timeline-label">Release V1</div>
+                                <div class="timeline-bars">
+                                    <div class="timeline-bar" style="left: 90%; width: 5%; background-color: var(--success);">
+                                        All Team
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="gantt-tab">
+                    <div class="chart-container" style="height: 500px;">
+                        <canvas id="gantt-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="critical-path-tab">
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="critical-path-chart"></canvas>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Duration</th>
+                                <th>Early Start</th>
+                                <th>Early Finish</th>
+                                <th>Late Start</th>
+                                <th>Late Finish</th>
+                                <th>Slack</th>
+                                <th>Critical</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>User Authentication</td>
+                                <td>12 days</td>
+                                <td>May 12</td>
+                                <td>May 24</td>
+                                <td>May 12</td>
+                                <td>May 24</td>
+                                <td>0</td>
+                                <td><span class="badge danger">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard UI</td>
+                                <td>26 days</td>
+                                <td>May 15</td>
+                                <td>June 10</td>
+                                <td>May 17</td>
+                                <td>June 12</td>
+                                <td>2</td>
+                                <td><span class="badge secondary">No</span></td>
+                            </tr>
+                            <tr>
+                                <td>Data Export Module</td>
+                                <td>15 days</td>
+                                <td>June 1</td>
+                                <td>June 15</td>
+                                <td>June 1</td>
+                                <td>June 15</td>
+                                <td>0</td>
+                                <td><span class="badge danger">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Notification System</td>
+                                <td>18 days</td>
+                                <td>June 12</td>
+                                <td>June 30</td>
+                                <td>June 12</td>
+                                <td>June 30</td>
+                                <td>0</td>
+                                <td><span class="badge danger">Yes</span></td>
+                            </tr>
+                            <tr>
+                                <td>Testing Phase</td>
+                                <td>15 days</td>
+                                <td>July 1</td>
+                                <td>July 15</td>
+                                <td>July 1</td>
+                                <td>July 15</td>
+                                <td>0</td>
+                                <td><span class="badge danger">Yes</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Time Allocation Summary</h3>
+                    <div class="chart-container">
+                        <canvas id="time-allocation-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Version 1 Timeline</h3>
+                    <div class="flex space-between mb-4">
+                        <div>
+                            <p><strong>Start Date:</strong> May 10, 2025</p>
+                            <p><strong>End Date:</strong> July 15, 2025</p>
+                        </div>
+                        <div>
+                            <p><strong>Total Duration:</strong> 66 days</p>
+                            <p><strong>Total Estimated Hours:</strong> 320</p>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 45%;"></div>
+                    </div>
+                    <p>45% Complete</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conflicts Page -->
+        <div id="conflicts-page" class="page" style="display: none;">
+            <div class="flex space-between items-center mb-4">
+                <h1>Schedule Conflicts</h1>
+                <div>
+                    <button id="resolve-all-btn">Auto Resolve All</button>
+                    <button class="secondary">Export Conflicts</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="tabs">
+                    <div class="tab active" data-tab="resource-conflicts-tab">Resource Conflicts</div>
+                    <div class="tab" data-tab="timeline-conflicts-tab">Timeline Conflicts</div>
+                    <div class="tab" data-tab="dependency-conflicts-tab">Dependency Conflicts</div>
+                </div>
+                
+                <div class="tab-content active" id="resource-conflicts-tab">
+                    <div class="conflict-item">
+                        <h4>Resource Overallocation</h4>
+                        <p><strong>Conflict:</strong> Frontend developers are overallocated by 10% during June 10-20</p>
+                        <p><strong>Affected Resources:</strong> John Smith</p>
+                        <p><strong>Affected Features:</strong> Dashboard UI, Notification System</p>
+                        <p><strong>Impact:</strong> May delay Notification System implementation by up to 3 days</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Reassign Tasks</button>
+                            <button>Reschedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="conflict-item">
+                        <h4>Leave Conflict</h4>
+                        <p><strong>Conflict:</strong> John Smith is on leave during critical implementation phase</p>
+                        <p><strong>Dates:</strong> June 15-22</p>
+                        <p><strong>Affected Features:</strong> Notification System</p>
+                        <p><strong>Impact:</strong> May delay implementation by 5 days</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Find Replacement</button>
+                            <button>Reschedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="conflict-item">
+                        <h4>Skill Gap</h4>
+                        <p><strong>Conflict:</strong> No QA resource available at the start of QA phase</p>
+                        <p><strong>Dates:</strong> June 25-July 1</p>
+                        <p><strong>Affected Features:</strong> All features pending QA</p>
+                        <p><strong>Impact:</strong> Potential quality issues or delay in release</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Hire Contractor</button>
+                            <button>Reschedule</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="timeline-conflicts-tab">
+                    <div class="conflict-item">
+                        <h4>Timeline Overlap</h4>
+                        <p><strong>Conflict:</strong> Data Export Module and Dashboard UI completion overlaps</p>
+                        <p><strong>Dates:</strong> June 8-12</p>
+                        <p><strong>Affected Resources:</strong> Sarah Johnson</p>
+                        <p><strong>Impact:</strong> Sarah Johnson is assigned to both tasks simultaneously</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Reassign Tasks</button>
+                            <button>Reschedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="conflict-item">
+                        <h4>Late Dependency</h4>
+                        <p><strong>Conflict:</strong> User Authentication may finish later than expected</p>
+                        <p><strong>Current End Date:</strong> May 24</p>
+                        <p><strong>Affected Features:</strong> Dashboard UI, Notification System</p>
+                        <p><strong>Impact:</strong> Could delay dependent features by up to 1 week</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Add Resources</button>
+                            <button>Reschedule</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="dependency-conflicts-tab">
+                    <div class="conflict-item">
+                        <h4>Missing Dependency</h4>
+                        <p><strong>Conflict:</strong> Data Export Module requires third-party library integration</p>
+                        <p><strong>Missing Task:</strong> Third-party API Integration</p>
+                        <p><strong>Impact:</strong> May add 5 days to schedule</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Add Task</button>
+                            <button>Reschedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="conflict-item">
+                        <h4>Circular Dependency</h4>
+                        <p><strong>Conflict:</strong> Dashboard UI and Data Export have circular dependency</p>
+                        <p><strong>Details:</strong> Dashboard UI needs export capabilities, but Export Module needs Dashboard UI components</p>
+                        <p><strong>Impact:</strong> Development blocking situation</p>
+                        <div class="action-buttons" style="margin-top: 1rem;">
+                            <button class="secondary">Ignore</button>
+                            <button class="secondary">Refactor</button>
+                            <button>Resolve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Page -->
+        <div id="features-page" class="page">
+            <div class="flex space-between items-center mb-4">
+                <h1>Feature Analysis</h1>
+                <div>
+                    <button id="add-feature-btn">Add Feature</button>
+                    <button class="secondary">Import Features</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="tabs">
+                    <div class="tab active" data-tab="features-list-tab">Features List</div>
+                    <div class="tab" data-tab="feature-dependencies-tab">Dependencies</div>
+                    <div class="tab" data-tab="feature-priorities-tab">Priorities</div>
+                </div>
+                
+                <div class="tab-content active" id="features-list-tab">
+                    <div class="flex space-between items-center mb-4">
+                        <input type="text" placeholder="Search features..." id="feature-search">
+                        <div>
+                            <select id="feature-filter">
+                                <option value="all">All Features</option>
+                                <option value="core">Core Features</option>
+                                <option value="enhancement">Enhancements</option>
+                                <option value="v1">Version 1</option>
+                                <option value="future">Future Versions</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="features-list">
+                        <div class="feature-item">
+                            <div class="flex space-between">
+                                <h4>User Authentication System</h4>
+                                <span class="badge primary">Core</span>
+                            </div>
+                            <p>Implement secure login, registration, password reset, and account management functionality.</p>
+                            <div class="feature-details">
+                                <p><strong>Estimated Hours:</strong> 40</p>
+                                <p><strong>Assigned:</strong> Backend Team</p>
+                                <p><strong>Status:</strong> <span class="badge success">In Progress</span></p>
+                            </div>
+                            <div class="feature-tags">
+                                <span class="feature-tag">Security</span>
+                                <span class="feature-tag">User Management</span>
+                                <span class="feature-tag">V1</span>
+                            </div>
+                            <div class="action-buttons" style="margin-top: 1rem;">
+                                <button class="secondary">Edit</button>
+                                <button>View Details</button>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="flex space-between">
+                                <h4>Dashboard UI</h4>
+                                <span class="badge primary">Core</span>
+                            </div>
+                            <p>Create responsive dashboard interface with customizable widgets and data visualization.</p>
+                            <div class="feature-details">
+                                <p><strong>Estimated Hours:</strong> 60</p>
+                                <p><strong>Assigned:</strong> Frontend Team</p>
+                                <p><strong>Status:</strong> <span class="badge primary">In Progress</span></p>
+                            </div>
+                            <div class="feature-tags">
+                                <span class="feature-tag">UI/UX</span>
+                                <span class="feature-tag">Frontend</span>
+                                <span class="feature-tag">V1</span>
+                            </div>
+                            <div class="action-buttons" style="margin-top: 1rem;">
+                                <button class="secondary">Edit</button>
+                                <button>View Details</button>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="flex space-between">
+                                <h4>Data Export Module</h4>
+                                <span class="badge secondary">Enhancement</span>
+                            </div>
+                            <p>Allow users to export reports and data in various formats (PDF, CSV, Excel).</p>
+                            <div class="feature-details">
+                                <p><strong>Estimated Hours:</strong> 30</p>
+                                <p><strong>Assigned:</strong> Backend Team</p>
+                                <p><strong>Status:</strong> <span class="badge secondary">Not Started</span></p>
+                            </div>
+                            <div class="feature-tags">
+                                <span class="feature-tag">Reporting</span>
+                                <span class="feature-tag">Data Processing</span>
+                                <span class="feature-tag">V1</span>
+                            </div>
+                            <div class="action-buttons" style="margin-top: 1rem;">
+                                <button class="secondary">Edit</button>
+                                <button>View Details</button>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="flex space-between">
+                                <h4>Notification System</h4>
+                                <span class="badge primary">Core</span>
+                            </div>
+                            <p>Implement real-time notifications, alerts, and message center for users.</p>
+                            <div class="feature-details">
+                                <p><strong>Estimated Hours:</strong> 35</p>
+                                <p><strong>Assigned:</strong> Full Stack Team</p>
+                                <p><strong>Status:</strong> <span class="badge secondary">Not Started</span></p>
+                            </div>
+                            <div class="feature-tags">
+                                <span class="feature-tag">Real-time</span>
+                                <span class="feature-tag">User Experience</span>
+                                <span class="feature-tag">V1</span>
+                            </div>
+                            <div class="action-buttons" style="margin-top: 1rem;">
+                                <button class="secondary">Edit</button>
+                                <button>View Details</button>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="flex space-between">
+                                <h4>Advanced Analytics</h4>
+                                <span class="badge info">Future</span>
+                            </div>
+                            <p>Implement advanced data visualization and predictive analytics capabilities.</p>
+                            <div class="feature-details">
+                                <p><strong>Estimated Hours:</strong> 80</p>
+                                <p><strong>Assigned:</strong> Data Science Team</p>
+                                <p><strong>Status:</strong> <span class="badge secondary">Not Started</span></p>
+                            </div>
+                            <div class="feature-tags">
+                                <span class="feature-tag">Analytics</span>
+                                <span class="feature-tag">Data Science</span>
+                                <span class="feature-tag">V2</span>
+                            </div>
+                            <div class="action-buttons" style="margin-top: 1rem;">
+                                <button class="secondary">Edit</button>
+                                <button>View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="feature-dependencies-tab">
+                    <div class="chart-container" style="height: 500px;">
+                        <canvas id="dependencies-chart"></canvas>
+                    </div>
+                    <div class="features-dependencies-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Dependencies</th>
+                                    <th>Status</th>
+                                    <th>Risk</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>User Authentication</td>
+                                    <td>None</td>
+                                    <td><span class="badge primary">In Progress</span></td>
+                                    <td><span class="badge success">Low</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dashboard UI</td>
+                                    <td>User Authentication</td>
+                                    <td><span class="badge primary">In Progress</span></td>
+                                    <td><span class="badge warning">Medium</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Data Export Module</td>
+                                    <td>Dashboard UI</td>
+                                    <td><span class="badge secondary">Not Started</span></td>
+                                    <td><span class="badge warning">Medium</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Notification System</td>
+                                    <td>User Authentication</td>
+                                    <td><span class="badge secondary">Not Started</span></td>
+                                    <td><span class="badge warning">Medium</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Advanced Analytics</td>
+                                    <td>Dashboard UI, Data Export Module</td>
+                                    <td><span class="badge secondary">Not Started</span></td>
+                                    <td><span class="badge danger">High</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="feature-priorities-tab">
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Priority Matrix</h3>
+                            <div class="chart-container">
+                                <canvas id="priority-matrix"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Feature Priorities</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>Business Value</th>
+                                        <th>Technical Complexity</th>
+                                        <th>Priority</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>User Authentication</td>
+                                        <td>High</td>
+                                        <td>Medium</td>
+                                        <td><span class="badge primary">P0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dashboard UI</td>
+                                        <td>High</td>
+                                        <td>Medium</td>
+                                        <td><span class="badge primary">P0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Data Export Module</td>
+                                        <td>Medium</td>
+                                        <td>Low</td>
+                                        <td><span class="badge info">P1</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Notification System</td>
+                                        <td>Medium</td>
+                                        <td>Medium</td>
+                                        <td><span class="badge info">P1</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Advanced Analytics</td>
+                                        <td>High</td>
+                                        <td>High</td>
+                                        <td><span class="badge secondary">P2</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Page -->
+        <div id="resources-page" class="page" style="display: none;">
+            <div class="flex space-between items-center mb-4">
+                <h1>Resource Management</h1>
+                <div>
+                    <button id="add-resource-btn">Add Resource</button>
+                    <button class="secondary">Import Resources</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>Available Resources</h3>
+                    <div class="flex space-between items-center mb-4">
+                        <input type="text" placeholder="Search resources..." id="resource-search">
+                        <div>
+                            <select id="resource-filter">
+                                <option value="all">All Resources</option>
+                                <option value="backend">Backend Engineers</option>
+                                <option value="frontend">Frontend Engineers</option>
+                                <option value="designer">UI/UX Designers</option>
+                                <option value="qa">QA Engineers</option>
+                                <option value="manager">Project Managers</option>

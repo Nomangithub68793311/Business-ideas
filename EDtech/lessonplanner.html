@@ -1,0 +1,510 @@
+import React, { useState, useEffect } from 'react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, BookOpen, Clock, Users, Share2, Bell, CheckCircle, AlertCircle, FileText, Link, Video, Trash2, Edit3 } from 'lucide-react';
+
+const LessonPlanner = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState('week'); // 'week' or 'month'
+  const [selectedClass, setSelectedClass] = useState('');
+  const [classes, setClasses] = useState([
+    { id: 1, name: 'Mathematics - Grade 10', color: '#3B82F6' },
+    { id: 2, name: 'Physics - Grade 11', color: '#10B981' },
+    { id: 3, name: 'Chemistry - Grade 12', color: '#F59E0B' }
+  ]);
+  
+  const [chapters, setChapters] = useState([
+    { id: 1, name: 'Quadratic Equations', classId: 1, estimatedHours: 8, completed: false },
+    { id: 2, name: 'Trigonometry', classId: 1, estimatedHours: 12, completed: false },
+    { id: 3, name: 'Motion and Forces', classId: 2, estimatedHours: 10, completed: false },
+    { id: 4, name: 'Thermodynamics', classId: 2, estimatedHours: 14, completed: false },
+    { id: 5, name: 'Organic Chemistry', classId: 3, estimatedHours: 16, completed: false }
+  ]);
+
+  const [lessons, setLessons] = useState([
+    {
+      id: 1,
+      title: 'Introduction to Quadratic Equations',
+      chapterId: 1,
+      classId: 1,
+      date: '2025-06-25',
+      startTime: '09:00',
+      duration: 60,
+      resources: [
+        { type: 'file', name: 'Quadratic_Notes.pdf' },
+        { type: 'link', name: 'Khan Academy - Quadratics', url: 'https://khanacademy.org' },
+        { type: 'video', name: 'Intro Video', url: 'https://youtube.com' }
+      ],
+      activities: ['Problem solving', 'Group discussion', 'Practice worksheet'],
+      status: 'scheduled'
+    },
+    {
+      id: 2,
+      title: 'Solving Quadratic Equations',
+      chapterId: 1,
+      classId: 1,
+      date: '2025-06-27',
+      startTime: '09:00',
+      duration: 60,
+      resources: [],
+      activities: ['Factoring practice', 'Quadratic formula'],
+      status: 'scheduled'
+    }
+  ]);
+
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [showAddLesson, setShowAddLesson] = useState(false);
+  const [editingLesson, setEditingLesson] = useState(null);
+  const [newLesson, setNewLesson] = useState({
+    title: '',
+    chapterId: '',
+    date: '',
+    startTime: '09:00',
+    duration: 60,
+    activities: [],
+    resources: []
+  });
+
+  // Get days for current view
+  const getWeekDays = () => {
+    const start = new Date(currentDate);
+    const day = start.getDay();
+    const diff = start.getDate() - day + (day === 0 ? -6 : 1);
+    start.setDate(diff);
+    
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(start);
+      date.setDate(start.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  const getMonthDays = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+    
+    const days = [];
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  const formatDate = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const getLessonsForDate = (date) => {
+    const dateStr = formatDate(date);
+    return lessons.filter(lesson => 
+      lesson.date === dateStr && 
+      (!selectedClass || lesson.classId === parseInt(selectedClass))
+    );
+  };
+
+  const getChapterProgress = (chapterId) => {
+    const chapterLessons = lessons.filter(l => l.chapterId === chapterId);
+    const completedLessons = chapterLessons.filter(l => l.status === 'completed');
+    return chapterLessons.length > 0 ? (completedLessons.length / chapterLessons.length) * 100 : 0;
+  };
+
+  const handleDragStart = (e, item, type) => {
+    setDraggedItem({ ...item, type });
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e, date) => {
+    e.preventDefault();
+    if (!draggedItem) return;
+
+    if (draggedItem.type === 'chapter') {
+      // Create new lesson from chapter
+      const newId = Math.max(...lessons.map(l => l.id), 0) + 1;
+      const lesson = {
+        id: newId,
+        title: `${draggedItem.name} - Lesson`,
+        chapterId: draggedItem.id,
+        classId: draggedItem.classId,
+        date: formatDate(date),
+        startTime: '09:00',
+        duration: 60,
+        activities: ['Introduction', 'Main content', 'Practice'],
+        resources: [],
+        status: 'scheduled'
+      };
+      setLessons([...lessons, lesson]);
+    } else if (draggedItem.type === 'lesson') {
+      // Move existing lesson
+      setLessons(lessons.map(lesson =>
+        lesson.id === draggedItem.id
+          ? { ...lesson, date: formatDate(date) }
+          : lesson
+      ));
+    }
+    
+    setDraggedItem(null);
+  };
+
+  const addLesson = () => {
+    if (!newLesson.title || !newLesson.chapterId || !newLesson.date) return;
+    
+    const lesson = {
+      ...newLesson,
+      id: Math.max(...lessons.map(l => l.id), 0) + 1,
+      classId: chapters.find(c => c.id === parseInt(newLesson.chapterId))?.classId || 1,
+      status: 'scheduled'
+    };
+    
+    setLessons([...lessons, lesson]);
+    setNewLesson({
+      title: '',
+      chapterId: '',
+      date: '',
+      startTime: '09:00',
+      duration: 60,
+      activities: [],
+      resources: []
+    });
+    setShowAddLesson(false);
+  };
+
+  const updateLessonStatus = (lessonId, status) => {
+    setLessons(lessons.map(lesson =>
+      lesson.id === lessonId ? { ...lesson, status } : lesson
+    ));
+  };
+
+  const deleteLesson = (lessonId) => {
+    setLessons(lessons.filter(lesson => lesson.id !== lessonId));
+  };
+
+  const navigateDate = (direction) => {
+    const newDate = new Date(currentDate);
+    if (viewMode === 'week') {
+      newDate.setDate(currentDate.getDate() + (direction * 7));
+    } else {
+      newDate.setMonth(currentDate.getMonth() + direction);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const selectedClassData = classes.find(c => c.id === parseInt(selectedClass));
+  const classChapters = chapters.filter(c => !selectedClass || c.classId === parseInt(selectedClass));
+  const days = viewMode === 'week' ? getWeekDays() : getMonthDays();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+              <BookOpen className="text-blue-600" />
+              Lesson Planner
+            </h1>
+            <div className="flex items-center gap-4">
+              <button className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                <Share2 size={16} />
+                Share
+              </button>
+              <button className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                <Bell size={16} />
+                Notifications
+              </button>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <select
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">All Classes</option>
+                {classes.map(cls => (
+                  <option key={cls.id} value={cls.id}>{cls.name}</option>
+                ))}
+              </select>
+              
+              <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('week')}
+                  className={`px-3 py-1 rounded-md transition-colors ${
+                    viewMode === 'week' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Week
+                </button>
+                <button
+                  onClick={() => setViewMode('month')}
+                  className={`px-3 py-1 rounded-md transition-colors ${
+                    viewMode === 'month' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Month
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigateDate(-1)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <h2 className="text-xl font-semibold text-gray-700 min-w-[200px] text-center">
+                {viewMode === 'week' ? (
+                  `Week of ${days[0]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                ) : (
+                  currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                )}
+              </h2>
+              <button
+                onClick={() => navigateDate(1)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Chapters</h3>
+                <button
+                  onClick={() => setShowAddLesson(true)}
+                  className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                {classChapters.map(chapter => {
+                  const progress = getChapterProgress(chapter.id);
+                  return (
+                    <div
+                      key={chapter.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, chapter, 'chapter')}
+                      className="p-3 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 cursor-move transition-colors"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-sm text-gray-800">{chapter.name}</span>
+                        <span className="text-xs text-gray-500">{chapter.estimatedHours}h</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                        <div
+                          className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-600">{Math.round(progress)}% Complete</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {selectedClassData && (
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Class Progress</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Overall Progress</span>
+                    <span className="text-sm font-medium text-gray-800">
+                      {Math.round(classChapters.reduce((acc, ch) => acc + getChapterProgress(ch.id), 0) / Math.max(classChapters.length, 1))}%
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Users size={16} />
+                    <span>25 Students</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Clock size={16} />
+                    <span>Next: Today 9:00 AM</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Calendar */}
+          <div className="lg:col-span-3">
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <div className={`grid ${viewMode === 'week' ? 'grid-cols-7' : 'grid-cols-7'} gap-1`}>
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div key={day} className="p-3 text-center font-semibold text-gray-600 bg-gray-50 rounded-lg">
+                    {day}
+                  </div>
+                ))}
+                
+                {days.map((day, index) => {
+                  const dayLessons = getLessonsForDate(day);
+                  const isCurrentMonth = viewMode === 'month' ? day.getMonth() === currentDate.getMonth() : true;
+                  const isToday = formatDate(day) === formatDate(new Date());
+                  
+                  return (
+                    <div
+                      key={index}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, day)}
+                      className={`min-h-[120px] p-2 border border-gray-200 rounded-lg transition-colors ${
+                        isToday ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'
+                      } ${!isCurrentMonth ? 'opacity-50' : ''}`}
+                    >
+                      <div className={`text-sm font-medium mb-2 ${
+                        isToday ? 'text-blue-600' : isCurrentMonth ? 'text-gray-800' : 'text-gray-400'
+                      }`}>
+                        {day.getDate()}
+                      </div>
+                      
+                      <div className="space-y-1">
+                        {dayLessons.map(lesson => {
+                          const chapterName = chapters.find(c => c.id === lesson.chapterId)?.name || 'Unknown';
+                          const classColor = classes.find(c => c.id === lesson.classId)?.color || '#6B7280';
+                          
+                          return (
+                            <div
+                              key={lesson.id}
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, lesson, 'lesson')}
+                              className="p-2 rounded-md text-xs cursor-move group relative"
+                              style={{ backgroundColor: classColor + '20', borderLeft: `3px solid ${classColor}` }}
+                            >
+                              <div className="font-medium text-gray-800 truncate">{lesson.title}</div>
+                              <div className="text-gray-600 flex items-center gap-1 mt-1">
+                                <Clock size={10} />
+                                {lesson.startTime} ({lesson.duration}min)
+                              </div>
+                              
+                              <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                <button
+                                  onClick={() => updateLessonStatus(lesson.id, lesson.status === 'completed' ? 'scheduled' : 'completed')}
+                                  className={`p-1 rounded ${
+                                    lesson.status === 'completed' ? 'text-green-600 hover:bg-green-100' : 'text-gray-400 hover:bg-gray-100'
+                                  }`}
+                                >
+                                  <CheckCircle size={12} />
+                                </button>
+                                <button
+                                  onClick={() => deleteLesson(lesson.id)}
+                                  className="p-1 text-red-400 hover:bg-red-100 rounded"
+                                >
+                                  <Trash2 size={12} />
+                                </button>
+                              </div>
+                              
+                              {lesson.resources.length > 0 && (
+                                <div className="flex gap-1 mt-1">
+                                  {lesson.resources.map((resource, idx) => (
+                                    <span key={idx} className="text-gray-500">
+                                      {resource.type === 'file' && <FileText size={10} />}
+                                      {resource.type === 'link' && <Link size={10} />}
+                                      {resource.type === 'video' && <Video size={10} />}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Add Lesson Modal */}
+        {showAddLesson && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Add New Lesson</h3>
+              
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Lesson title"
+                  value={newLesson.title}
+                  onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                
+                <select
+                  value={newLesson.chapterId}
+                  onChange={(e) => setNewLesson({ ...newLesson, chapterId: e.target.value })}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select Chapter</option>
+                  {classChapters.map(chapter => (
+                    <option key={chapter.id} value={chapter.id}>{chapter.name}</option>
+                  ))}
+                </select>
+                
+                <input
+                  type="date"
+                  value={newLesson.date}
+                  onChange={(e) => setNewLesson({ ...newLesson, date: e.target.value })}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                
+                <div className="flex gap-3">
+                  <input
+                    type="time"
+                    value={newLesson.startTime}
+                    onChange={(e) => setNewLesson({ ...newLesson, startTime: e.target.value })}
+                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Duration (min)"
+                    value={newLesson.duration}
+                    onChange={(e) => setNewLesson({ ...newLesson, duration: parseInt(e.target.value) || 60 })}
+                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setShowAddLesson(false)}
+                  className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={addLesson}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Add Lesson
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default LessonPlanner;

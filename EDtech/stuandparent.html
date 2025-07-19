@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Educational Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-toggle {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .toggle-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .toggle-btn:not(.active) {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .dashboard {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f7fafc;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .feature-content {
+            space-y: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .feature-item:hover {
+            background: #e2e8f0;
+            transform: translateX(5px);
+        }
+
+        .feature-item::before {
+            content: "▸";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .exam-item, .lesson-item, .quiz-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .exam-item:hover, .lesson-item:hover, .quiz-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .exam-date {
+            font-weight: 600;
+            color: #e53e3e;
+            font-size: 0.9rem;
+        }
+
+        .exam-subject {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 5px 0;
+        }
+
+        .exam-type {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .notification-badge {
+            background: #e53e3e;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .performance-chart {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #f7fafc, #e2e8f0);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+            font-weight: 600;
+            border: 2px dashed #cbd5e0;
+        }
+
+        .connection-flow {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin: 0 10px;
+        }
+
+        .child-selector {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .child-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .child-tab {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .child-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 EduConnect Platform</h1>
+            <p>Comprehensive Educational Management System</p>
+            <div class="user-toggle">
+                <button class="toggle-btn active" onclick="showDashboard('student')">👨‍🎓 Student Dashboard</button>
+                <button class="toggle-btn" onclick="showDashboard('guardian')">👨‍👩‍👦 Guardian Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="student-dashboard" class="dashboard active">
+            <div class="features-grid">
+                <!-- Exam Section -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📄</span>
+                        <h3 class="feature-title">Exam Section</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="exam-item">
+                            <div class="exam-date">📅 June 28, 2025</div>
+                            <div class="exam-subject">Mathematics - Algebra</div>
+                            <div class="exam-type">📝 Final Exam</div>
+                            <button class="btn btn-primary">Start Exam</button>
+                        </div>
+                        <div class="exam-item">
+                            <div class="exam-date">📅 June 30, 2025</div>
+                            <div class="exam-subject">Physics - Mechanics</div>
+                            <div class="exam-type">🔬 Lab Practical</div>
+                            <button class="btn btn-secondary">View Details</button>
+                        </div>
+                        <div class="feature-item">View exam history and results</div>
+                        <div class="feature-item">Save draft answers during exam</div>
+                    </div>
+                </div>
+
+                <!-- Lesson Hub -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📅</span>
+                        <h3 class="feature-title">Lesson Hub</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="lesson-item">
+                            <div class="exam-subject">📚 Today's Biology Class</div>
+                            <div class="exam-type">🧬 Cell Division & Mitosis</div>
+                            <button class="btn btn-primary">Join Live Class</button>
+                            <span class="notification-badge">LIVE</span>
+                        </div>
+                        <div class="feature-item">Download PDFs, videos, and slides</div>
+                        <div class="feature-item">Get auto-notifications of changes</div>
+                        <div class="feature-item">Mark as "Reviewed" or "Need Help"</div>
+                        <div class="feature-item">Access recorded lessons anytime</div>
+                    </div>
+                </div>
+
+                <!-- Quiz Zone -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">❓</span>
+                        <h3 class="feature-title">Quiz Zone</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="quiz-item">
+                            <div class="exam-subject">🎯 Quick Math Quiz</div>
+                            <div class="exam-type">⚡ 10 questions • 15 minutes</div>
+                            <input type="text" placeholder="Enter quiz code..." style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin: 10px 0;">
+                            <button class="btn btn-primary">Join Quiz</button>
+                        </div>
+                        <div class="feature-item">Live timer with auto-submit</div>
+                        <div class="feature-item">View leaderboard rankings</div>
+                        <div class="feature-item">Retake practice quizzes</div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">🔔</span>
+                        <h3 class="feature-title">Notifications</h3>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-item">📢 Math exam tomorrow at 9 AM</div>
+                        <div class="feature-item">⚠️ Attendance alert - Physics class</div>
+                        <div class="feature-item">📝 Homework due in 2 days</div>
+                        <div class="feature-item">Customize notification preferences</div>
+                    </div>
+                </div>
+
+                <!-- Performance -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📈</span>
+                        <h3 class="feature-title">My Performance</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="performance-chart">
+                            <div class="chart-placeholder">📊 Performance Graph Coming Soon</div>
+                        </div>
+                        <div class="feature-item">View grades and progress trends</div>
+                        <div class="feature-item">Teacher feedback and comments</div>
+                        <div class="feature-item">AI skill improvement suggestions</div>
+                    </div>
+                </div>
+
+                <!-- Homework -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">🧾</span>
+                        <h3 class="feature-title">Homework & Assignments</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="exam-item">
+                            <div class="exam-subject">📚 English Essay</div>
+                            <div class="exam-type">📅 Due: June 27, 2025</div>
+                            <button class="btn btn-primary">Upload Assignment</button>
+                        </div>
+                        <div class="feature-item">Download homework files</div>
+                        <div class="feature-item">Submit digital assignments</div>
+                        <div class="feature-item">View grading and teacher comments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guardian Dashboard -->
+        <div id="guardian-dashboard" class="dashboard">
+            <div class="child-selector">
+                <h4>Select Child:</h4>
+                <div class="child-tabs">
+                    <div class="child-tab active">👧 Emma (Grade 8)</div>
+                    <div class="child-tab">👦 Alex (Grade 6)</div>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <!-- Performance Overview -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📊</span>
+                        <h3 class="feature-title">Student Performance</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="performance-chart">
+                            <div class="chart-placeholder">📈 Emma's Performance Trends</div>
+                        </div>
+                        <div class="feature-item">Quiz scores: 85% average</div>
+                        <div class="feature-item">Exam performance: Improving trend</div>
+                        <div class="feature-item">Teacher feedback: "Excellent progress"</div>
+                        <div class="feature-item">AI weekly summary available</div>
+                    </div>
+                </div>
+
+                <!-- Calendar -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📅</span>
+                        <h3 class="feature-title">Lesson & Activity Calendar</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="lesson-item">
+                            <div class="exam-subject">📚 Today: Science - Photosynthesis</div>
+                            <div class="exam-type">🕐 10:00 AM - 11:00 AM</div>
+                        </div>
+                        <div class="lesson-item">
+                            <div class="exam-subject">📝 Tomorrow: Math Exam</div>
+                            <div class="exam-type">🕘 9:00 AM - 10:30 AM</div>
+                        </div>
+                        <div class="feature-item">View weekly learning schedule</div>
+                        <div class="feature-item">Track class schedule changes</div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📩</span>
+                        <h3 class="feature-title">Notifications & Alerts</h3>
+                        <span class="notification-badge">2</span>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-item">⚠️ Emma was absent yesterday</div>
+                        <div class="feature-item">🎯 Math quiz scheduled for Friday</div>
+                        <div class="feature-item">📢 Parent-teacher meeting next week</div>
+                        <div class="feature-item">🏫 School holiday on Monday</div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📬</span>
+                        <h3 class="feature-title">Messages</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="exam-item">
+                            <div class="exam-subject">💬 Ms. Johnson (Math Teacher)</div>
+                            <div class="exam-type">"Emma is doing great in algebra!"</div>
+                            <button class="btn btn-primary">Reply</button>
+                        </div>
+                        <div class="feature-item">1:1 chat with teachers</div>
+                        <div class="feature-item">School announcements</div>
+                        <div class="feature-item">Submit feedback to school</div>
+                    </div>
+                </div>
+
+                <!-- Reports -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📄</span>
+                        <h3 class="feature-title">Reports & Downloads</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="exam-item">
+                            <div class="exam-subject">📋 Mid-term Report Card</div>
+                            <div class="exam-type">📅 Generated: June 15, 2025</div>
+                            <button class="btn btn-primary">Download PDF</button>
+                        </div>
+                        <div class="feature-item">Subject-wise performance reports</div>
+                        <div class="feature-item">Attendance records</div>
+                        <div class="feature-item">Save and print anytime</div>
+                    </div>
+                </div>
+
+                <!-- Multi-Child Support -->
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-icon">📍</span>
+                        <h3 class="feature-title">Multiple Children</h3>
+                    </div>
+                    <div class="feature-content">
+                        <div class="exam-item">
+                            <div class="exam-subject">👧 Emma (Grade 8)</div>
+                            <div class="exam-type">📊 Overall Grade: A-</div>
+                            <button class="btn btn-secondary">View Dashboard</button>
+                        </div>
+                        <div class="exam-item">
+                            <div class="exam-subject">👦 Alex (Grade 6)</div>
+                            <div class="exam-type">📊 Overall Grade: B+</div>
+                            <button class="btn btn-secondary">View Dashboard</button>
+                        </div>
+                        <div class="feature-item">Easy switching between children</div>
+                        <div class="feature-item">Consolidated family view</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Flow -->
+        <div class="connection-flow">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #2d3748;">
+                🔗 Platform Connection Flow
+            </h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">👨‍🏫</div>
+                    <h4>Teacher Assigns</h4>
+                    <p>Creates lessons, quizzes, and exams</p>
+                </div>
+                <div class="flow-arrow">➜</div>
+                <div class="flow-step">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📚</div>
+                    <h4>Content Delivery</h4>
+                    <p>Lessons, quizzes & exams distributed</p>
+                </div>
+                <div class="flow-arrow">➜</div>
+                <div class="flow-step">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">👨‍🎓</div>
+                    <h4>Student Completes</h4>
+                    <p>Takes quizzes, exams & submits work</p>
+                </div>
+                <div class="flow-arrow">➜</div>
+                <div class="flow-step">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                    <h4>Results Distribution</h4>
+                    <p>Scores & feedback sent to all dashboards</p>
+                </div>
+            </div>
+            <div style="margin-top: 30px; text-align: center; padding: 20px; background: #f8fafc; border-radius: 12px;">
+                <h4 style="color: #4a5568; margin-bottom: 10px;">📈 Data Flows To:</h4>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                    <div>🎓 <strong>Student Dashboard</strong><br><small>Progress & Performance</small></div>
+                    <div>👨‍👩‍👦 <strong>Parent Dashboard</strong><br><small>Performance Summary</small></div>
+                    <div>👨‍🏫 <strong>Teacher Dashboard</strong><br><small>Review & Grading</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDashboard(type) {
+            // Hide all dashboards
+            document.querySelectorAll('.dashboard').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected dashboard
+            document.getElementById(type + '-dashboard').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for child tabs
+            document.querySelectorAll('.child-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.child-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Add hover effects for cards
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Simulate real-time updates
+            setInterval(() => {
+                const badges = document.querySelectorAll('.notification-badge');
+                badges.forEach(badge => {
+                    const currentCount = parseInt(badge.textContent);
+                    if (Math.random() > 0.95) { // 5% chance each second
+                        badge.textContent = currentCount + 1;
+                        badge.style.animation = 'pulse 0.5s ease-in-out';
+                        setTimeout(() => badge.style.animation = '', 500);
+                    }
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

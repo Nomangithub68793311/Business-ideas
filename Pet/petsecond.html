@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetCare Pro - Multi-Role Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .role-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .role-btn {
+            padding: 12px 24px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .role-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .role-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .dashboard {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .content-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .list-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .appointment-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .appointment-time {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .appointment-pet {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .appointment-owner {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .notification {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .pet-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pet-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .pet-info h3 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .pet-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-busy {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .chart-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .role-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐾 VetCare Pro</h1>
+            <p>Comprehensive Veterinary Management System</p>
+        </div>
+
+        <div class="role-selector">
+            <button class="role-btn active" onclick="showDashboard('pet-parent')">🐶 Pet Parent</button>
+            <button class="role-btn" onclick="showDashboard('vet')">🩺 Veterinarian</button>
+            <button class="role-btn" onclick="showDashboard('clinic-admin')">🏥 Clinic Admin</button>
+            <button class="role-btn" onclick="showDashboard('vet-assistant')">👩‍⚕️ Vet Assistant</button>
+            <button class="role-btn" onclick="showDashboard('super-admin')">🧑‍💻 Super Admin</button>
+            <button class="role-btn" onclick="showDashboard('partner')">🧳 Partner</button>
+        </div>
+
+        <!-- Pet Parent Dashboard -->
+        <div id="pet-parent" class="dashboard active">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">🐶 Pet Parent Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div style="font-weight: bold;">John Doe</div>
+                        <div style="font-size: 0.9rem; color: #666;">Pet Owner</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Registered Pets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Upcoming Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Total Visits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$450</div>
+                    <div class="stat-label">Total Spent</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section">
+                    <h3 class="section-title">🐾 My Pets</h3>
+                    <div class="pet-card">
+                        <div class="pet-avatar">🐕</div>
+                        <div class="pet-info">
+                            <h3>Buddy</h3>
+                            <p>Golden Retriever • 3 years old</p>
+                            <p>Last visit: Dec 15, 2024</p>
+                        </div>
+                    </div>
+                    <div class="pet-card">
+                        <div class="pet-avatar">🐱</div>
+                        <div class="pet-info">
+                            <h3>Whiskers</h3>
+                            <p>Persian Cat • 2 years old</p>
+                            <p>Last visit: Jan 10, 2025</p>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">➕ Add New Pet</button>
+                        <button class="btn btn-secondary">📋 View All Records</button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title">📅 Upcoming Appointments</h3>
+                    <div class="appointment-card">
+                        <div class="appointment-time">Today, 2:00 PM</div>
+                        <div class="appointment-pet">Buddy - Routine Checkup</div>
+                        <div class="appointment-owner">Dr. Sarah Wilson • VetCare Clinic</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-success">Join Video Call</button>
+                            <button class="btn btn-warning">Reschedule</button>
+                        </div>
+                    </div>
+                    <div class="appointment-card">
+                        <div class="appointment-time">Jul 5, 10:30 AM</div>
+                        <div class="appointment-pet">Whiskers - Vaccination</div>
+                        <div class="appointment-owner">Dr. Mike Johnson • Pet Health Center</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-danger">Cancel</button>
+                            <button class="btn btn-secondary">View Details</button>
+                        </div>
+                    </div>
+                    <button class="btn">📅 Book New Appointment</button>
+                </div>
+            </div>
+
+            <div class="notification">
+                <strong>Reminder:</strong> Buddy's vaccination is due in 2 weeks!
+            </div>
+        </div>
+
+        <!-- Veterinarian Dashboard -->
+        <div id="vet" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">🩺 Veterinarian Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">DS</div>
+                    <div>
+                        <div style="font-weight: bold;">Dr. Sarah Wilson</div>
+                        <div style="font-size: 0.9rem; color: #666;">Veterinarian</div>
+                        <span class="status-badge status-online">Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Pending Consultations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">127</div>
+                    <div class="stat-label">Total Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.8</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section">
+                    <h3 class="section-title">📋 Today's Schedule</h3>
+                    <div class="appointment-card">
+                        <div class="appointment-time">9:00 AM - Current</div>
+                        <div class="appointment-pet">Max (German Shepherd)</div>
+                        <div class="appointment-owner">Owner: Emily Johnson</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-success">Start Consultation</button>
+                            <button class="btn btn-secondary">View History</button>
+                        </div>
+                    </div>
+                    <div class="appointment-card">
+                        <div class="appointment-time">10:30 AM - Next</div>
+                        <div class="appointment-pet">Bella (Labrador)</div>
+                        <div class="appointment-owner">Owner: Michael Smith</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn">View Details</button>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">⏰ Update Availability</button>
+                        <button class="btn btn-secondary">📊 View Reports</button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title">🩺 Quick Actions</h3>
+                    <div class="form-group">
+                        <label>Patient Search</label>
+                        <input type="text" placeholder="Search by pet name or owner...">
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">📝 Add Treatment Notes</button>
+                        <button class="btn btn-secondary">💊 Prescribe Medication</button>
+                        <button class="btn btn-warning">🔬 Request Lab Test</button>
+                    </div>
+                    <div class="chart-placeholder">
+                        📈 Patient Visit Trends Chart
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert">
+                <strong>Emergency Alert:</strong> Emergency case incoming - Trauma patient ETA 15 minutes
+            </div>
+        </div>
+
+        <!-- Clinic Admin Dashboard -->
+        <div id="clinic-admin" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">🏥 Clinic Admin Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">AM</div>
+                    <div>
+                        <div style="font-weight: bold;">Alice Manager</div>
+                        <div style="font-size: 0.9rem; color: #666;">Clinic Administrator</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Active Veterinarians</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">32</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$2,840</div>
+                    <div class="stat-label">Today's Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Occupancy Rate</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section">
+                    <h3 class="section-title">👩‍⚕️ Staff Management</h3>
+                    <div class="list-item">
+                        <div>
+                            <strong>Dr. Sarah Wilson</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Veterinarian</div>
+                        </div>
+                        <span class="status-badge status-online">Online</span>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Dr. Mike Johnson</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Veterinarian</div>
+                        </div>
+                        <span class="status-badge status-busy">Busy</span>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Jane Nurse</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Vet Assistant</div>
+                        </div>
+                        <span class="status-badge status-offline">Off Duty</span>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">➕ Add Staff Member</button>
+                        <button class="btn btn-secondary">📅 Manage Schedules</button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title">📊 Clinic Analytics</h3>
+                    <div class="chart-placeholder">
+                        📈 Revenue Trends Chart
+                    </div>
+                    <div class="chart-placeholder">
+                        📊 Appointment Statistics
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">📋 Generate Report</button>
+                        <button class="btn btn-secondary">💰 View Financials</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vet Assistant Dashboard -->
+        <div id="vet-assistant" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">👩‍⚕️ Vet Assistant Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">JN</div>
+                    <div>
+                        <div style="font-weight: bold;">Jane Nurse</div>
+                        <div style="font-size: 0.9rem; color: #666;">Veterinary Assistant</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Tasks Assigned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Waiting Room</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Files to Upload</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section">
+                    <h3 class="section-title">📋 Today's Tasks</h3>
+                    <div class="list-item">
+                        <div>
+                            <strong>Update Max's treatment notes</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Assigned by Dr. Wilson</div>
+                        </div>
+                        <button class="btn btn-success">Complete</button>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Upload lab results for Bella</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Assigned by Dr. Johnson</div>
+                        </div>
+                        <button class="btn">📎 Upload Files</button>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Prepare Room 3 for surgery</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Assigned by Clinic Admin</div>
+                        </div>
+                        <button class="btn btn-warning">In Progress</button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title">⏰ Waiting Room Management</h3>
+                    <div class="appointment-card">
+                        <div class="appointment-time">Waiting 15 mins</div>
+                        <div class="appointment-pet">Rocky (Bulldog)</div>
+                        <div class="appointment-owner">Owner: Tom Wilson</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-success">Call Next</button>
+                            <button class="btn btn-secondary">Send Update</button>
+                        </div>
+                    </div>
+                    <div class="appointment-card">
+                        <div class="appointment-time">Just Arrived</div>
+                        <div class="appointment-pet">Luna (Siamese Cat)</div>
+                        <div class="appointment-owner">Owner: Lisa Brown</div>
+                        <div style="margin-top: 10px;">
+                            <button class="btn">Check In</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Super Admin Dashboard -->
+        <div id="super-admin" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">🧑‍💻 Super Admin Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">SA</div>
+                    <div>
+                        <div style="font-weight: bold;">System Administrator</div>
+                        <div style="font-size: 0.9rem; color: #666;">Platform Owner</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Total Clinics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">128</div>
+                    <div class="stat-label">Active Veterinarians</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2,847</div>
+                    <div class="stat-label">Registered Pet Owners</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$45,230</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section">
+                    <h3 class="section-title">🏥 Platform Management</h3>
+                    <div class="quick-actions">
+                        <button class="btn">🏥 Manage Clinics</button>
+                        <button class="btn btn-secondary">👩‍⚕️ Manage Veterinarians</button>
+                        <button class="btn btn-warning">⚙️ System Settings</button>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Pending Clinic Approvals</strong>
+                            <div style="font-size: 0.9rem; color: #666;">3 new clinics awaiting approval</div>
+                        </div>
+                        <button class="btn">Review</button>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Support Tickets</strong>
+                            <div style="font-size: 0.9rem; color: #666;">12 open tickets</div>
+                        </div>
+                        <button class="btn btn-warning">Manage</button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title">📊 Platform Analytics</h3>
+                    <div class="chart-placeholder">
+                        📈 Platform Growth Chart
+                    </div>
+                    <div class="chart-placeholder">
+                        💰 Revenue Analytics
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">📊 View Full Analytics</button>
+                        <button class="btn btn-secondary">📋 Generate Reports</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partner Dashboard -->
+        <div id="partner" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">🧳 Partner Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">PI</div>
+                    <div>
+                        <div style="font-weight: bold;">PetCare Insurance</div>
+                        <div style="font-size: 0.9rem; color: #666;">Insurance Partner</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">234</div>
+                    <div class="stat-label">Active Policies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Pending Claims</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Claim Approval Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$12,450</div>
+                    <div class="stat-label">Monthly Payouts</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="content-section">
+                    <h3 class="section-title">📋 Insurance Claims</h3>
+                    <div class="list-item">
+                        <div>
+                            <strong>Claim #INS-2025-001</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Buddy - Emergency Surgery</div>
+                            <div style="font-size: 0.8rem; color: #999;">Amount: $1,200</div>
+                        </div>
+                        <button class="btn btn-success">Approve</button>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Claim #INS-2025-002</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Whiskers - Dental Cleaning</div>
+                            <div style="font-size: 0.8rem; color: #999;">Amount: $450</div>
+                        </div>
+                        <button class="btn btn-warning">Review</button>
+                    </div>
+                    <div class="list-item">
+                        <div>
+                            <strong>Claim #INS-2025-003</strong>
+                            <div style="font-size: 0.9rem; color: #666;">Max - Vaccination</div>
+                            <div style="font-size: 0.8rem; color: #999;">Amount: $85</div>
+                        </div>
+                        <button class="btn btn-danger">Reject</button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3 class="section-title">🎯 Partner Services</h3>
+                    <div class="form-group">
+                        <label>Send Promotional Offer</label>
+                        <select>
+                            <option>Select Target Group</option>
+                            <option>New Pet Owners</option>
+                            <option>Multi-Pet Households</option>
+                            <option>Senior Pet Owners</option>
+                        </select>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn">📧 Send Offers</button>
+                        <button class="btn btn-secondary">📊 View Performance</button>
+                        <button class="btn btn-warning">🔗 Integration Settings</button>
+                    </div>
+                    <div class="chart-placeholder">
+                        📈 Partnership Performance Metrics
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification">
+                <strong>New Partnership Opportunity:</strong> 3 new clinics interested in insurance partnerships
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDashboard(role) {
+            // Hide all dashboards
+            const dashboards = document.querySelectorAll('.dashboard');
+            dashboards.forEach(dashboard => dashboard.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.role-btn');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected dashboard
+            document.getElementById(role).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Add some interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects and click handlers for buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Simple feedback for button clicks
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Add click handlers for list items
+            const listItems = document.querySelectorAll('.list-item');
+            listItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 200);
+                });
+            });
+
+            // Add notification auto-hide
+            const notifications = document.querySelectorAll('.notification, .alert');
+            notifications.forEach(notification => {
+                setTimeout(() => {
+                    notification.style.opacity = '0.8';
+                }, 5000);
+            });
+
+            // Simulate real-time updates
+            setInterval(() => {
+                const timeElements = document.querySelectorAll('.appointment-time');
+                timeElements.forEach(element => {
+                    if (element.textContent.includes('Current')) {
+                        element.style.color = '#28a745';
+                        element.style.fontWeight = 'bold';
+                    }
+                });
+            }, 1000);
+        });
+
+        // Add search functionality
+        function searchPatients() {
+            const searchInput = document.querySelector('input[placeholder*="Search"]');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    // This would typically filter results
+                    console.log('Searching for:', searchTerm);
+                });
+            }
+        }
+
+        // Initialize search when page loads
+        document.addEventListener('DOMContentLoaded', searchPatients);
+    </script>
+</body>
+</html>

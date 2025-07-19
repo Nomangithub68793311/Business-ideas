@@ -1,0 +1,35 @@
+i have developed an ecommerce platform which has a store front in web and mobile .an admin panel and a seller panel.i built it in nextjs 
+for web and nodejs for backend and reactnative for mobile
+now the store fornt has following functionalities
+
+1.signup/login
+2.browse product
+3.add to cart
+4.order product
+5.make payment 
+6.refund and replace the product
+7.can check the seller profile and review and rate the product
+
+admin has these functionalities
+1.Dashboard 
+2.User and customer management and roles
+3.Category management
+4.Brand 
+5.Tag  and attribute
+6.Product management and reviews
+7.stock and refund and replace
+8.coupon and campaign management
+9.setings,shipping and notification management
+10.seller management
+
+seller has these functionalities
+
+1.Dashboard
+2.Add Product Product List Stocks Campaigns
+3.order management refund and replace
+4.withdrawals ,earning and store setting and product reviews
+
+
+thses are all functioalities it has.now i want to sell it to all others customers who needs nodejs ecommerce software
+i will give them customization.but i can make it SAAS now.i dont have the budget.how can i sell this same software with a little custommization.how can i get this kind of cusomers in manually and in different social media.or i cant sell it to anyone tell me.because i am trying it is not working
+tell me what can i do to sell this sofyware and find my customer and where can i find them
